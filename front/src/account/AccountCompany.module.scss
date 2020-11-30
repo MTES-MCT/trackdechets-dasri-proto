@@ -1,0 +1,46 @@
+.company {
+  .title {
+    display: flex;
+    justify-content: space-between;
+
+    h6 {
+      margin-top: 0;
+      margin-bottom: 1em;
+    }
+
+    .admin {
+      font-style: italic;
+      font-weight: normal;
+      color: var(--darker-grey);
+      svg {
+        margin-left: 1em;
+        vertical-align: sub;
+        display: inline;
+      }
+    }
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: 1em;
+
+    button {
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--theme-dark-text);
+      margin-right: 1.5em;
+    }
+
+    button:hover {
+      background: none;
+      color: var(--blue);
+    }
+
+    button.active {
+      color: var(--blue);
+      border-bottom: var(--blue) solid 2px;
+    }
+  }
+}
