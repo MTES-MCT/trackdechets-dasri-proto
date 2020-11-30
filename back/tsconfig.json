@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "lib": ["es2016", "esnext.asynciterable"],
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "module": "CommonJS",
+    "target": "es6",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+
+    "strict": false,
+    "noImplicitThis": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false
+  },
+  "include": ["src/**/*", "prisma/**/*"]
+}
