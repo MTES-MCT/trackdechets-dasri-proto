@@ -1,0 +1,181 @@
+scalar DateTime
+scalar JSON
+
+"Type de packaging du déchet"
+enum DasriPackagings {
+  "Caisse en carton avec sac en plastique"
+  BOITE_CARTON
+
+  "Fûts ou jérrican à usage unique"
+  FUT
+
+  "Boîtes et Mini-collecteurs pour déchets perforants"
+  BOITE_PERFORANTS
+
+  "Grand emballage"
+  GRAND_EMBALLAGE
+
+  "Grand récipient pour vrac"
+  VRAC
+
+  "Autre"
+  AUTRE
+}
+
+type FormCompany {
+  "Nom de l'établissement"
+  name: String
+
+  "SIRET de l'établissement"
+  siret: String
+
+  "Adresse de l'établissement"
+  address: String
+
+  "Numéro de téléphone de contact dans l'établissement"
+  phone: String
+
+  "Email du contact dans l'établissement"
+  mail: String
+}
+type Transporter {
+  "Établissement collecteur - transporteur"
+  company: FormCompany
+
+  "N° de récipissé"
+  receipt: String
+
+  "Département"
+  department: String
+
+  "Limite de validité du récipissé"
+  validityLimit: DateTime
+}
+
+type WorkSite {
+  name: String
+  address: String
+  city: String
+  postalCode: String
+  infos: String
+}
+
+"Émetteur du BSD, Personne responsable de l'émimination des déchets (PRED)"
+type Emitter {
+  "Établissement émetteur"
+  company: FormCompany
+  workSite: WorkSite
+  handOverToTransporterAt: DateTime
+}
+type Recipient {
+  """
+  Installation destinataire
+  """
+  company: FormCompany
+}
+
+"""
+Collecteur transporteur
+"""
+type Transporter {
+  "Établissement de destination"
+  company: FormCompany
+
+  "N° de récipissé"
+  receipt: String
+
+  "Département"
+  department: String
+
+  "Limite de validité du récipissé"
+  validityLimit: DateTime
+}
+
+"Informations sur le conditionnement Dasri"
+type DasriPackagingInfo {
+  "Type de conditionnement"
+  type: DasriPackagings!
+
+  "Description du conditionnement dans le cas où le type de conditionnement est `AUTRE`"
+  other: String
+
+  "Nombre de colis associés à ce conditionnement"
+  quantity: Int!
+
+  volume: Int!
+}
+type DasriWasteDetails {
+  quantity: Int
+  quantityType: QuantityType
+  volume: Int
+  packagingInfos: [DasriPackagingInfo!]
+}
+
+type Emission {
+  wasteCode: String
+  wasteDetailsOnuCode: String
+  wasteDetails: DasriWasteDetails
+  handedOverAt: DateTime
+  signedBy: String
+  signedAt: DateTime
+}
+
+type WasteAcceptation {
+  status: String
+  refusalReason: String
+  refusedQuantity: Int
+}
+
+type Transport {
+  wasteDetails: DasriWasteDetails
+  wasteAcceptation: WasteAcceptation
+  handedOverAt: DateTime
+  takenOverAt: DateTime
+  signedBy: String
+  signedAt: DateTime
+}
+
+type Reception {
+  wasteDetails: DasriWasteDetails
+  wasteAcceptation: WasteAcceptation
+  signedBy: String
+  signedAt: DateTime
+  receivedAt: DateTime
+  processingOperation: String
+  processedAt: DateTime
+}
+
+type DasriForm {
+  id: ID!
+  readableId: String!
+  status: String
+  createdAt: DateTime
+  updatedAt: DateTime
+
+  emitter: Emitter
+  emission: Emission
+
+  transporter: Transporter
+  transport: Transport
+
+  recipient: Recipient
+  reception: Reception
+}
+
+type Query {
+  dasriForms: [DasriForm]
+  dasriForm(
+    "Identifiant opaque du BSD"
+    id: ID
+    "Identifiant lisible du BSD"
+    readableId: String
+  ): DasriForm
+}
+
+type Mutation {
+  "Crée un nouveau bordereau"
+  dasriCreate(
+    "Payload de création d'un bordereau"
+    dasriCreateInput: DasriCreateInput!
+  ): DasriForm!
+}
