@@ -484,13 +484,14 @@ enum DasriStatus {
   REFUSED
 }
 
-model DasriForm {
+model Dasri {
   id                                 String                  @id @default(cuid())
   readableId                         String                  @unique
   status                             DasriStatus             @default(DRAFT)
   createdAt                          DateTime                @default(now())
   updatedAt                          DateTime                @updatedAt
-  owner                              User 
+  ownerId                            String
+  owner                              User                    @relation(fields: [ownerId], references: [id])
   isDeleted                          Boolean?                @default(false)
   
   // emitter
@@ -569,6 +570,6 @@ model DasriForm {
   processingOperation       String?
   processedAt               DateTime?
 
-    recipientSignedBy                  String?
+  recipientSignedBy                  String?
   recipientSignedAt                  DateTime?
 }

@@ -4592,11 +4592,11 @@
     },
     {
       "tag": "CreateModel",
-      "model": "DasriForm"
+      "model": "Dasri"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "id",
       "type": "String",
       "arity": "Required"
@@ -4606,7 +4606,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "DasriForm",
+          "model": "Dasri",
           "field": "id"
         },
         "directive": "id"
@@ -4617,7 +4617,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "DasriForm",
+          "model": "Dasri",
           "field": "id"
         },
         "directive": "default"
@@ -4629,7 +4629,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "DasriForm",
+          "model": "Dasri",
           "field": "id"
         },
         "directive": "default"
@@ -4639,7 +4639,7 @@
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "readableId",
       "type": "String",
       "arity": "Required"
@@ -4649,7 +4649,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "DasriForm",
+          "model": "Dasri",
           "field": "readableId"
         },
         "directive": "unique"
@@ -4657,7 +4657,7 @@
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "status",
       "type": "DasriStatus",
       "arity": "Required"
@@ -4667,7 +4667,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "DasriForm",
+          "model": "Dasri",
           "field": "status"
         },
         "directive": "default"
@@ -4679,7 +4679,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "DasriForm",
+          "model": "Dasri",
           "field": "status"
         },
         "directive": "default"
@@ -4689,7 +4689,7 @@
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "createdAt",
       "type": "DateTime",
       "arity": "Required"
@@ -4699,7 +4699,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "DasriForm",
+          "model": "Dasri",
           "field": "createdAt"
         },
         "directive": "default"
@@ -4711,7 +4711,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "DasriForm",
+          "model": "Dasri",
           "field": "createdAt"
         },
         "directive": "default"
@@ -4721,7 +4721,7 @@
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "updatedAt",
       "type": "DateTime",
       "arity": "Required"
@@ -4731,7 +4731,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "DasriForm",
+          "model": "Dasri",
           "field": "updatedAt"
         },
         "directive": "updatedAt"
@@ -4739,14 +4739,60 @@
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
+      "field": "ownerId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Dasri",
       "field": "owner",
       "type": "User",
       "arity": "Required"
     },
     {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Dasri",
+          "field": "owner"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Dasri",
+          "field": "owner"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[ownerId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Dasri",
+          "field": "owner"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "isDeleted",
       "type": "Boolean",
       "arity": "Optional"
@@ -4756,7 +4802,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "DasriForm",
+          "model": "Dasri",
           "field": "isDeleted"
         },
         "directive": "default"
@@ -4768,7 +4814,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "DasriForm",
+          "model": "Dasri",
           "field": "isDeleted"
         },
         "directive": "default"
@@ -4778,379 +4824,393 @@
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterCompanyName",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterCompanySiret",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterCompanyAddress",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterCompanyContact",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterCompanyPhone",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterCompanyMail",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterWorkSiteName",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterWorkSiteAddress",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterWorkSiteCity",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterWorkSitePostalCode",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterWorkSiteInfos",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "wasteDetailsCode",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "wasteDetailsOnuCode",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterWasteQuantity",
       "type": "Int",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterWasteQuantityType",
       "type": "QuantityType",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterWasteVolume",
       "type": "Int",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterWastePackagingsInfo",
       "type": "Json",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "handedOverToTransporterAt",
       "type": "DateTime",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterSignedBy",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "emitterSignedAt",
       "type": "DateTime",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterCompanyName",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterCompanySiret",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterCompanyAddress",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterCompanyPhone",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterCompanyMail",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterReceipt",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterDepartment",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterValidityLimit",
       "type": "DateTime",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterWasteAcceptationStatus",
       "type": "WasteAcceptationStatus",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterWasteRefusalReason",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
+      "field": "transporterWasteRefusedQuantity",
+      "type": "Int",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Dasri",
       "field": "transporterTakenOverAt",
       "type": "DateTime",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterWastePackagingsInfo",
       "type": "Json",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterWasteQuantity",
       "type": "Int",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterWasteQuantityType",
       "type": "QuantityType",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterWasteVolume",
       "type": "Int",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "handedOverToRecipientAt",
       "type": "DateTime",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterSignedBy",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "transporterSignedAt",
       "type": "DateTime",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "recipientCompanyName",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "recipientCompanySiret",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "recipientCompanyAddress",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "recipientCompanyContact",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "recipientCompanyPhone",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "recipientCompanyMail",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
-      "field": "recipientSignedBy",
-      "type": "String",
-      "arity": "Optional"
-    },
-    {
-      "tag": "CreateField",
-      "model": "DasriForm",
-      "field": "recipientSignedAt",
-      "type": "DateTime",
-      "arity": "Optional"
-    },
-    {
-      "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "recipientWastePackagingsInfo",
       "type": "Json",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "recipientWasteAcceptationStatus",
       "type": "WasteAcceptationStatus",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "recipientWasteRefusalReason",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
-      "field": "recipientWasteRefusalQuantity",
+      "model": "Dasri",
+      "field": "recipientWasteRefusedQuantity",
       "type": "Int",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "recipientWasteQuantity",
       "type": "Int",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
+      "field": "recipientWasteVolume",
+      "type": "Int",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Dasri",
       "field": "receivedAt",
       "type": "DateTime",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "processingOperation",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "DasriForm",
+      "model": "Dasri",
       "field": "processedAt",
+      "type": "DateTime",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Dasri",
+      "field": "recipientSignedBy",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Dasri",
+      "field": "recipientSignedAt",
       "type": "DateTime",
       "arity": "Optional"
     }
