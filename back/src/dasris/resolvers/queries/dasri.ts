@@ -1,4 +1,4 @@
-import { expandDasriFormFromDb } from "../../form-converter";
+import { expandDasriFormFromDb } from "../../dasri-converter";
 import { UserInputError } from "apollo-server-express";
 import { MissingIdOrReadableId } from "../../errors";
 import { QueryResolvers } from "../../../generated/graphql/types";
@@ -17,7 +17,7 @@ function validateArgs(args: any) {
   return args;
 }
 
-const formResolver: QueryResolvers["dasriForm"] = async (_, args, context) => {
+const dasriResolver: QueryResolvers["dasri"] = async (_, args, context) => {
   // check query level permissions
 
   const validArgs = validateArgs(args);
@@ -27,4 +27,4 @@ const formResolver: QueryResolvers["dasriForm"] = async (_, args, context) => {
   return expandDasriFormFromDb(form);
 };
 
-export default formResolver;
+export default dasriResolver;
