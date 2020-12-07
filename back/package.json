@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "^10"
+  },
   "scripts": {
     "predev": "copyfiles src/common/constants/** front/generated/constants --flat && npx prisma generate",
     "dev": "concurrently npm:watch-node npm:watch-graphql",
     "watch-node": "npx nodemon -L --watch src --exec \"ts-node\" -r tsconfig-paths/register src/index.ts",
     "watch-graphql": "npm run graphql-codegen -- --watch",
-    "start": "node src/index.js",
+    "start": "npm run watch-node",
     "update": "node prisma/scripts/index.js",
     "update:dev": "ts-node prisma/scripts/index.ts",
     "test": "jest",
