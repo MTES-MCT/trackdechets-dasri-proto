@@ -1,0 +1,115 @@
+input DasriPackagingInfoInput {
+  "Type de conditionnement"
+  type: DasriPackagings!
+
+  "Description du conditionnement dans le cas où le type de conditionnement est `AUTRE`"
+  other: String
+
+  "Nombre de colis associés à ce conditionnement"
+  quantity: Int!
+}
+
+input DasriCreateInput {
+  "Identifiant opaque"
+  customId: String
+
+  emitter: DasriEmitterInput
+  emission: DasriEmissionInput
+  transporter: DasriTransporterInput
+  transport: DasriTransportInput
+  recipient: DasriRecipientInput
+  reception: DasriReceptionInput
+}
+input WorkSiteInput {
+  name: String
+  address: String
+  city: String
+  postalCode: String
+  infos: String
+}
+input DasriFormInput {
+  customId: String
+  emitter: DasriEmitterInput
+  emission: DasriEmissionInput
+  transporter: DasriTransporterInput
+  transport: DasriTransportInput
+  recipient: DasriRecipientInput
+  reception: DasriReceptionInput
+}
+
+input DasriEmitterInput {
+  "Établissement émetteur"
+  company: CompanyInput
+  workSite: WorkSiteInput
+}
+
+input DasriWasteDetailInput {
+  quantity: Int
+  quantityType: QuantityType
+  volume: Int
+  packagingInfos: [DasriPackagingInfoInput!]
+}
+input DasriRecipientWasteDetailInput {
+  quantity: Int
+  volume: Int
+}
+
+input DasriEmissionInput {
+  wasteCode: String
+  wasteDetailsOnuCode: String
+  wasteDetails: DasriWasteDetailInput
+  handedOverAt: DateTime
+}
+input DasriTransportInput {
+  wasteDetails: DasriWasteDetailInput
+
+  takenOverAt: DateTime
+  handedOverAt: DateTime
+}
+
+input DasriTransporterInput {
+  "Établissement collecteur - transporteur"
+  company: CompanyInput
+
+  "N° de récipissé"
+  receipt: String
+
+  "Département"
+  department: String
+
+  "Limite de validité du récipissé"
+  validityLimit: DateTime
+}
+
+input DasriRecipientInput {
+  "Établissement émetteur"
+  company: CompanyInput
+}
+
+input DasriReceptionInput {
+  wasteDetails: DasriWasteDetailInput
+  receivedAt: DateTime
+  processingOperation: String
+  processedAt: DateTime
+}
+
+"Payload d'un établissement"
+input CompanyInput {
+  "SIRET de l'établissement"
+  siret: String
+
+  "Nom de l'établissement"
+  name: String
+
+  "Adresse de l'établissement"
+  address: String
+
+  "Nom du contact dans l'établissement"
+  contact: String
+
+  "Email du contact dans l'établissement"
+  mail: String
+
+  "Numéro de téléphone de contact dans l'établissement"
+  phone: String
+}
