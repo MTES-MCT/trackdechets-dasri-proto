@@ -470,3 +470,105 @@ model UserActivationHash {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
 }
+
+
+
+// dasris
+
+enum DasriStatus {
+  DRAFT
+  SEALED
+  SENT
+  RECEIVED
+  PROCESSED
+  REFUSED
+}
+
+model DasriForm {
+  id                                 String                  @id @default(cuid())
+  readableId                         String                  @unique
+  status                             DasriStatus             @default(DRAFT)
+  createdAt                          DateTime                @default(now())
+  updatedAt                          DateTime                @updatedAt
+  owner                              User 
+  isDeleted                          Boolean?                @default(false)
+  
+  // emitter
+  emitterCompanyName                 String?
+  emitterCompanySiret                String?
+  emitterCompanyAddress              String?
+  emitterCompanyContact              String? //?
+  emitterCompanyPhone                String?
+  emitterCompanyMail                 String?
+
+  emitterWorkSiteName                String?
+  emitterWorkSiteAddress             String?
+  emitterWorkSiteCity                String?
+  emitterWorkSitePostalCode          String?
+  emitterWorkSiteInfos               String?
+
+  // emission
+  wasteDetailsCode                   String?
+  wasteDetailsOnuCode                String?
+  
+  emitterWasteQuantity               Int? // kg
+  emitterWasteQuantityType           QuantityType?
+  emitterWasteVolume                 Int? // liters
+  emitterWastePackagingsInfo         Json?
+  handedOverToTransporterAt          DateTime?
+
+  emitterSignedBy                    String?
+  emitterSignedAt                    DateTime?
+  
+// transporter
+
+  transporterCompanyName             String?
+  transporterCompanySiret            String?
+  transporterCompanyAddress          String?
+  transporterCompanyPhone            String?
+  transporterCompanyMail             String?
+  transporterReceipt                 String?
+  transporterDepartment              String?
+  transporterValidityLimit           DateTime?
+  
+  // transport
+  transporterWasteAcceptationStatus  WasteAcceptationStatus?
+  transporterWasteRefusalReason      String?
+  transporterWasteRefusedQuantity      Int? // kg
+
+  transporterTakenOverAt          DateTime?
+  
+  transporterWastePackagingsInfo        Json?
+  transporterWasteQuantity           Int? // kg
+  transporterWasteQuantityType       QuantityType?
+  transporterWasteVolume             Int? // liters
+
+  handedOverToRecipientAt              DateTime?
+
+  transporterSignedBy                String?
+  transporterSignedAt                DateTime?
+
+  // recipient
+  recipientCompanyName               String?
+  recipientCompanySiret              String?
+  recipientCompanyAddress            String?
+  recipientCompanyContact            String?
+  recipientCompanyPhone              String?
+  recipientCompanyMail               String?
+
+  // reception
+
+  recipientWastePackagingsInfo          Json?
+  recipientWasteAcceptationStatus    WasteAcceptationStatus?
+  recipientWasteRefusalReason        String?
+  recipientWasteRefusedQuantity      Int? // kg
+  recipientWasteQuantity             Int? // kg
+  recipientWasteVolume             Int? // liters
+  receivedAt                         DateTime? // accepted or refused date
+  
+  processingOperation       String?
+  processedAt               DateTime?
+
+    recipientSignedBy                  String?
+  recipientSignedAt                  DateTime?
+}
