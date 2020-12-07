@@ -4,7 +4,7 @@ export async function getReadableId() {
   const beginningOfYear = new Date(new Date().getFullYear(), 0, 1);
   const shortYear = beginningOfYear.getFullYear().toString().slice(-2);
 
-  const mostRecentForms = await prisma.dasriForm.findMany({
+  const mostRecentForms = await prisma.dasri.findMany({
     orderBy: { readableId: "desc" },
     take: 10
   });
