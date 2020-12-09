@@ -16,6 +16,7 @@ import "./Dashboard.scss";
 import DashboardMenu from "./DashboardMenu";
 import Exports from "./exports/Exports";
 import SlipsContainer from "./slips/SlipsContainer";
+import DasrisContainer from "./dasris/DasrisContainer";
 import Transport from "./transport/Transport";
 
 import { Query } from "generated/graphql/types";
@@ -93,11 +94,19 @@ export default function Dashboard() {
             <Route path={routes.dashboard.stats}>
               <Stats />
             </Route>
+
+            <Route path={routes.dashboard.dasris.index}>
+              <DasrisContainer />
+            </Route>
+
+
             <Redirect
               to={generatePath(routes.dashboard.slips.drafts, {
                 siret,
               })}
             />
+
+        
           </Switch>
         </div>
       </div>
