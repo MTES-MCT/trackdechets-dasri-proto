@@ -33,6 +33,18 @@ export default function DashboardMenu({ me, handleCompanyChange }: IProps) {
 
         {company && (
           <>
+            <p className="sidebar__chapter">Mes Dasris</p>
+            <ul>
+              <li>
+                <NavLink
+                  to={generatePath(routes.dashboard.dasris.drafts, { siret })}
+                  className="sidebar__link sidebar__link--indented"
+                  activeClassName="sidebar__link--active"
+                >
+                  Brouillon
+                </NavLink>
+              </li>
+            </ul>
             <p className="sidebar__chapter">Mes bordereaux</p>
             <ul>
               <li>
