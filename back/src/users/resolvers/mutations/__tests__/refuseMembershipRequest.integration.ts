@@ -5,7 +5,7 @@ import {
   userWithCompanyFactory
 } from "../../../../__tests__/factories";
 import makeClient from "../../../../__tests__/testClient";
-import * as mailsHelper from "../../../../common/mails.helper";
+import * as mailsHelper from "../../../../mailer/mailing";
 import { userMails } from "../../../mails";
 import { AuthType } from "../../../../auth";
 
@@ -126,7 +126,7 @@ describe("mutation refuseMembershipRequest", () => {
       variables: { id: membershipRequest.id }
     });
     expect(data.refuseMembershipRequest.users).toHaveLength(1);
-    const refusedMembershipRequest = await prisma.membershipRequest.findOne({
+    const refusedMembershipRequest = await prisma.membershipRequest.findUnique({
       where: {
         id: membershipRequest.id
       }

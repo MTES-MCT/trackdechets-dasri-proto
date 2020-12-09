@@ -3,7 +3,7 @@ import { UserInputError } from "apollo-server-express";
 import { hash } from "bcrypt";
 import prisma from "src/prisma";
 import * as yup from "yup";
-import { sendMail } from "../../../common/mails.helper";
+import { sendMail } from "../../../mailer/mailing";
 import {
   MutationResolvers,
   MutationSignupArgs

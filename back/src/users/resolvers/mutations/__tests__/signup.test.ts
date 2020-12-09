@@ -27,7 +27,7 @@ jest.mock("src/prisma", () => ({
   }
 }));
 
-jest.mock("../../../../common/mails.helper", () => ({
+jest.mock("../../../../mailer/mailing", () => ({
   sendMail: () => null
 }));
 

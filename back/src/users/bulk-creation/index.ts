@@ -6,7 +6,7 @@ import { sirenify } from "./sirene";
 import { hashPassword } from "../utils";
 import { randomNumber, getUIBaseURL } from "../../utils";
 import { groupBy } from "./utils";
-import { sendMail } from "../../common/mails.helper";
+import { sendMail } from "../../mailer/mailing";
 import { UserInputError } from "apollo-server-express";
 import {
   associateUserToCompany,
@@ -120,7 +120,7 @@ export async function bulkCreate(opts: Opts): Promise<void> {
   // create companies in Trackdéchets
 
   for (const company of sirenifiedCompanies) {
-    const existingCompany = await prisma.company.findOne({
+    const existingCompany = await prisma.company.findUnique({
       where: { siret: company.siret }
     });
     if (!existingCompany) {
@@ -147,7 +147,7 @@ export async function bulkCreate(opts: Opts): Promise<void> {
 
   for (const email of Object.keys(usersWithRoles)) {
     // check for existing user
-    let user = await prisma.user.findOne({ where: { email } });
+    let user = await prisma.user.findUnique({ where: { email } });
 
     let newUser = null;
 

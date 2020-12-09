@@ -2,7 +2,7 @@ import { createTestClient } from "apollo-server-integration-testing";
 import { resetDatabase } from "integration-tests/helper";
 import prisma from "src/prisma";
 import { ErrorCode } from "../../../../common/errors";
-import * as mailsHelper from "../../../../common/mails.helper";
+import * as mailsHelper from "../../../../mailer/mailing";
 import { server } from "../../../../server";
 import { companyFactory, userFactory } from "../../../../__tests__/factories";
 import { userMails } from "../../../mails";
@@ -50,7 +50,9 @@ describe("Mutation.signup", () => {
     });
     expect(data.signup).toEqual(user);
 
-    const newUser = await prisma.user.findOne({ where: { email: user.email } });
+    const newUser = await prisma.user.findUnique({
+      where: { email: user.email }
+    });
     expect(newUser.email).toEqual(user.email);
 
     const activationHashes = await prisma.userActivationHash.findMany({
@@ -166,9 +168,11 @@ describe("Mutation.signup", () => {
       }
     });
 
-    const newUser = await prisma.user.findOne({ where: { email: user.email } });
+    const newUser = await prisma.user.findUnique({
+      where: { email: user.email }
+    });
 
-    const updatedInvitation = await prisma.userAccountHash.findOne({
+    const updatedInvitation = await prisma.userAccountHash.findUnique({
       where: {
         id: invitation.id
       }

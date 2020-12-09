@@ -1,7 +1,7 @@
 import { resetDatabase } from "integration-tests/helper";
 import prisma from "src/prisma";
 import { AuthType } from "../../../../auth";
-import * as mailsHelper from "../../../../common/mails.helper";
+import * as mailsHelper from "../../../../mailer/mailing";
 import {
   userFactory,
   userWithCompanyFactory
@@ -130,11 +130,13 @@ describe("mutation acceptMembershipRequest", () => {
       const members = data.acceptMembershipRequest.users.map(u => u.email);
       expect(members).toContain(user.email);
 
-      const acceptedMembershipRequest = await prisma.membershipRequest.findOne({
-        where: {
-          id: membershipRequest.id
+      const acceptedMembershipRequest = await prisma.membershipRequest.findUnique(
+        {
+          where: {
+            id: membershipRequest.id
+          }
         }
-      });
+      );
 
       expect(acceptedMembershipRequest.status).toEqual("ACCEPTED");
       expect(acceptedMembershipRequest.statusUpdatedBy).toEqual(user.email);

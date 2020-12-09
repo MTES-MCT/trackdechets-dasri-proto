@@ -1,6 +1,6 @@
 import { UserInputError } from "apollo-server-express";
 import prisma from "src/prisma";
-import { sendMail } from "../../../common/mails.helper";
+import { sendMail } from "../../../mailer/mailing";
 import { checkIsAuthenticated } from "../../../common/permissions";
 import {
   getCompanyAdminUsers,
