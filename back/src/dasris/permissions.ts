@@ -4,7 +4,7 @@ import { getFullUser } from "../users/database";
 import { FullUser } from "../users/types";
 
 import { NotDasriContributor } from "./errors";
-
+import { FullDasri } from "./types";
 function isDasriOwner(user: User, dasri: { owner: User }) {
   return dasri.owner?.id === user.id;
 }
@@ -33,7 +33,8 @@ function isDasriTransporter(user: { companies: Company[] }, dasri: Dasri) {
   return sirets.includes(dasri.transporterCompanySiret);
 }
 
-export function isDasriContributor(user: FullUser, dasri: Dasri) {
+export function isDasriContributor(user: FullUser, dasri: FullDasri) {
+  console.log(dasri.ownerId);
   return [
     isDasriOwner,
     isDasriEmitter,
@@ -46,7 +47,10 @@ export function isDasriContributor(user: FullUser, dasri: Dasri) {
  * Only users who belongs to a company that appears on the dasri
  * can read, update or delete it
  */
-export async function checkCanReadUpdateDeleteDasri(user: User, dasri: Dasri) {
+export async function checkCanReadUpdateDeleteDasri(
+  user: User,
+  dasri: FullDasri
+) {
   // user with companies
   const fullUser = await getFullUser(user);
 
