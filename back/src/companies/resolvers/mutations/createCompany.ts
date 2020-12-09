@@ -1,9 +1,9 @@
-import { Company, CompanyCreateInput, User } from "@prisma/client";
+import { Company, Prisma, User } from "@prisma/client";
 import { UserInputError } from "apollo-server-express";
 import { convertUrls } from "src/companies/database";
 import prisma from "src/prisma";
 import { applyAuthStrategies, AuthType } from "../../../auth";
-import { sendMail } from "../../../common/mails.helper";
+import { sendMail } from "../../../mailer/mailing";
 import { checkIsAuthenticated } from "../../../common/permissions";
 import { MutationResolvers } from "../../../generated/graphql/types";
 import { randomNumber } from "../../../utils";
@@ -37,7 +37,7 @@ const createCompanyResolver: MutationResolvers["createCompany"] = async (
   const siret = companyInput.siret.replace(/\s+/g, "");
 
   const existingCompany = await prisma.company
-    .findOne({
+    .findUnique({
       where: {
         siret
       }
@@ -55,12 +55,12 @@ const createCompanyResolver: MutationResolvers["createCompany"] = async (
   }
 
   if (companyTypes.includes("ECO_ORGANISME")) {
-    const ecoOrganismeExists = await prisma.ecoOrganisme.findOne({
+    const ecoOrganismeExists = await prisma.ecoOrganisme.findUnique({
       where: { siret }
     });
     if (!ecoOrganismeExists) {
       throw new UserInputError(
-        "Cette entreprise ne fait pas partie de la liste des éco-organismes reconnus par Trackdéchets. Contactez-nous si vous pensez qu'il s'agit d'une erreur : emmanuel.flahaut@developpement-durable.gouv.fr"
+        "Cette entreprise ne fait pas partie de la liste des éco-organismes reconnus par Trackdéchets. Contactez-nous si vous pensez qu'il s'agit d'une erreur : hello@trackdechets.beta.gouv.fr"
       );
     }
 
@@ -75,7 +75,7 @@ const createCompanyResolver: MutationResolvers["createCompany"] = async (
     );
   }
 
-  const companyCreateInput: CompanyCreateInput = {
+  const companyCreateInput: Prisma.CompanyCreateInput = {
     siret,
     codeNaf,
     gerepId,

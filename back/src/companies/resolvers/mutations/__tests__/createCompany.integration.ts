@@ -2,7 +2,7 @@ import { resetDatabase } from "integration-tests/helper";
 import prisma from "src/prisma";
 import { AuthType } from "../../../../auth";
 import { ErrorCode } from "../../../../common/errors";
-import * as mailsHelper from "../../../../common/mails.helper";
+import * as mailsHelper from "../../../../mailer/mailing";
 import { companyFactory, userFactory } from "../../../../__tests__/factories";
 import makeClient from "../../../../__tests__/testClient";
 
@@ -60,18 +60,18 @@ describe("Mutation.createCompany", () => {
       companyTypes: companyInput.companyTypes
     });
 
-    const newCompanyExists = !!(await prisma.company.findFirst({
-      where: {
-        siret: companyInput.siret
-      }
-    }));
+    const newCompanyExists =
+      (await prisma.company.findFirst({
+        where: {
+          siret: companyInput.siret
+        }
+      })) != null;
     expect(newCompanyExists).toBe(true);
 
-    const newCompanyAssociationExists = !!(await prisma.companyAssociation.findFirst(
-      {
+    const newCompanyAssociationExists =
+      (await prisma.companyAssociation.findFirst({
         where: { company: { siret: companyInput.siret }, user: { id: user.id } }
-      }
-    ));
+      })) != null;
     expect(newCompanyAssociationExists).toBe(true);
   });
 
@@ -162,7 +162,7 @@ describe("Mutation.createCompany", () => {
       }
     });
 
-    const company = await prisma.company.findOne({
+    const company = await prisma.company.findUnique({
       where: { siret: companyInput.siret }
     });
     expect(company.documentKeys).toEqual(["key1", "key2"]);
@@ -247,7 +247,7 @@ describe("Mutation.createCompany", () => {
     expect(errors).toEqual([
       expect.objectContaining({
         message:
-          "Cette entreprise ne fait pas partie de la liste des éco-organismes reconnus par Trackdéchets. Contactez-nous si vous pensez qu'il s'agit d'une erreur : emmanuel.flahaut@developpement-durable.gouv.fr"
+          "Cette entreprise ne fait pas partie de la liste des éco-organismes reconnus par Trackdéchets. Contactez-nous si vous pensez qu'il s'agit d'une erreur : hello@trackdechets.beta.gouv.fr"
       })
     ]);
   });

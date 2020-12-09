@@ -6,7 +6,7 @@ const companyMock = jest.fn();
 const updateCompanyMock = jest.fn();
 jest.mock("src/prisma", () => ({
   company: {
-    findOne: jest.fn((...args) => companyMock(...args)),
+    findUnique: jest.fn((...args) => companyMock(...args)),
     update: jest.fn((...args) => updateCompanyMock(...args))
   }
 }));
@@ -18,7 +18,7 @@ jest.mock("../../../../utils", () => ({
 
 const sendMailMock = jest.fn();
 
-jest.mock("../../../../common/mails.helper", () => ({
+jest.mock("../../../../mailer/mailing", () => ({
   sendMail: jest.fn((...args) => sendMailMock(...args))
 }));
 

@@ -1,7 +1,7 @@
 import { UserInputError } from "apollo-server-express";
 import prisma from "src/prisma";
 import { applyAuthStrategies, AuthType } from "../../../auth";
-import { sendMail } from "../../../common/mails.helper";
+import { sendMail } from "../../../mailer/mailing";
 import { checkIsAuthenticated } from "../../../common/permissions";
 import {
   CompanyPrivate,
@@ -31,7 +31,7 @@ export async function renewSecurityCodeFn(
     });
   }
 
-  const company = await prisma.company.findOne({ where: { siret } });
+  const company = await prisma.company.findUnique({ where: { siret } });
 
   if (!company) {
     throw new UserInputError(
