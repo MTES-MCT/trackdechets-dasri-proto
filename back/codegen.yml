@@ -15,12 +15,15 @@ generates:
       scalarDefaults:
         DateTime: new Date().toISOString()
         URL: "https://example.com"
-  front/generated/graphql/types.ts:
+  ../front/src/generated/graphql/types.ts:
     plugins:
       - typescript
       - typescript-operations
       - graphql-codegen-factories
     config:
+      namingConvention: 
+        enumValues: change-case#pascalCase
+        transformUnderscore: true
       avoidOptionals: true
       scalars:
         DateTime: string
