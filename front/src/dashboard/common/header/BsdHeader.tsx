@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react";
 
 import routes from "common/routes";
-import styles from "./SlipsHeader.module.scss";
-import { FaTimesCircle } from "react-icons/fa";
+import styles from "./BsdHeader.module.scss";
 import { useRouteMatch } from "react-router-dom";
+import { BsdTypes } from "common/bsdConstants";
+import { FaTimesCircle } from "react-icons/fa";
+type headerConfigInterface = {
+  [key in BsdTypes]: { name: string; subRoute: string };
+};
+const headerConfig: headerConfigInterface = {
+  [BsdTypes.FORM]: { name: "Bordereaux", subRoute: "slips" },
+  [BsdTypes.DASRI]: { name: "Bordereaux Dasri", subRoute: "slips" },
+};
 
-const Crumb = () => {
-  const draft = useRouteMatch(routes.dashboard.slips.drafts);
-  const act = useRouteMatch(routes.dashboard.slips.act);
-  const follow = useRouteMatch(routes.dashboard.slips.follow);
-  const history = useRouteMatch(routes.dashboard.slips.history);
-  const detail = useRouteMatch(routes.dashboard.slips.view);
+const Crumb = ({ bsdType }: { bsdType: BsdTypes }) => {
+  const subRoute = headerConfig[bsdType].subRoute;
+  const draft = useRouteMatch(routes.dashboard[subRoute].drafts);
+  const act = useRouteMatch(routes.dashboard[subRoute].act);
+  const follow = useRouteMatch(routes.dashboard[subRoute].follow);
+  const history = useRouteMatch(routes.dashboard[subRoute].history);
+  const detail = useRouteMatch(routes.dashboard[subRoute].view);
 
   return (
     <span>
@@ -23,7 +32,8 @@ const Crumb = () => {
     </span>
   );
 };
-export default function SlipsHeader() {
+
+export default function BsdHeader({ bsdType }: { bsdType: BsdTypes }) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -37,7 +47,7 @@ export default function SlipsHeader() {
       <div>
         <div className="title">
           <h2 className="h3 tw-mb-4">
-            Mes Bordereaux <Crumb />
+            Mes {headerConfig[bsdType].name} <Crumb bsdType={bsdType} />
           </h2>
         </div>
       </div>
@@ -45,9 +55,9 @@ export default function SlipsHeader() {
         <div className="notification warning tw-flex tw-items-center">
           <p>
             Actuellement, Trackdéchets ne permet pas de prendre en compte les
-            déchets d'amiante, les DASRI et les Fluides frigorigènes, ainsi que
-            l'annexe 3 (Spécifique Véhicules Hors d'Usage) et le multimodal.
-            Merci de votre compréhension
+            déchets d'amiante et les Fluides frigorigènes, ainsi que l'annexe 3
+            (Spécifique Véhicules Hors d'Usage) et le multimodal. Merci de votre
+            compréhension
           </p>
           <button
             aria-label="Fermer"
