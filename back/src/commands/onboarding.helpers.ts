@@ -31,8 +31,8 @@ export const sendOnboardingEmails = async (daysAgo: number, emailFunction) => {
   const recipients = await prisma.user.findMany({
     where: {
       AND: [
-        { createdAt_gt: inscriptionDateGt },
-        { createdAt_lt: inscriptionDateLt }
+        { createdAt: { gt: inscriptionDateGt } },
+        { createdAt: { lt: inscriptionDateLt } }
       ],
       isActive: true
     }
