@@ -29,7 +29,18 @@ export default {
       toCollect: "/dashboard/:siret/transport/to-collect",
       collected: "/dashboard/:siret/transport/collected",
     },
+    dasris: {
+      index: "/dashboard/:siret/dasris/drafts",
+      drafts: "/dashboard/:siret/dasris/drafts",
+      act: "/dashboard/:siret/dasris/act",
+      follow: "/dashboard/:siret/dasris/follow",
+      history: "/dashboard/:siret/dasris/history",
+      view: "/dashboard/:siret/dasris/view/:id",
+      create: "/dashboard/:siret/dasris/create",
+      edit: "/dashboard/:siret/dasris/edit/:id",
+    },
   },
+
   account: {
     index: "/account",
     info: "/account/info",
