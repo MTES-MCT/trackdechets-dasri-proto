@@ -1,4 +1,4 @@
-import { FormUpdateInput } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 // Xstate possible states
 export enum FormState {
@@ -33,5 +33,5 @@ export enum EventType {
 // Xstate event
 export type Event = {
   type: EventType;
-  formUpdateInput?: FormUpdateInput;
+  formUpdateInput?: Prisma.FormUpdateInput;
 };

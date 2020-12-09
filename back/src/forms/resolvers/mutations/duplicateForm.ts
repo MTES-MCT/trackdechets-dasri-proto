@@ -9,6 +9,7 @@ import { getFormOrFormNotFound, getFullForm } from "../../database";
 import { getFullUser } from "../../../users/database";
 import { isFormContributor } from "../../permissions";
 import { NotFormContributor } from "../../errors";
+import { eventEmitter, TDEvent } from "../../../events/emitter";
 
 /**
  * Duplicate a form by stripping the properties that should not be copied.
@@ -133,6 +134,13 @@ const duplicateFormResolver: MutationResolvers["duplicateForm"] = async (
       fullExistingForm.temporaryStorage
     );
   }
+
+  eventEmitter.emit(TDEvent.CreateForm, {
+    previousNode: null,
+    node: newForm,
+    updatedFields: {},
+    mutation: "CREATED"
+  });
 
   // create statuslog when form is created
   await prisma.statusLog.create({

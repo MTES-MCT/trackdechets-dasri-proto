@@ -1,9 +1,10 @@
-import { Form, FormUpdateInput, Status } from "@prisma/client";
+import { Form, Prisma, Status } from "@prisma/client";
 import prisma from "src/prisma";
 import { Event } from "./types";
 import machine from "./machine";
 import { InvalidTransition } from "../errors";
 import { formDiff } from "./diff";
+import { eventEmitter, TDEvent } from "../../events/emitter";
 
 /**
  * Transition a form from initial state (ex: DRAFT) to next state (ex: SEALED)
@@ -28,7 +29,7 @@ export default async function transitionForm(
 
   const nextStatus = nextState.value as Status;
 
-  const formUpdateInput: FormUpdateInput = {
+  const formUpdateInput: Prisma.FormUpdateInput = {
     status: nextStatus,
     ...event.formUpdateInput
   };
@@ -36,7 +37,7 @@ export default async function transitionForm(
   // retrieves temp storage before update
   // for diff calculation
   const temporaryStorageDetail = await prisma.form
-    .findOne({ where: { id: form.id } })
+    .findUnique({ where: { id: form.id } })
     .temporaryStorageDetail();
 
   // update form
@@ -47,7 +48,7 @@ export default async function transitionForm(
 
   // retrieves updated temp storage
   const updatedTemporaryStorageDetail = await prisma.form
-    .findOne({ where: { id: updatedForm.id } })
+    .findUnique({ where: { id: updatedForm.id } })
     .temporaryStorageDetail();
 
   // calculates diff between initial form and updated form
@@ -55,6 +56,13 @@ export default async function transitionForm(
     { ...form, temporaryStorageDetail },
     { ...updatedForm, temporaryStorageDetail: updatedTemporaryStorageDetail }
   );
+
+  eventEmitter.emit<Form>(TDEvent.TransitionForm, {
+    previousNode: form,
+    node: updatedForm,
+    updatedFields,
+    mutation: "UPDATED"
+  });
 
   // log status change
   await prisma.statusLog.create({

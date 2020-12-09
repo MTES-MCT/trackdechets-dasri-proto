@@ -3,7 +3,7 @@ import {
   flattenTemporaryStorageDetailInput,
   expandFormFromDb
 } from "../../form-converter";
-import { FormUpdateInput } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import prisma from "src/prisma";
 import {
   ResolversParentTypes,
@@ -16,6 +16,7 @@ import { checkCanReadUpdateDeleteForm } from "../../permissions";
 import { GraphQLContext } from "../../../types";
 import { getFormOrFormNotFound } from "../../database";
 import { draftFormSchema } from "../../validation";
+import { UserInputError } from "apollo-server-express";
 
 function validateArgs(args: MutationUpdateFormArgs) {
   const wasteDetailsCode = args.updateFormInput.wasteDetails?.code;
@@ -45,10 +46,16 @@ const updateFormResolver = async (
 
   await checkCanReadUpdateDeleteForm(user, existingForm);
 
+  if (existingForm.status != "DRAFT") {
+    const errMessage =
+      "Seuls les bordereaux en brouillon peuvent être modifiés";
+    throw new UserInputError(errMessage);
+  }
+
   const form = flattenFormInput(formContent);
 
   // Construct form update payload
-  const formUpdateInput: FormUpdateInput = {
+  const formUpdateInput: Prisma.FormUpdateInput = {
     ...form,
     appendix2Forms: { set: appendix2Forms }
   };
@@ -62,7 +69,7 @@ const updateFormResolver = async (
     formContent.recipient?.isTempStorage === true;
 
   const existingTemporaryStorageDetail = await prisma.form
-    .findOne({ where: { id } })
+    .findUnique({ where: { id } })
     .temporaryStorageDetail();
 
   if (

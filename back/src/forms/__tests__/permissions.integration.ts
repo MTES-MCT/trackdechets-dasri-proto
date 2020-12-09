@@ -107,7 +107,7 @@ async function checkTransporterAfterTempStoragePermission(
     ownerId: owner.id
   });
   const tempStorageDetail = await prisma.form
-    .findOne({ where: { id: form.id } })
+    .findUnique({ where: { id: form.id } })
     .temporaryStorageDetail();
   await prisma.temporaryStorageDetail.update({
     data: { transporterCompanySiret: company.siret },
@@ -125,7 +125,7 @@ async function checkDestinationAfterTempStoragePermission(
     ownerId: owner.id
   });
   const tempStorageDetail = await prisma.form
-    .findOne({ where: { id: form.id } })
+    .findUnique({ where: { id: form.id } })
     .temporaryStorageDetail();
   await prisma.temporaryStorageDetail.update({
     data: { destinationCompanySiret: company.siret },

@@ -1,10 +1,11 @@
-import { FormCreateInput, Status } from "@prisma/client";
+import { Prisma, Status } from "@prisma/client";
 import prisma from "src/prisma";
 import { checkIsAuthenticated } from "../../../common/permissions";
 import {
   MutationCreateFormArgs,
   ResolversParentTypes
 } from "../../../generated/graphql/types";
+import { eventEmitter, TDEvent } from "../../../events/emitter";
 import { GraphQLContext } from "../../../types";
 import { getUserCompanies } from "../../../users/database";
 import { MissingTempStorageFlag, NotFormContributor } from "../../errors";
@@ -44,7 +45,7 @@ const createFormResolver = async (
   }
 
   const form = flattenFormInput(formContent);
-  const formCreateInput: FormCreateInput = {
+  const formCreateInput: Prisma.FormCreateInput = {
     ...form,
     readableId: await getReadableId(),
     owner: { connect: { id: user.id } },
@@ -73,6 +74,13 @@ const createFormResolver = async (
   }
 
   const newForm = await prisma.form.create({ data: formCreateInput });
+
+  eventEmitter.emit(TDEvent.CreateForm, {
+    previousNode: null,
+    node: newForm,
+    updatedFields: {},
+    mutation: "CREATED"
+  });
 
   // create statuslog when and only when form is created
   await prisma.statusLog.create({
