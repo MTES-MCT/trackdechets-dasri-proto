@@ -23,7 +23,6 @@ export const wasteDetailsFragment = gql`
     }
     quantity
     quantityType
-    consistence
   }
 `;
 
@@ -52,6 +51,17 @@ const emissionFragment = gql`
   fragment EmissionFragment on DasriEmission {
     wasteCode
     wasteDetailsOnuCode
+    wasteDetails {
+      quantity
+      quantityType
+      volume
+      packagingInfos {
+        type
+        other
+        quantity
+        volume
+      }
+    }
   }
 `;
 const recipientFragment = gql`
