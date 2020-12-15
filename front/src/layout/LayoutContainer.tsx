@@ -15,12 +15,16 @@ import { useQuery, gql } from "@apollo/client";
 
 const Dashboard = lazy(() => import("dashboard/Dashboard"));
 const Account = lazy(() => import("account/Account"));
-const AccountMembershipRequest = lazy(() =>
-  import("account/AccountMembershipRequest")
+const AccountMembershipRequest = lazy(
+  () => import("account/AccountMembershipRequest")
 );
 const FormContainer = lazy(() => import("form/FormContainer"));
 const SignupInfo = lazy(() => import("login/SignupInfos"));
 const WasteSelector = lazy(() => import("login/WasteSelector"));
+
+const DasriEditionContainer = lazy(
+  () => import("dasriEdition/DasriEditionContainer")
+);
 
 const Invite = lazy(() => import("login/Invite"));
 const ResetPassword = lazy(() => import("login/ResetPassword"));
@@ -123,7 +127,20 @@ export default withRouter(function LayoutContainer({ history }) {
               >
                 <FormContainer />
               </PrivateRoute>
-
+              <PrivateRoute
+                path={routes.dashboard.dasris.create}
+                isAuthenticated={isAuthenticated}
+                exact
+              >
+                <DasriEditionContainer />
+              </PrivateRoute>
+              <PrivateRoute
+                path={routes.dashboard.dasris.edit}
+                isAuthenticated={isAuthenticated}
+                exact
+              >
+                <DasriEditionContainer />
+              </PrivateRoute>
               {/*
                 This is a legacy URL we need to keep for some time
                 in order to redirect users from the old URL to the new one
