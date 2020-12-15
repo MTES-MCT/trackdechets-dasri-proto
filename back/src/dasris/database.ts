@@ -2,7 +2,7 @@ import prisma from "../prisma";
 
 import { DasriNotFound } from "./errors";
 import { UserInputError } from "apollo-server-express";
-import { DasriWhereInput, DasriWhereUniqueInput } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 import { DasriRole } from "../generated/graphql/types";
 
@@ -12,11 +12,11 @@ import { DasriRole } from "../generated/graphql/types";
 export async function getDasriOrDasriNotFound({
   id,
   readableId
-}: DasriWhereUniqueInput) {
+}: Prisma.DasriWhereUniqueInput) {
   if (!id && !readableId) {
     throw new UserInputError("You should specify an id or a readableId");
   }
-  const form = await prisma.dasri.findOne({
+  const form = await prisma.dasri.findUnique({
     where: { id: id ? id : readableId }
   });
   if (form == null || form.isDeleted == true) {
@@ -34,7 +34,9 @@ export async function getDasriOrDasriNotFound({
  * @param roles optional [FormRole] to refine filter
  */
 export function getDasrisRightFilter(siret: string, roles?: DasriRole[]) {
-  const filtersByRole: { [key in DasriRole]: Partial<DasriWhereInput>[] } = {
+  const filtersByRole: {
+    [key in DasriRole]: Partial<Prisma.DasriWhereInput>[];
+  } = {
     ["RECIPIENT"]: [{ recipientCompanySiret: siret }],
     ["EMITTER"]: [{ emitterCompanySiret: siret }],
     ["TRANSPORTER"]: [{ transporterCompanySiret: siret }]
