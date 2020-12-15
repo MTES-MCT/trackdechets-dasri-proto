@@ -6,6 +6,9 @@ input DasriPackagingInfoInput {
   other: String
 
   "Nombre de colis associés à ce conditionnement"
+  volume: Int!
+
+  "Nombre de colis associés à ce conditionnement"
   quantity: Int!
 }
 
@@ -94,8 +97,18 @@ input DasriReceptionInput {
 #   phone: String
 # }
 
+input DasriInput {
+  customId: String
+  emitter: DasriEmitterInput
+  emission: DasriEmissionInput
+  transporter: DasriTransporterInput
+  transport: DasriTransportInput
+  recipient: DasriRecipientInput
+  reception: DasriReceptionInput
+}
+
 input DasriCreateInput {
-  "Identifiant opaque"
+  "Identifiant custom"
   customId: String
 
   emitter: DasriEmitterInput
@@ -106,8 +119,13 @@ input DasriCreateInput {
   reception: DasriReceptionInput
 }
 
-input DasriInput {
+input DasriUpdateInput {
+  "Identifiant opaque"
+  id: ID!
+
+  "Identifiant custom"
   customId: String
+
   emitter: DasriEmitterInput
   emission: DasriEmissionInput
   transporter: DasriTransporterInput

@@ -19,12 +19,7 @@ import {
   DasriReceptionInput,
   DasriPackagingInfo
 } from "../generated/graphql/types";
-import {
-  DasriCreateInput,
-  Dasri,
-  DasriStatus,
-  QuantityType
-} from "@prisma/client";
+import { Prisma, Dasri, DasriStatus, QuantityType } from "@prisma/client";
 
 /**
  * Return null if all object values are null
@@ -34,11 +29,11 @@ export function nullIfNoValues<T>(obj: T): T | null {
   return Object.values(obj).some(v => v !== null) ? obj : null;
 }
 
-export function expandDasriFormFromDb(form: Dasri ): GqlDasri  {
+export function expandDasriFromDb(form: Dasri): GqlDasri {
   return {
     id: form.id,
     readableId: form.readableId,
-    //  customId: form.customId,
+    customId: form.customId,
 
     emitter: nullIfNoValues<DasriEmitter>({
       company: nullIfNoValues<FormCompany>({
@@ -319,7 +314,7 @@ function flattenReceptiontInput(input: { reception?: DasriReceptionInput }) {
     )
   };
 }
-export function flattenDasriFormInput(
+export function flattenDasriInput(
   formInput: Pick<
     DasriInput,
     | "customId"
@@ -330,7 +325,7 @@ export function flattenDasriFormInput(
     | "recipient"
     | "reception"
   >
-): Partial<DasriCreateInput> {
+): Partial<Prisma.DasriCreateInput> {
   return safeInput({
     customId: formInput.customId,
     ...flattenEmitterInput(formInput),

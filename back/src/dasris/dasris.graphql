@@ -157,6 +157,7 @@ type DasriReception {
 type Dasri {
   id: ID!
   readableId: String!
+  customId: String
   status: DasriStatus!
   createdAt: DateTime
   updatedAt: DateTime
@@ -263,9 +264,15 @@ type Query {
 }
 
 type Mutation {
-  "Crée un nouveau bordereau"
+  "Crée un nouveau dasri"
   dasriCreate(
-    "Payload de création d'un bordereau"
+    "Payload de création d'un dasri"
     dasriCreateInput: DasriCreateInput!
+  ): Dasri!
+
+  "Met à jour un dasri existant"
+  dasriUpdate(
+    "Payload de mise à jour d'un dasri"
+    dasriUpdateInput: DasriUpdateInput!
   ): Dasri!
 }
