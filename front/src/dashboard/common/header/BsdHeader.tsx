@@ -10,7 +10,7 @@ type headerConfigInterface = {
 };
 const headerConfig: headerConfigInterface = {
   [BsdTypes.FORM]: { name: "Bordereaux", subRoute: "slips" },
-  [BsdTypes.DASRI]: { name: "Bordereaux Dasri", subRoute: "dasris" },
+  [BsdTypes.DASRI]: { name: "Dasris", subRoute: "dasris" },
 };
 
 const Crumb = ({ bsdType }: { bsdType: BsdTypes }) => {
