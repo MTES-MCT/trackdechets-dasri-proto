@@ -7,7 +7,7 @@ import { statusLabels } from "../constants";
 import Shorten from "common/components/Shorten";
 import { Dasri } from "generated/graphql/types";
 import "./Dasris.scss";
-
+import Edit from "./actions/Edit"
 type Props = {
   dasris: Dasri[];
   siret: string;
@@ -15,7 +15,7 @@ type Props = {
   dynamicActions?: boolean;
   refetch?: () => void;
 };
-export default function Slips({
+export default function Dasris({
   dasris,
   siret,
   hiddenFields = [],
@@ -144,10 +144,16 @@ export default function Slips({
                   </>
                 )}
               </td>
-              <td>xx</td>
+              <td> {s?.emission?.wasteDetails?.volume && (
+                  <>
+                    <div>{s?.emission?.wasteDetails?.volume} L</div>
+                  </>
+                )}</td>
               {hiddenFields.indexOf("status") === -1 && (
                 <td>{statusLabels[s.status]}</td>
               )}
+
+              <Edit bsdId={s.id} /> 
               {dynamicActions && (
                 <td>
                   {/* <DynamicActions siret={siret} form={s} refetch={refetch} /> */}

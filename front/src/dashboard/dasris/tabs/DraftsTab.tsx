@@ -6,7 +6,7 @@ import { generatePath, Link, useParams } from "react-router-dom";
 import { InlineError } from "common/components/Error";
 import Loader from "common/components/Loaders";
 import { FormStatus, Query, QueryDasriArgs } from "generated/graphql/types";
-import { GET_DASRIS } from "../query";
+import { DASRIS_GET } from "../query";
 
 import TabContent from "./TabContent";
 import { COLORS } from "common/config";
@@ -20,14 +20,12 @@ export default function DraftsTab() {
   const { error, data, fetchMore, refetch, networkStatus } = useQuery<
     Pick<Query, "dasris">,
     Partial<QueryDasriArgs>
-  >(GET_DASRIS, {
+  >(DASRIS_GET, {
     notifyOnNetworkStatusChange: true,
   });
 
   if (networkStatus === NetworkStatus.loading) return <Loader />;
   if (error) return <InlineError apolloError={error} />;
-
- 
 
   if (!data?.dasris?.length)
     return (
@@ -49,7 +47,7 @@ export default function DraftsTab() {
         </p>
       </EmptyTab>
     );
- 
+
   return (
     <TabContent
       networkStatus={networkStatus}
@@ -57,7 +55,6 @@ export default function DraftsTab() {
       forms={data.dasris}
       fetchMore={fetchMore}
     >
-   
       <Dasris
         siret={siret}
         dasris={data.dasris}

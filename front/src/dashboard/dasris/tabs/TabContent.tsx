@@ -1,9 +1,11 @@
 import React from "react";
 
 import { RefreshLoader } from "common/components/Loaders";
+import { BsdTypes } from "common/bsdConstants";
+import BsdHeaderActions from "dashboard/common/header/BsdHeaderActions";
 
 // import LoadMore from "./LoadMore";
-// import SlipsHeaderActions from "../SlipsHeaderActions";
+ 
 
 export default function TabContent({
   forms,
@@ -15,7 +17,9 @@ export default function TabContent({
   return (
     <>
       <RefreshLoader networkStatus={networkStatus} />
-      {/* <SlipsHeaderActions refetch={refetch} /> */}
+
+      <BsdHeaderActions refetch={refetch} bsdType={BsdTypes.DASRI} />
+
       {children}
       {/* <LoadMore forms={forms} fetchMore={fetchMore} /> */}
     </>

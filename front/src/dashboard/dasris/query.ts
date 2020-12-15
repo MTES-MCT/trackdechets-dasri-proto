@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { fullDasriFragment } from "common/fragments/dasris";
 
-export const GET_DASRIS = gql`
+export const DASRIS_GET = gql`
   query GetDasris {
     dasris {
       ...FullDasri

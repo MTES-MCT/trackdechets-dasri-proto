@@ -3,8 +3,8 @@ import React from "react";
 import { RefreshLoader } from "common/components/Loaders";
 
 import LoadMore from "./LoadMore";
-import SlipsHeaderActions from "../SlipsHeaderActions";
-
+import BsdHeaderActions from "dashboard/common/header/BsdHeaderActions";
+import { BsdTypes } from "common/bsdConstants";
 export default function TabContent({
   forms,
   networkStatus,
@@ -15,7 +15,7 @@ export default function TabContent({
   return (
     <>
       <RefreshLoader networkStatus={networkStatus} />
-      <SlipsHeaderActions refetch={refetch} />
+      <BsdHeaderActions refetch={refetch} bsdType={BsdTypes.FORM} />
       {children}
       <LoadMore forms={forms} fetchMore={fetchMore} />
     </>
