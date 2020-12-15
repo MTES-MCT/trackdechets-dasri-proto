@@ -1,4 +1,4 @@
-import { expandDasriFormFromDb } from "../../dasri-converter";
+import { expandDasriFromDb } from "../../dasri-converter";
 import { Dasri, QueryResolvers } from "../../../generated/graphql/types";
 import prisma from "../../../prisma";
 import { checkIsAuthenticated } from "../../../common/permissions";
@@ -12,7 +12,7 @@ import { getDasrisRightFilter } from "../../../dasris/database";
 
 export async function getDasris(): Promise<Dasri[]> {
   const queried = await prisma.dasri.findMany();
-  return queried.map(f => expandDasriFormFromDb(f));
+  return queried.map(f => expandDasriFromDb(f));
 }
 
 const dasrisResolver: QueryResolvers["dasris"] = async (_, args, context) => {
@@ -66,7 +66,7 @@ const dasrisResolver: QueryResolvers["dasris"] = async (_, args, context) => {
       isDeleted: false
     }
   });
-  return queried.map(f => expandDasriFormFromDb(f));
+  return queried.map(f => expandDasriFromDb(f));
 };
 
 export default dasrisResolver;

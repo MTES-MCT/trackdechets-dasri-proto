@@ -1,4 +1,4 @@
-import { expandDasriFormFromDb } from "../../dasri-converter";
+import { expandDasriFromDb } from "../../dasri-converter";
 import { UserInputError } from "apollo-server-express";
 import { MissingIdOrReadableId } from "../../errors";
 import { QueryResolvers } from "../../../generated/graphql/types";
@@ -24,7 +24,7 @@ const dasriResolver: QueryResolvers["dasri"] = async (_, args, context) => {
 
   const form = await getDasriOrDasriNotFound(validArgs);
 
-  return expandDasriFormFromDb(form);
+  return expandDasriFromDb(form);
 };
 
 export default dasriResolver;
