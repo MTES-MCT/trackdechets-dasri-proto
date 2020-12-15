@@ -311,6 +311,7 @@ export type Dasri = {
   __typename?: 'Dasri';
   id: Scalars['ID'];
   readableId: Scalars['String'];
+  customId?: Maybe<Scalars['String']>;
   status: DasriStatus;
   createdAt?: Maybe<Scalars['DateTime']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -323,7 +324,7 @@ export type Dasri = {
 };
 
 export type DasriCreateInput = {
-  /** Identifiant opaque */
+  /** Identifiant custom */
   customId?: Maybe<Scalars['String']>;
   emitter?: Maybe<DasriEmitterInput>;
   emission?: Maybe<DasriEmissionInput>;
@@ -392,6 +393,8 @@ export type DasriPackagingInfoInput = {
   type: DasriPackagings;
   /** Description du conditionnement dans le cas où le type de conditionnement est `AUTRE` */
   other?: Maybe<Scalars['String']>;
+  /** Nombre de colis associés à ce conditionnement */
+  volume: Scalars['Int'];
   /** Nombre de colis associés à ce conditionnement */
   quantity: Scalars['Int'];
 };
@@ -508,6 +511,19 @@ export type DasriTransportInput = {
   wasteDetails?: Maybe<DasriWasteDetailInput>;
   takenOverAt?: Maybe<Scalars['DateTime']>;
   handedOverAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type DasriUpdateInput = {
+  /** Identifiant opaque */
+  id: Scalars['ID'];
+  /** Identifiant custom */
+  customId?: Maybe<Scalars['String']>;
+  emitter?: Maybe<DasriEmitterInput>;
+  emission?: Maybe<DasriEmissionInput>;
+  transporter?: Maybe<DasriTransporterInput>;
+  transport?: Maybe<DasriTransportInput>;
+  recipient?: Maybe<DasriRecipientInput>;
+  reception?: Maybe<DasriReceptionInput>;
 };
 
 export type DasriWasteAcceptation = {
@@ -1094,8 +1110,10 @@ export type Mutation = {
    * Récupère une URL signé pour l'upload d'un fichier
    */
   createUploadLink: UploadLink;
-  /** Crée un nouveau bordereau */
+  /** Crée un nouveau dasri */
   dasriCreate: Dasri;
+  /** Met à jour un dasri existant */
+  dasriUpdate: Dasri;
   /** Supprime un BSD */
   deleteForm?: Maybe<Form>;
   /**
@@ -1347,6 +1365,11 @@ export type MutationCreateUploadLinkArgs = {
 
 export type MutationDasriCreateArgs = {
   dasriCreateInput: DasriCreateInput;
+};
+
+
+export type MutationDasriUpdateArgs = {
+  dasriUpdateInput: DasriUpdateInput;
 };
 
 
@@ -2672,6 +2695,7 @@ export type ResolversTypes = {
   DasriTransportInput: DasriTransportInput;
   DasriRecipientInput: DasriRecipientInput;
   DasriReceptionInput: DasriReceptionInput;
+  DasriUpdateInput: DasriUpdateInput;
   DeleteTraderReceiptInput: DeleteTraderReceiptInput;
   DeleteTransporterReceiptInput: DeleteTransporterReceiptInput;
   NextSegmentInfoInput: NextSegmentInfoInput;
@@ -2804,6 +2828,7 @@ export type ResolversParentTypes = {
   DasriTransportInput: DasriTransportInput;
   DasriRecipientInput: DasriRecipientInput;
   DasriReceptionInput: DasriReceptionInput;
+  DasriUpdateInput: DasriUpdateInput;
   DeleteTraderReceiptInput: DeleteTraderReceiptInput;
   DeleteTransporterReceiptInput: DeleteTransporterReceiptInput;
   NextSegmentInfoInput: NextSegmentInfoInput;
@@ -2927,6 +2952,7 @@ export type CompanyStatResolvers<ContextType = GraphQLContext, ParentType extend
 export type DasriResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Dasri'] = ResolversParentTypes['Dasri']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   readableId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  customId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   status?: Resolver<ResolversTypes['DasriStatus'], ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
@@ -3170,6 +3196,7 @@ export type MutationResolvers<ContextType = GraphQLContext, ParentType extends R
   createTransporterReceipt?: Resolver<Maybe<ResolversTypes['TransporterReceipt']>, ParentType, ContextType, RequireFields<MutationCreateTransporterReceiptArgs, 'input'>>;
   createUploadLink?: Resolver<ResolversTypes['UploadLink'], ParentType, ContextType, RequireFields<MutationCreateUploadLinkArgs, 'fileName' | 'fileType'>>;
   dasriCreate?: Resolver<ResolversTypes['Dasri'], ParentType, ContextType, RequireFields<MutationDasriCreateArgs, 'dasriCreateInput'>>;
+  dasriUpdate?: Resolver<ResolversTypes['Dasri'], ParentType, ContextType, RequireFields<MutationDasriUpdateArgs, 'dasriUpdateInput'>>;
   deleteForm?: Resolver<Maybe<ResolversTypes['Form']>, ParentType, ContextType, RequireFields<MutationDeleteFormArgs, 'id'>>;
   deleteInvitation?: Resolver<ResolversTypes['CompanyPrivate'], ParentType, ContextType, RequireFields<MutationDeleteInvitationArgs, 'email' | 'siret'>>;
   deleteTraderReceipt?: Resolver<Maybe<ResolversTypes['TransporterReceipt']>, ParentType, ContextType, RequireFields<MutationDeleteTraderReceiptArgs, 'input'>>;
@@ -3653,6 +3680,7 @@ export function createDasriMock(props: Partial<Dasri>): Dasri {
     __typename: "Dasri",
     id: "",
     readableId: "",
+    customId: null,
     status: "DRAFT",
     createdAt: null,
     updatedAt: null,
@@ -3748,6 +3776,7 @@ export function createDasriPackagingInfoInputMock(props: Partial<DasriPackagingI
   return {
     type: "BOITE_CARTON",
     other: null,
+    volume: 0,
     quantity: 0,
     ...props,
   };
@@ -3839,6 +3868,20 @@ export function createDasriTransportInputMock(props: Partial<DasriTransportInput
     wasteDetails: null,
     takenOverAt: null,
     handedOverAt: null,
+    ...props,
+  };
+}
+
+export function createDasriUpdateInputMock(props: Partial<DasriUpdateInput>): DasriUpdateInput {
+  return {
+    id: "",
+    customId: null,
+    emitter: null,
+    emission: null,
+    transporter: null,
+    transport: null,
+    recipient: null,
+    reception: null,
     ...props,
   };
 }

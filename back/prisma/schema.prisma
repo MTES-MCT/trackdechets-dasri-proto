@@ -487,6 +487,7 @@ enum DasriStatus {
 model Dasri {
   id                                 String                  @id @default(cuid())
   readableId                         String                  @unique
+  customId                           String? 
   status                             DasriStatus             @default(DRAFT)
   createdAt                          DateTime                @default(now())
   updatedAt                          DateTime                @updatedAt
@@ -498,7 +499,7 @@ model Dasri {
   emitterCompanyName                 String?
   emitterCompanySiret                String?
   emitterCompanyAddress              String?
-  emitterCompanyContact              String? //?
+  emitterCompanyContact              String?
   emitterCompanyPhone                String?
   emitterCompanyMail                 String?
 
@@ -527,6 +528,7 @@ model Dasri {
   transporterCompanySiret            String?
   transporterCompanyAddress          String?
   transporterCompanyPhone            String?
+  transporterCompanyContact          String?
   transporterCompanyMail             String?
   transporterReceipt                 String?
   transporterDepartment              String?
@@ -535,16 +537,16 @@ model Dasri {
   // transport
   transporterWasteAcceptationStatus  WasteAcceptationStatus?
   transporterWasteRefusalReason      String?
-  transporterWasteRefusedQuantity      Int? // kg
+  transporterWasteRefusedQuantity    Int? // kg
 
-  transporterTakenOverAt          DateTime?
+  transporterTakenOverAt             DateTime?
   
-  transporterWastePackagingsInfo        Json?
+  transporterWastePackagingsInfo     Json?
   transporterWasteQuantity           Int? // kg
   transporterWasteQuantityType       QuantityType?
   transporterWasteVolume             Int? // liters
 
-  handedOverToRecipientAt              DateTime?
+  handedOverToRecipientAt            DateTime?
 
   transporterSignedBy                String?
   transporterSignedAt                DateTime?
@@ -559,16 +561,16 @@ model Dasri {
 
   // reception
 
-  recipientWastePackagingsInfo          Json?
+  recipientWastePackagingsInfo       Json?
   recipientWasteAcceptationStatus    WasteAcceptationStatus?
   recipientWasteRefusalReason        String?
   recipientWasteRefusedQuantity      Int? // kg
   recipientWasteQuantity             Int? // kg
-  recipientWasteVolume             Int? // liters
+  recipientWasteVolume               Int? // liters
   receivedAt                         DateTime? // accepted or refused date
   
-  processingOperation       String?
-  processedAt               DateTime?
+  processingOperation                String?
+  processedAt                        DateTime?
 
   recipientSignedBy                  String?
   recipientSignedAt                  DateTime?
