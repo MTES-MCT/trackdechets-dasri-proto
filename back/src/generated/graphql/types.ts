@@ -536,7 +536,6 @@ export type DasriWasteAcceptation = {
 export type DasriWasteDetailInput = {
   quantity?: Maybe<Scalars['Int']>;
   quantityType?: Maybe<QuantityType>;
-  volume?: Maybe<Scalars['Int']>;
   packagingInfos?: Maybe<Array<DasriPackagingInfoInput>>;
 };
 
@@ -3900,7 +3899,6 @@ export function createDasriWasteDetailInputMock(props: Partial<DasriWasteDetailI
   return {
     quantity: null,
     quantityType: null,
-    volume: null,
     packagingInfos: null,
     ...props,
   };
