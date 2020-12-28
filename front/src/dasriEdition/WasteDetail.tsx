@@ -18,9 +18,9 @@ type Values = {
 export default connect<{}, Values>(function DasriWasteDetail(props) {
   const values = props.formik.values;
 
-//   if (!values.wasteDetails.packagings) {
-//     values.wasteDetails.packagings = [];
-//   }
+  //   if (!values.wasteDetails.packagings) {
+  //     values.wasteDetails.packagings = [];
+  //   }
 
   return (
     <>
@@ -51,24 +51,6 @@ export default connect<{}, Values>(function DasriWasteDetail(props) {
         component={Packagings}
       />
 
-      <h4 className="form__section-heading">Volume en l</h4>
-      <div className="form__row">
-        <label>
-          <Field
-            component={NumberInput}
-            name="emission.wasteDetails.volume"
-            className="td-input waste-details__quantity"
-            placeholder="En litres"
-            min="0"
-            step="1"
-          />
-          <span className="tw-ml-2">Litres</span>
-        </label>
-        <RedErrorMessage name="emission.wasteDetails.volume" />
-
-    </div>
-     
-     
       <h4 className="form__section-heading">Quantité en kg</h4>
       <div className="form__row">
         <label>

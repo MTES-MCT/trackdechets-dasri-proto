@@ -33,7 +33,7 @@ import "./StepList.scss";
 
 interface IProps {
   children: ReactElement<IStepContainerProps>[];
-  formId?: string;
+  bsdId?: string;
 }
 export default function StepList(props: IProps) {
   const { siret } = useParams<{ siret: string }>();
@@ -46,10 +46,10 @@ export default function StepList(props: IProps) {
     QueryDasriArgs
   >(DASRI_GET, {
     variables: {
-      id: props.formId!,
+      id: props.bsdId!,
       readableId: null,
     },
-    skip: !props.formId,
+    skip: !props.bsdId,
     fetchPolicy: "network-only",
   });
 
@@ -65,16 +65,9 @@ export default function StepList(props: IProps) {
       if (!data?.dasriCreate) {
         return;
       }
-      // const dasriCreate = data.dasriCreate;
-      // updateApolloCache<{ forms: Form[] }>(store, {
-      //   query: DASRIS_GET,
-      //   variables: { siret, status: ["DRAFT"] },
-      //   getNewData: data => ({
-      //     dasris: [...data.dasris.filter(f => f.id !== dasriCreate.id), dasriCreate],
-      //   }),
-      // });
     },
   });
+
   const [dasriUpdate] = useMutation<
     Pick<Mutation, "dasriUpdate">,
     MutationDasriUpdateArgs
@@ -111,7 +104,7 @@ export default function StepList(props: IProps) {
         displaySubmit: currentStep === totalSteps,
         goToPreviousStep: () => setCurrentStep(currentStep - 1),
         goToNextStep: () => setCurrentStep(currentStep + 1),
-        formId: props.formId,
+        formId: props.bsdId,
       },
       child
     );
@@ -158,27 +151,36 @@ export default function StepList(props: IProps) {
                     ...rest,
                   };
 
-                  props?.formId
+                  const historyCallback = (siret: string) =>
+                    history.push(
+                      generatePath(routes.dashboard.dasris.drafts, {
+                        siret,
+                      })
+                    );
+                  const errCallback = err =>
+                    err.graphQLErrors.map(err =>
+                      cogoToast.error(err.message, { hideAfter: 7 })
+                    );
+
+                  !!props?.bsdId
                     ? dasriUpdate({
                         variables: {
-                          dasriUpdateInput: { id: props.formId, ...formInput },
+                          dasriUpdateInput: { id: props.bsdId, ...formInput },
                         },
                       })
+                        .then(_ => historyCallback(siret))
+                        .catch(err => {
+                          errCallback(err);
+                        })
                     : dasriCreate({
                         variables: { dasriCreateInput: formInput },
                       })
-                        .then(_ =>
-                          history.push(
-                            generatePath(routes.dashboard.dasris.drafts, {
-                              siret,
-                            })
-                          )
-                        )
+                        .then(_ => historyCallback(siret))
+
                         .catch(err => {
-                          err.graphQLErrors.map(err =>
-                            cogoToast.error(err.message, { hideAfter: 7 })
-                          );
+                          errCallback(err);
                         });
+
                   return false;
                 }}
               >

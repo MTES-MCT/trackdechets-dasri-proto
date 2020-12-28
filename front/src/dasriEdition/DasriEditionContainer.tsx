@@ -12,7 +12,7 @@ export default function DasriEditionContainer() {
   return (
     <main className="main">
       <div className="container">
-        <StepList formId={id}>
+        <StepList bsdId={id}>
           <StepContainer component={Emitter} title="Émetteur du dasri" />
           <StepContainer
             component={DasriWasteDetail}

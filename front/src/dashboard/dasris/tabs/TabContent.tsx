@@ -17,7 +17,7 @@ export default function TabContent({
   return (
     <>
       <RefreshLoader networkStatus={networkStatus} />
-
+  
       <BsdHeaderActions refetch={refetch} bsdType={BsdTypes.DASRI} />
 
       {children}

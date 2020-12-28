@@ -13,6 +13,7 @@ import TabContent from "./TabContent";
 import { COLORS } from "common/config";
 import EmptyTab from "./EmptyTab";
 import routes from "common/routes";
+import { BsdTypes } from "common/bsdConstants";
 
 export default function DraftsTab() {
   const { siret } = useParams<{ siret: string }>();
@@ -29,7 +30,7 @@ export default function DraftsTab() {
 
   if (!data?.forms?.length)
     return (
-      <EmptyTab>
+      <EmptyTab bsdType={BsdTypes.FORM}>
         <img src="/illu/illu_empty.svg" alt="" />
         <h4>Il n'y a aucun bordereau en brouillon</h4>
         <p>

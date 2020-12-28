@@ -12,7 +12,7 @@ export const DASRIS_GET = gql`
 `;
 
 export const DASRI_GET = gql`
-  query DasrisGet($id: ID) {
+  query DasriGet($id: ID) {
     dasri(id: $id) {
       ...FullDasri
     }

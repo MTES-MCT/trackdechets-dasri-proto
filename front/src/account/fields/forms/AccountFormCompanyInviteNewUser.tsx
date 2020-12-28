@@ -62,7 +62,7 @@ export default function AccountFormCompanyInviteNewUser({ company }: Props) {
       }}
       onSubmit={(values, { setSubmitting, setFieldError, resetForm }) => {
         inviteUserToCompany({
-          variables: { siret: company.siret, ...values },
+          variables: { ...values, siret: company.siret },
         })
           .then(() => {
             setSubmitting(false);

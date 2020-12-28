@@ -10,7 +10,7 @@ import {
 import routes from "common/routes";
 // import "./SlipsContent.scss";
 // import ActTab from "./tabs/ActTab";
-  import DraftsTab from "./tabs/DraftsTab";
+import DraftsTab from "./tabs/DraftsTab";
 // import FollowTab from "./tabs/FollowTab";
 // import HistoryTab from "./tabs/HistoryTab";
 // import SlipDetail from "../slip/SlipDetail";
@@ -20,7 +20,7 @@ export default function DasrisContent() {
 
   return (
     <div>
-             <DraftsTab />
+      <DraftsTab />
       {/* <Switch>
         <Route path={routes.dashboard.slips.view}>
           <SlipDetail />

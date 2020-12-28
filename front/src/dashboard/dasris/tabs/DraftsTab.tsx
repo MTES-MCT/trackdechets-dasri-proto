@@ -5,7 +5,7 @@ import { DuplicateFile } from "common/components/Icons";
 import { generatePath, Link, useParams } from "react-router-dom";
 import { InlineError } from "common/components/Error";
 import Loader from "common/components/Loaders";
-import { FormStatus, Query, QueryDasriArgs } from "generated/graphql/types";
+import { DasriStatus, Query, QueryDasrisArgs } from "generated/graphql/types";
 import { DASRIS_GET } from "../query";
 
 import TabContent from "./TabContent";
@@ -13,14 +13,15 @@ import { COLORS } from "common/config";
 import Dasris from "../Dasris";
 import routes from "common/routes";
 import EmptyTab from "../../slips/tabs/EmptyTab";
-
+import { BsdTypes } from "common/bsdConstants";
 export default function DraftsTab() {
   const { siret } = useParams<{ siret: string }>();
 
   const { error, data, fetchMore, refetch, networkStatus } = useQuery<
     Pick<Query, "dasris">,
-    Partial<QueryDasriArgs>
+    Partial<QueryDasrisArgs>
   >(DASRIS_GET, {
+    variables: { siret, status: [DasriStatus.Draft] },
     notifyOnNetworkStatusChange: true,
   });
 
@@ -29,12 +30,12 @@ export default function DraftsTab() {
 
   if (!data?.dasris?.length)
     return (
-      <EmptyTab>
+      <EmptyTab bsdType={BsdTypes.DASRI}>
         <img src="/illu/illu_empty.svg" alt="" />
         <h4>Il n'y a aucun bordereau en brouillon</h4>
         <p>
           Si vous le souhaitez, vous pouvez{" "}
-          <Link to={generatePath(routes.dashboard.slips.create, { siret })}>
+          <Link to={generatePath(routes.dashboard.dasris.create, { siret })}>
             <button className="btn btn--outline-primary btn--medium-text">
               Créer un bordereau
             </button>{" "}

@@ -6,6 +6,7 @@ import { FormStatus, Query, QueryFormsArgs } from "generated/graphql/types";
 import { GET_SLIPS } from "../query";
 import EmptyTab from "./EmptyTab";
 import Slips from "../Slips";
+import { BsdTypes } from "common/bsdConstants";
 
 import TabContent from "./TabContent";
 import { useParams } from "react-router-dom";
@@ -31,7 +32,7 @@ export default function HistoryTab() {
   if (error) return <InlineError apolloError={error} />;
   if (!data?.forms?.length)
     return (
-      <EmptyTab>
+      <EmptyTab bsdType={BsdTypes.FORM}>
         <img src="/illu/illu_hello.svg" alt="" />
         <h4>Il n'y a aucun bordereau en archive</h4>
         <p>

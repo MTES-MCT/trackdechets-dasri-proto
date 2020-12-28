@@ -40,7 +40,6 @@ export default {
     wasteDetails: {
       quantity: null,
       quantityType: null,
-      volume: null,
       packagingInfos: [],
     },
   },
@@ -49,7 +48,7 @@ export default {
       siret: "",
       name: "",
       address: "",
-      // contact:"",
+      contact: "",
       mail: "",
       phone: "",
     },
@@ -58,7 +57,6 @@ export default {
     wasteDetails: {
       quantity: 99,
       quantityType: "REAL",
-      volume: 11,
       packagingInfos: [],
     },
   },
@@ -67,14 +65,13 @@ export default {
       siret: "",
       name: "",
       address: "",
-      // contact:"",
+      contact: "",
       mail: "",
       phone: "",
     },
   },
   reception: {
     wasteDetails: {
-      volume: null,
       quantity: null,
       quantityType: null,
       packagingInfos: [],

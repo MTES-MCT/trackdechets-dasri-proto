@@ -9,6 +9,8 @@ import TabContent from "./TabContent";
 import EmptyTab from "./EmptyTab";
 import { statusesWithDynamicActions } from "../../constants";
 import { useParams } from "react-router-dom";
+ 
+import { BsdTypes } from "common/bsdConstants";
 
 export default function ActTab() {
   const { siret } = useParams<{ siret: string }>();
@@ -28,7 +30,7 @@ export default function ActTab() {
   if (error) return <InlineError apolloError={error} />;
   if (!data?.forms?.length)
     return (
-      <EmptyTab>
+      <EmptyTab bsdType={BsdTypes.FORM}>
         <img src="/illu/illu_sent.svg" alt="" />
         <h4>Il n'y a aucun bordereau à signer</h4>
         <p>

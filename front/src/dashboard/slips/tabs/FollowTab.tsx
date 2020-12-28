@@ -8,6 +8,7 @@ import Slips from "../Slips";
 import TabContent from "./TabContent";
 import EmptyTab from "./EmptyTab";
 import { useParams } from "react-router-dom";
+import { BsdTypes } from "common/bsdConstants";
 
 export default function FollowTab() {
   const { siret } = useParams<{ siret: string }>();
@@ -36,7 +37,7 @@ export default function FollowTab() {
   if (error) return <InlineError apolloError={error} />;
   if (!data?.forms?.length)
     return (
-      <EmptyTab>
+      <EmptyTab bsdType={BsdTypes.FORM}>
         <img src="/illu/illu_transfer.svg" alt="" />
         <h4>Il n'y a aucun bordereau à suivre</h4>
         <p>

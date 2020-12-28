@@ -1,4 +1,3 @@
-
 import { Close } from "common/components/Icons";
 import RedErrorMessage from "common/components/RedErrorMessage";
 import NumberInput from "form/custom-inputs/NumberInput";
@@ -8,9 +7,15 @@ import React, { InputHTMLAttributes, useMemo } from "react";
 import "./Packagings.scss";
 
 const PACKAGINGS = [
-  { value: PackagingsEnum.BoiteCarton, label: "Caisse en carton avec sac en plastique" },
+  {
+    value: PackagingsEnum.BoiteCarton,
+    label: "Caisse en carton avec sac en plastique",
+  },
   { value: PackagingsEnum.Fut, label: "Fûts ou jérrican à usage unique" },
-  { value: PackagingsEnum.BoitePerforants, label: " Boîtes et Mini-collecteurs pour déchets perforants" },
+  {
+    value: PackagingsEnum.BoitePerforants,
+    label: " Boîtes et Mini-collecteurs pour déchets perforants",
+  },
   { value: PackagingsEnum.GrandEmballage, label: "Grand emballage" },
   { value: PackagingsEnum.Autre, label: "Autre (à préciser)" },
 ];
@@ -63,7 +68,6 @@ export default function Packagings({
                             <option
                               key={packaging.value}
                               value={packaging.value}
-                        
                             >
                               {packaging.label}
                             </option>
@@ -91,7 +95,6 @@ export default function Packagings({
                         name={`${name}.${idx}.volume`}
                         placeholder="Volume en l"
                         min="1"
-                    
                       />
                     </div>
                     <div className="tw-w-1/3 tw-px-2">
@@ -102,7 +105,6 @@ export default function Packagings({
                         name={`${name}.${idx}.quantity`}
                         placeholder="Nombre de colis"
                         min="1"
-                      
                       />
                     </div>
                   </div>
@@ -123,7 +125,6 @@ export default function Packagings({
             <button
               type="button"
               className="btn btn--outline-primary"
-        
               onClick={() =>
                 arrayHelpers.push({
                   type: PackagingsEnum.Autre,
@@ -134,13 +135,15 @@ export default function Packagings({
             >
               Ajouter un conditionnement
             </button>
-        
           </div>
         )}
       />
       {value?.length > 0 && (
         <div className="tw-mt-4">
           Total : {value.reduce((prev, cur) => prev + cur.quantity, 0)} colis -{" "}
+          Volume :{" "}
+          {value.reduce((prev, cur) => prev + cur.volume * cur.quantity, 0)}{" "}
+          litres -{" - "}
           {value
             .map(v => {
               const packaging = PACKAGINGS.find(p => p.value === v.type);
