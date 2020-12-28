@@ -17,7 +17,8 @@ import {
   DasriEmissionInput,
   DasriTransportInput,
   DasriReceptionInput,
-  DasriPackagingInfo
+  DasriPackagingInfo,
+  DasriPackagingInfoInput
 } from "../generated/graphql/types";
 import { Prisma, Dasri, DasriStatus, QuantityType } from "@prisma/client";
 
@@ -142,6 +143,19 @@ export function safeInput<K>(obj: K): Partial<K> {
   }, {});
 }
 
+type computeTotalVolumeFn = (
+  packagingInfos: DasriPackagingInfoInput[]
+) => number;
+/**
+ * Compute total volume according to packaging infos details
+ */
+const computeTotalVolume: computeTotalVolumeFn = packagingInfos => {
+  return packagingInfos.reduce(
+    (acc, packaging) =>
+      acc + (packaging.volume || 0) * (packaging.quantity || 0),
+    0
+  );
+};
 /**
  * Equivalent to a typescript optional chaining operator foo?.bar
  * except that it returns "null" instead of "undefined" if "null" is encountered in the chain
@@ -197,6 +211,9 @@ function flattenEmitterInput(input: { emitter?: DasriEmitterInput }) {
 }
 
 function flattenEmissionInput(input: { emission?: DasriEmissionInput }) {
+  const emitterWastePackagingsInfo = chain(input.emission, e =>
+    chain(e.wasteDetails, w => w.packagingInfos)
+  );
   return {
     wasteDetailsCode: chain(input.emission, e => e.wasteCode),
     wasteDetailsOnuCode: chain(input.emission, e => e.wasteDetailsOnuCode),
@@ -209,13 +226,8 @@ function flattenEmissionInput(input: { emission?: DasriEmissionInput }) {
     emitterWasteQuantityType: chain(input.emission, e =>
       chain(e.wasteDetails, w => w.quantityType)
     ),
-    emitterWasteVolume: chain(input.emission, e =>
-      chain(e.wasteDetails, w => w.volume)
-    ),
-
-    emitterWastePackagingsInfo: chain(input.emission, e =>
-      chain(e.wasteDetails, w => w.packagingInfos)
-    )
+    emitterWasteVolume: computeTotalVolume(emitterWastePackagingsInfo),
+    emitterWastePackagingsInfo
   };
 }
 function flattenTransporterInput(input: {
@@ -249,6 +261,9 @@ function flattenTransporterInput(input: {
   };
 }
 function flattenTransportInput(input: { transport?: DasriTransportInput }) {
+  const transporterWastePackagingsInfo = chain(input.transport, t =>
+    chain(t.wasteDetails, w => w.packagingInfos)
+  );
   return {
     transporterTakenOverAt: chain(input.transport, t =>
       t.takenOverAt ? new Date(t.takenOverAt) : null
@@ -262,12 +277,8 @@ function flattenTransportInput(input: { transport?: DasriTransportInput }) {
     transporterWasteQuantityType: chain(input.transport, t =>
       chain(t.wasteDetails, w => w.quantityType)
     ),
-    transporterWasteVolume: chain(input.transport, t =>
-      chain(t.wasteDetails, w => w.volume)
-    ),
-    transporterWastePackagingsInfo: chain(input.transport, t =>
-      chain(t.wasteDetails, w => w.packagingInfos)
-    )
+    transporterWasteVolume: computeTotalVolume(transporterWastePackagingsInfo),
+    transporterWastePackagingsInfo
   };
 }
 
@@ -295,13 +306,14 @@ function flattenRecipientInput(input: { recipient?: DasriRecipientInput }) {
 }
 
 function flattenReceptiontInput(input: { reception?: DasriReceptionInput }) {
+  const recipientWastePackagingsInfo = chain(input.reception, r =>
+    chain(r.wasteDetails, w => w.packagingInfos)
+  );
   return {
     recipientWasteQuantity: chain(input.reception, r =>
       chain(r.wasteDetails, w => w.quantity)
     ),
-    recipientWasteVolume: chain(input.reception, r =>
-      chain(r.wasteDetails, w => w.volume)
-    ),
+    recipientWasteVolume: computeTotalVolume(recipientWastePackagingsInfo),
     processingOperation: chain(input.reception, r => r.processingOperation),
     receivedAt: chain(input.reception, r =>
       r.receivedAt ? new Date(r.receivedAt) : null
@@ -309,9 +321,7 @@ function flattenReceptiontInput(input: { reception?: DasriReceptionInput }) {
     processedAt: chain(input.reception, r =>
       r.processedAt ? new Date(r.processedAt) : null
     ),
-    recipientWastePackagingsInfo: chain(input.reception, r =>
-      chain(r.wasteDetails, w => w.packagingInfos)
-    )
+    recipientWastePackagingsInfo
   };
 }
 export function flattenDasriInput(

@@ -29,7 +29,6 @@ input DasriEmitterInput {
 input DasriWasteDetailInput {
   quantity: Int
   quantityType: QuantityType
-  volume: Int
   packagingInfos: [DasriPackagingInfoInput!]
 }
 input DasriRecipientWasteDetailInput {
@@ -76,26 +75,7 @@ input DasriReceptionInput {
   processedAt: DateTime
 }
 
-# "Payload d'un établissement"
-# input CompanyInput {
-#   "SIRET de l'établissement"
-#   siret: String
-
-#   "Nom de l'établissement"
-#   name: String
-
-#   "Adresse de l'établissement"
-#   address: String
-
-#   "Nom du contact dans l'établissement"
-#   contact: String
-
-#   "Email du contact dans l'établissement"
-#   mail: String
-
-#   "Numéro de téléphone de contact dans l'établissement"
-#   phone: String
-# }
+ 
 
 input DasriInput {
   customId: String

@@ -26,8 +26,7 @@ const dasrisResolver: QueryResolvers["dasris"] = async (_, args, context) => {
     await checkIsCompanyMember({ id: user.id }, { siret });
   } else {
     const userCompanies = await getUserCompanies(user.id);
-
-    if (userCompanies.length === 0) {
+     if (userCompanies.length === 0) {
       // the user is not member of any companies, return empty array
       return [];
     }
@@ -40,7 +39,7 @@ const dasrisResolver: QueryResolvers["dasris"] = async (_, args, context) => {
     // the user is member of only one company, use it as default
     company = userCompanies[0];
   }
-
+ 
   const connectionsArgs = getCursorConnectionsArgs({
     ...rest,
     defaultPaginateBy: 50,
