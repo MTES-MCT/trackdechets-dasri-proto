@@ -1,12 +1,13 @@
-import { EmitterType, Dasri, QuantityType } from "@prisma/client";
-import { UserInputError } from "apollo-server-express";
-import prisma from "src/prisma";
+import { WasteAcceptationStatus, Dasri, QuantityType } from "@prisma/client";
 
 import * as yup from "yup";
 import { DASRI_WASTE_CODES } from "../common/constants";
 import configureYup from "../common/yup/configureYup";
 import validDatetime from "../common/yup/validDatetime";
-import { PackagingInfo, Packagings } from "../generated/graphql/types";
+import {
+  DasriPackagings,
+  DasriPackagingInfo
+} from "../generated/graphql/types";
 
 const wasteCodes = DASRI_WASTE_CODES.map(el => el.code);
 // set yup default error messages
@@ -18,7 +19,6 @@ configureYup();
 
 type Emitter = Pick<
   Dasri,
-  //   | "emitterType"
   | "emitterWorkSiteName"
   | "emitterWorkSiteAddress"
   | "emitterWorkSiteCity"
@@ -106,206 +106,207 @@ const MISSING_COMPANY_EMAIL = "L'email de l'entreprise est obligatoire";
 
 const INVALID_SIRET_LENGTH = "Le SIRET doit faire 14 caractères numériques";
 
-const INVALID_PROCESSING_OPERATION =
-  "Cette opération d’élimination / valorisation n'existe pas.";
+const INVALID_DASRI_WASTE_CODE =
+  "Le code déchet n'est pas autorisé pour les DASRI";
 
-const INVALID_WASTE_CODE =
-  "Le code déchet n'est pas reconnu comme faisant partie de la liste officielle du code de l'environnement.";
+export const emitterSchema: yup.ObjectSchema<
+  Partial<Emitter>
+> = yup.object().shape({
+  emitterCompanyName: yup
+    .string()
+    .ensure()
+    .required(`Émetteur: ${MISSING_COMPANY_NAME}`),
+  emitterCompanySiret: yup
+    .string()
+    .ensure()
+    .required(`Émetteur: ${MISSING_COMPANY_SIRET}`)
+    .length(14, `Émetteur: ${INVALID_SIRET_LENGTH}`),
+  emitterCompanyAddress: yup
+    .string()
+    .ensure()
+    .required(`Émetteur: ${MISSING_COMPANY_ADDRESS}`),
+  emitterCompanyContact: yup
+    .string()
+    .ensure()
+    .required(`Émetteur: ${MISSING_COMPANY_CONTACT}`),
+  emitterCompanyPhone: yup
+    .string()
+    .ensure()
+    .required(`Émetteur: ${MISSING_COMPANY_PHONE}`),
+  emitterCompanyMail: yup
+    .string()
+    .email()
+    .ensure()
+    .required(`Émetteur: ${MISSING_COMPANY_EMAIL}`)
+});
 
-const EXTRANEOUS_NEXT_DESTINATION = `L'opération de traitement renseignée ne permet pas de destination ultérieure`;
+const packagingsTypes: DasriPackagings[] = [
+  "BOITE_CARTON",
+  "FUT",
+  "BOITE_PERFORANTS",
+  "GRAND_EMBALLAGE",
+  "VRAC",
+  "AUTRE"
+];
+export const packagingInfo: yup.ObjectSchema<DasriPackagingInfo> = yup
+  .object()
+  .shape({
+    type: yup
+      .mixed()
+      .required("Le type de conditionnement doit être précisé.")
+      .oneOf(packagingsTypes),
+    other: yup
+      .string()
+      .when("type", (type, schema) =>
+        type === "AUTRE"
+          ? schema.required(
+              "La description doit être précisée pour le conditionnement 'AUTRE'."
+            )
+          : schema
+              .nullable()
+              .max(
+                0,
+                "${path} ne peut être renseigné que lorsque le type de conditionnement est 'AUTRE'."
+              )
+      ),
+    quantity: yup
+      .number()
+      .required(
+        "Le nombre de colis associé au conditionnement doit être précisé."
+      )
+      .integer()
+      .min(1, "Le nombre de colis doit être supérieur à 0."),
+    volume: yup
+      .number()
+      .required(
+        "Le volume en litres associé à chaque type de contenant doit être précisé."
+      )
+      .integer()
+      .min(1, "Le volume de chaque type de contenant doit être supérieur à 0.")
+  });
 
-// export const emitterSchema: yup.ObjectSchema<
-//   Partial<Emitter>
-// > = yup.object().shape({
-//   emitterCompanyName: yup
-//     .string()
-//     .ensure()
-//     .required(`Émetteur: ${MISSING_COMPANY_NAME}`),
-//   emitterCompanySiret: yup
-//     .string()
-//     .ensure()
-//     .required(`Émetteur: ${MISSING_COMPANY_SIRET}`)
-//     .length(14, `Émetteur: ${INVALID_SIRET_LENGTH}`),
-//   emitterCompanyAddress: yup
-//     .string()
-//     .ensure()
-//     .required(`Émetteur: ${MISSING_COMPANY_ADDRESS}`),
-//   emitterCompanyContact: yup
-//     .string()
-//     .ensure()
-//     .required(`Émetteur: ${MISSING_COMPANY_CONTACT}`),
-//   emitterCompanyPhone: yup
-//     .string()
-//     .ensure()
-//     .required(`Émetteur: ${MISSING_COMPANY_PHONE}`),
-//   emitterCompanyMail: yup
-//     .string()
-//     .email()
-//     .ensure()
-//     .required(`Émetteur: ${MISSING_COMPANY_EMAIL}`)
-// });
+export const emissionSchema: yup.ObjectSchema<
+  Partial<Emission>
+> = yup.object().shape({
+  wasteDetailsCode: yup
+    .string()
+    .ensure()
+    .required("Le code déchet est obligatoire")
+    .oneOf(wasteCodes, INVALID_DASRI_WASTE_CODE),
+  wasteDetailsOnuCode: yup
+    .string()
+    .ensure()
+    .required(`La mention ADR est obligatoire.`),
+  emitterWasteQuantity: yup
+    .number()
+    .required("La quantité du déchet en tonnes est obligatoire")
+    .min(0, "La quantité doit être supérieure à 0"),
+  emitterWasteQuantityType: yup
+    .mixed<QuantityType>()
+    .required("Le type de quantité (réelle ou estimée) doit être précisé"),
+  emitterWastePackagingsInfo: yup
+    .array()
+    .required("Le détail du conditionnement est obligatoire")
+    .of(packagingInfo)
+});
 
-// export const recipientSchema: yup.ObjectSchema<
-//   Partial<Recipient>
-// > = yup.object().shape({
-//   recipientProcessingOperation: yup
-//     .string()
-//     .label("Opération d’élimination / valorisation")
-//     .ensure()
-//     .required(),
-//   recipientCompanyName: yup
-//     .string()
-//     .ensure()
-//     .required(`Destinataire: ${MISSING_COMPANY_NAME}`),
-//   recipientCompanySiret: yup
-//     .string()
-//     .ensure()
-//     .required(`Destinataire: ${MISSING_COMPANY_SIRET}`)
-//     .length(14, `Destinataire: ${INVALID_SIRET_LENGTH}`),
-//   recipientCompanyAddress: yup
-//     .string()
-//     .ensure()
-//     .required(`Destinataire: ${MISSING_COMPANY_ADDRESS}`),
-//   recipientCompanyContact: yup
-//     .string()
-//     .ensure()
-//     .required(`Destinataire: ${MISSING_COMPANY_CONTACT}`),
-//   recipientCompanyPhone: yup
-//     .string()
-//     .ensure()
-//     .required(`Destinataire: ${MISSING_COMPANY_PHONE}`),
-//   recipientCompanyMail: yup
-//     .string()
-//     .email()
-//     .ensure()
-//     .required(`Destinataire: ${MISSING_COMPANY_EMAIL}`)
-// });
+export const transporterSchema: yup.ObjectSchema<
+  Partial<Transporter>
+> = yup.object().shape({
+  transporterCompanyName: yup
+    .string()
+    .ensure()
+    .required(`Transporteur: ${MISSING_COMPANY_NAME}`),
+  transporterCompanySiret: yup
+    .string()
+    .ensure()
+    .required(`Transporteur: ${MISSING_COMPANY_SIRET}`)
+    .length(14, `Transporteur: ${INVALID_SIRET_LENGTH}`),
+  transporterCompanyAddress: yup
+    .string()
+    .ensure()
+    .required(`Transporteur: ${MISSING_COMPANY_ADDRESS}`),
+  transporterCompanyContact: yup
+    .string()
+    .ensure()
+    .required(`Transporteur: ${MISSING_COMPANY_CONTACT}`),
+  transporterCompanyPhone: yup
+    .string()
+    .ensure()
+    .required(`Transporteur: ${MISSING_COMPANY_PHONE}`),
+  transporterCompanyMail: yup
+    .string()
+    .email()
+    .ensure()
+    .required(`Transporteur: ${MISSING_COMPANY_EMAIL}`),
+  transporterIsExemptedOfReceipt: yup.boolean().notRequired().nullable(),
+  transporterReceipt: yup.string().ensure().required(),
 
-// const packagingInfo: yup.ObjectSchema<PackagingInfo> = yup.object().shape({
-//   type: yup
-//     .mixed<Packagings>()
-//     .required("Le type de conditionnement doit être précisé."),
-//   other: yup
-//     .string()
-//     .when("type", (type, schema) =>
-//       type === "AUTRE"
-//         ? schema.required(
-//             "La description doit être précisée pour le conditionnement 'AUTRE'."
-//           )
-//         : schema
-//             .nullable()
-//             .max(
-//               0,
-//               "${path} ne peut être renseigné que lorsque le type de conditionnement est 'AUTRE'."
-//             )
-//     ),
-//   quantity: yup
-//     .number()
-//     .required(
-//       "Le nombre de colis associé au conditionnement doit être précisé."
-//     )
-//     .integer()
-//     .min(1, "Le nombre de colis doit être supérieur à 0."),
-//   volume: yup
-//     .number()
-//     .required(
-//       "Le volume en litres associé à chaque type de contenant doit être précisé."
-//     )
-//     .integer()
-//     .min(1, "Le volume de chaque type de contenant doit être supérieur à 0.")
-// });
+  transporterDepartment: yup
+    .string()
+    .ensure()
+    .required("Le département du transporteur est obligatoire"),
 
- 
-// export const wasteDetailsSchema: yup.ObjectSchema<
-//   Partial<WasteDetails>
-// > = yup.object().shape({
-//   wasteDetailsCode: yup
-//     .string()
-//     .ensure()
-//     .required("Le code déchet est obligatoire")
-//     .oneOf(wasteCodes, INVALID_WASTE_CODE),
-//   wasteDetailsOnuCode: yup
-//     .string()
-//     .ensure()
-//     .required(`La mention ADR est obligatoire.`),
+  transporterValidityLimit: validDatetime({
+    verboseFieldName: "date de validité"
+  })
+});
 
-//   wasteDetailsPackagingInfos: yup
-//     .array()
-//     .required("Le détail du conditionnement est obligatoire")
-//     .of(packagingInfo)
-//     .test(
-//       "is-valid-packaging-infos",
-//       "${path} ne peut pas à la fois contenir 1 citerne ou 1 benne et un autre conditionnement.",
-//       (infos: PackagingInfo[]) => {
-//         const hasCiterne = infos?.find(i => i.type === "CITERNE");
-//         const hasBenne = infos?.find(i => i.type === "BENNE");
+export const transportSchema: yup.ObjectSchema<
+  Partial<Transport>
+> = yup.object().shape({
+  transporterWasteAcceptationStatus: yup
+    .mixed<WasteAcceptationStatus>()
+    .required(),
 
-//         if (hasCiterne && hasBenne) {
-//           return false;
-//         }
+  transporterWasteRefusedQuantity: yup
+    .number()
+    .nullable()
+    .notRequired()
+    .min(0, "La quantité doit être supérieure à 0"),
+  transporterWasteQuantity: yup
+    .number()
+    .required("La quantité du déchet en tonnes est obligatoire")
+    .min(0, "La quantité doit être supérieure à 0"),
+  transporterWasteQuantityType: yup
+    .mixed<QuantityType>()
+    .required("Le type de quantité (réelle ou estimée) doit être précisé"),
+  transporterWastePackagingsInfo: yup
+    .array()
+    .required("Le détail du conditionnement est obligatoire")
+    .of(packagingInfo)
+});
 
-//         const hasOtherPackaging = infos?.find(
-//           i => !["CITERNE", "BENNE"].includes(i.type)
-//         );
-//         if ((hasCiterne || hasBenne) && hasOtherPackaging) {
-//           return false;
-//         }
-
-//         return true;
-//       }
-//     ),
-//   wasteDetailsQuantity: yup
-//     .number()
-//     .required("La quantité du déchet en tonnes est obligatoire")
-//     .min(0, "La quantité doit être supérieure à 0"),
-//   wasteDetailsQuantityType: yup
-//     .mixed<QuantityType>()
-//     .required("Le type de quantité (réelle ou estimée) doit être précisé"),
- 
-// });
-
- 
-// export const transporterSchema: yup.ObjectSchema<
-//   Partial<Transporter>
-// > = yup.object().shape({
-//   transporterCompanyName: yup
-//     .string()
-//     .ensure()
-//     .required(`Transporteur: ${MISSING_COMPANY_NAME}`),
-//   transporterCompanySiret: yup
-//     .string()
-//     .ensure()
-//     .required(`Transporteur: ${MISSING_COMPANY_SIRET}`)
-//     .length(14, `Transporteur: ${INVALID_SIRET_LENGTH}`),
-//   transporterCompanyAddress: yup
-//     .string()
-//     .ensure()
-//     .required(`Transporteur: ${MISSING_COMPANY_ADDRESS}`),
-//   transporterCompanyContact: yup
-//     .string()
-//     .ensure()
-//     .required(`Transporteur: ${MISSING_COMPANY_CONTACT}`),
-//   transporterCompanyPhone: yup
-//     .string()
-//     .ensure()
-//     .required(`Transporteur: ${MISSING_COMPANY_PHONE}`),
-//   transporterCompanyMail: yup
-//     .string()
-//     .email()
-//     .ensure()
-//     .required(`Transporteur: ${MISSING_COMPANY_EMAIL}`),
-//   transporterIsExemptedOfReceipt: yup.boolean().notRequired().nullable(),
-//   transporterReceipt: yup.string().ensure().required(),
-
-//   transporterDepartment: yup
-//     .string()
-//     .ensure()
-//     .required("Le département du transporteur est obligatoire"),
-
-//   transporterValidityLimit: validDatetime({
-//     verboseFieldName: "date de validité"
-//   })
-// });
+export const recipientSchema: yup.ObjectSchema<
+  Partial<Recipient>
+> = yup.object().shape({
+  recipientCompanyName: yup
+    .string()
+    .ensure()
+    .required(`Destinataire: ${MISSING_COMPANY_NAME}`),
+  recipientCompanySiret: yup
+    .string()
+    .ensure()
+    .required(`Destinataire: ${MISSING_COMPANY_SIRET}`)
+    .length(14, `Destinataire: ${INVALID_SIRET_LENGTH}`),
+  recipientCompanyAddress: yup
+    .string()
+    .ensure()
+    .required(`Destinataire: ${MISSING_COMPANY_ADDRESS}`),
+  recipientCompanyContact: yup
+    .string()
+    .ensure()
+    .required(`Destinataire: ${MISSING_COMPANY_CONTACT}`),
+  recipientCompanyPhone: yup
+    .string()
+    .ensure()
+    .required(`Destinataire: ${MISSING_COMPANY_PHONE}`),
+  recipientCompanyMail: yup
+    .string()
+    .email()
+    .ensure()
+    .required(`Destinataire: ${MISSING_COMPANY_EMAIL}`)
+});
 
 export const draftDasriSchema = yup.object().shape({
   emitterCompanySiret: yup
@@ -328,7 +329,7 @@ export const draftDasriSchema = yup.object().shape({
     .string()
     .notRequired()
     .nullable()
-    .oneOf([...wasteCodes, "", null], INVALID_WASTE_CODE),
+    .oneOf([...wasteCodes, "", null], INVALID_DASRI_WASTE_CODE),
   transporterCompanySiret: yup
     .string()
     .notRequired()

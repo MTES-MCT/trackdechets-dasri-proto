@@ -21,28 +21,6 @@ export default function DasrisContent() {
   return (
     <div>
       <DraftsTab />
-      {/* <Switch>
-        <Route path={routes.dashboard.slips.view}>
-          <SlipDetail />
-        </Route>
-        <Route path={routes.dashboard.slips.drafts}>
-          <DraftsTab />
-        </Route>
-        <Route path={routes.dashboard.slips.act}>
-          <ActTab />
-        </Route>
-        <Route path={routes.dashboard.slips.follow}>
-          <FollowTab />
-        </Route>
-        <Route path={routes.dashboard.slips.history}>
-          <HistoryTab />
-        </Route>
-        <Redirect
-          to={generatePath(routes.dashboard.slips.drafts, {
-            siret,
-          })}
-        />
-      </Switch> */}
     </div>
   );
 }
