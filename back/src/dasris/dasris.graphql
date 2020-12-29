@@ -275,4 +275,8 @@ type Mutation {
     "Payload de mise à jour d'un dasri"
     dasriUpdateInput: DasriUpdateInput!
   ): Dasri!
+
+  "Marque un dasri brouillon comme prêt à être transporté"
+  dasriMarkAsReady("ID d'un Dasri" id: ID!): Dasri
+
 }

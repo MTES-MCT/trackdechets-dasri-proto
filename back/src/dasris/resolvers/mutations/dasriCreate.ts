@@ -4,10 +4,7 @@ import {
   ResolversParentTypes
 } from "../../../generated/graphql/types";
 import { GraphQLContext } from "../../../types";
-import {
-  expandDasriFromDb,
-  flattenDasriInput
-} from "../../dasri-converter";
+import { expandDasriFromDb, flattenDasriInput } from "../../dasri-converter";
 import { getReadableId } from "../../dasri-readable-id";
 import { checkIsAuthenticated } from "../../../common/permissions";
 import { draftDasriSchema } from "../../validation";

@@ -2,10 +2,10 @@ import prisma from "../prisma";
 
 import { DasriNotFound } from "./errors";
 import { UserInputError } from "apollo-server-express";
-import { Prisma } from "@prisma/client";
+import { Prisma, Dasri } from "@prisma/client";
 
 import { DasriRole } from "../generated/graphql/types";
-
+import { FullDasri } from "./types";
 /**
  * Retrieves a form by id or readableId or throw a FormNotFound error
  */
@@ -49,5 +49,20 @@ export function getDasrisRightFilter(siret: string, roles?: DasriRole[]) {
       )
       .map(role => filtersByRole[role])
       .flat()
+  };
+}
+
+/**
+ * Returns a prisma Dasri object with its owner
+ * @param dasri
+ */
+export async function getFullDasri(dasri: Dasri): Promise<FullDasri> {
+  const owner = await prisma.form
+    .findUnique({ where: { id: dasri.id } })
+    .owner();
+
+  return {
+    ...dasri,
+    owner
   };
 }

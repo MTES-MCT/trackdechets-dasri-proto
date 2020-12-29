@@ -1,10 +1,13 @@
 import { Company, Dasri, User } from "@prisma/client";
 
 import { getFullUser } from "../users/database";
+import { getFullDasri } from "./database";
 import { FullUser } from "../users/types";
+import { ForbiddenError } from "apollo-server-express";
 
 import { NotDasriContributor } from "./errors";
 import { FullDasri } from "./types";
+
 function isDasriOwner(user: User, dasri: { owner: User }) {
   return dasri.owner?.id === user.id;
 }
@@ -34,7 +37,6 @@ function isDasriTransporter(user: { companies: Company[] }, dasri: Dasri) {
 }
 
 export function isDasriContributor(user: FullUser, dasri: FullDasri) {
-  console.log(dasri.ownerId);
   return [
     isDasriOwner,
     isDasriEmitter,
@@ -56,6 +58,18 @@ export async function checkCanReadUpdateDeleteDasri(
 
   if (!isDasriContributor(fullUser, dasri)) {
     throw new NotDasriContributor();
+  }
+
+  return true;
+}
+
+export async function checkCanMarkDasriAsReady(user: User, dasri: Dasri) {
+  const fullUser = await getFullUser(user);
+  const fullDasri = await getFullDasri(dasri);
+  if (!isDasriContributor(fullUser, fullDasri)) {
+    throw new ForbiddenError(
+      "Vous n'êtes pas autorisé à marquer ce sasri comme prêt"
+    );
   }
 
   return true;
