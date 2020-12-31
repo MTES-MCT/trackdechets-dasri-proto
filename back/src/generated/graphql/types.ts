@@ -1111,6 +1111,8 @@ export type Mutation = {
   createUploadLink: UploadLink;
   /** Crée un nouveau dasri */
   dasriCreate: Dasri;
+  /** Marque un dasri brouillon comme prêt à être transporté */
+  dasriMarkAsReady?: Maybe<Dasri>;
   /** Met à jour un dasri existant */
   dasriUpdate: Dasri;
   /** Supprime un BSD */
@@ -1364,6 +1366,11 @@ export type MutationCreateUploadLinkArgs = {
 
 export type MutationDasriCreateArgs = {
   dasriCreateInput: DasriCreateInput;
+};
+
+
+export type MutationDasriMarkAsReadyArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -3195,6 +3202,7 @@ export type MutationResolvers<ContextType = GraphQLContext, ParentType extends R
   createTransporterReceipt?: Resolver<Maybe<ResolversTypes['TransporterReceipt']>, ParentType, ContextType, RequireFields<MutationCreateTransporterReceiptArgs, 'input'>>;
   createUploadLink?: Resolver<ResolversTypes['UploadLink'], ParentType, ContextType, RequireFields<MutationCreateUploadLinkArgs, 'fileName' | 'fileType'>>;
   dasriCreate?: Resolver<ResolversTypes['Dasri'], ParentType, ContextType, RequireFields<MutationDasriCreateArgs, 'dasriCreateInput'>>;
+  dasriMarkAsReady?: Resolver<Maybe<ResolversTypes['Dasri']>, ParentType, ContextType, RequireFields<MutationDasriMarkAsReadyArgs, 'id'>>;
   dasriUpdate?: Resolver<ResolversTypes['Dasri'], ParentType, ContextType, RequireFields<MutationDasriUpdateArgs, 'dasriUpdateInput'>>;
   deleteForm?: Resolver<Maybe<ResolversTypes['Form']>, ParentType, ContextType, RequireFields<MutationDeleteFormArgs, 'id'>>;
   deleteInvitation?: Resolver<ResolversTypes['CompanyPrivate'], ParentType, ContextType, RequireFields<MutationDeleteInvitationArgs, 'email' | 'siret'>>;
