@@ -215,7 +215,8 @@ describe("Mutation.signedByTransporter", () => {
 
     expect(errors).toEqual([
       expect.objectContaining({
-        message: "Le code de sécurité de l'émetteur du bordereau est invalide.",
+        message:
+          "Le code de signature de l'émetteur du bordereau est invalide.",
         extensions: expect.objectContaining({
           code: ErrorCode.FORBIDDEN
         })

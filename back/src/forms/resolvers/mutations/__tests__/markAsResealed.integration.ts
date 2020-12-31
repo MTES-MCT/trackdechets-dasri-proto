@@ -29,7 +29,7 @@ describe("Mutation markAsResealed", () => {
     const form = await formWithTempStorageFactory({
       ownerId: owner.id,
       opt: {
-        status: "TEMP_STORED",
+        status: "TEMP_STORER_ACCEPTED",
         recipientCompanySiret: company.siret
       }
     });
@@ -56,7 +56,7 @@ describe("Mutation markAsResealed", () => {
     const form = await formWithTempStorageFactory({
       ownerId: owner.id,
       opt: {
-        status: "TEMP_STORED",
+        status: "TEMP_STORER_ACCEPTED",
         recipientCompanySiret: company.siret
       }
     });
@@ -84,7 +84,7 @@ describe("Mutation markAsResealed", () => {
     const resealedForm = await prisma.form.findUnique({
       where: { id: form.id }
     });
-    expect(resealedForm.status).toEqual("TEMP_STORED");
+    expect(resealedForm.status).toEqual("TEMP_STORER_ACCEPTED");
   });
 
   test("it should work if resealedInfos is completing current data", async () => {
@@ -96,7 +96,7 @@ describe("Mutation markAsResealed", () => {
     const form = await formWithTempStorageFactory({
       ownerId: owner.id,
       opt: {
-        status: "TEMP_STORED",
+        status: "TEMP_STORER_ACCEPTED",
         recipientCompanySiret: company.siret
       }
     });

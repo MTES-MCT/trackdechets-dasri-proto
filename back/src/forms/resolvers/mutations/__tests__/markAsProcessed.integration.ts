@@ -33,7 +33,7 @@ describe("mutation.markAsProcessed", () => {
     const form = await formFactory({
       ownerId: user.id,
       opt: {
-        status: "RECEIVED",
+        status: "ACCEPTED",
         recipientCompanyName: recipientCompany.name,
         recipientCompanySiret: recipientCompany.siret
       }
@@ -59,7 +59,7 @@ describe("mutation.markAsProcessed", () => {
     const form = await formFactory({
       ownerId: user.id,
       opt: {
-        status: "RECEIVED",
+        status: "ACCEPTED",
         recipientCompanyName: company.name,
         recipientCompanySiret: company.siret
       }
@@ -100,7 +100,7 @@ describe("mutation.markAsProcessed", () => {
     const form = await formFactory({
       ownerId: user.id,
       opt: {
-        status: "RECEIVED",
+        status: "ACCEPTED",
         recipientCompanyName: company.name,
         recipientCompanySiret: company.siret
       }
@@ -134,7 +134,7 @@ describe("mutation.markAsProcessed", () => {
     const form = await formFactory({
       ownerId: user.id,
       opt: {
-        status: "RECEIVED",
+        status: "ACCEPTED",
         recipientCompanyName: company.name,
         recipientCompanySiret: company.siret
       }
@@ -159,7 +159,7 @@ describe("mutation.markAsProcessed", () => {
     const resultingForm = await prisma.form.findUnique({
       where: { id: form.id }
     });
-    expect(resultingForm.status).toBe("RECEIVED");
+    expect(resultingForm.status).toBe("ACCEPTED");
 
     // no statusLog is created
     const statusLogs = await prisma.statusLog.findMany({
@@ -176,7 +176,7 @@ describe("mutation.markAsProcessed", () => {
     const form = await formFactory({
       ownerId: user.id,
       opt: {
-        status: "RECEIVED",
+        status: "ACCEPTED",
         recipientCompanyName: company.name,
         recipientCompanySiret: company.siret
       }
@@ -217,7 +217,7 @@ describe("mutation.markAsProcessed", () => {
     const form = await formFactory({
       ownerId: user.id,
       opt: {
-        status: "RECEIVED",
+        status: "ACCEPTED",
         recipientCompanyName: company.name,
         recipientCompanySiret: company.siret
       }
@@ -260,7 +260,7 @@ describe("mutation.markAsProcessed", () => {
     const form = await formFactory({
       ownerId: user.id,
       opt: {
-        status: "RECEIVED",
+        status: "ACCEPTED",
         recipientCompanyName: company.name,
         recipientCompanySiret: company.siret
       }
@@ -291,7 +291,7 @@ describe("mutation.markAsProcessed", () => {
     const form = await formFactory({
       ownerId: user.id,
       opt: {
-        status: "RECEIVED",
+        status: "ACCEPTED",
         recipientCompanyName: company.name,
         recipientCompanySiret: company.siret
       }
@@ -335,7 +335,7 @@ describe("mutation.markAsProcessed", () => {
     const form = await formFactory({
       ownerId: user.id,
       opt: {
-        status: "RECEIVED",
+        status: "ACCEPTED",
         recipientCompanyName: company.name,
         recipientCompanySiret: company.siret
       }
@@ -378,7 +378,7 @@ describe("mutation.markAsProcessed", () => {
     const form = await formFactory({
       ownerId: user.id,
       opt: {
-        status: "RECEIVED",
+        status: "ACCEPTED",
         recipientCompanyName: company.name,
         recipientCompanySiret: company.siret
       }
@@ -428,7 +428,7 @@ describe("mutation.markAsProcessed", () => {
     const form = await formFactory({
       ownerId: user.id,
       opt: {
-        status: "RECEIVED",
+        status: "ACCEPTED",
         recipientCompanyName: company.name,
         recipientCompanySiret: company.siret
       }

@@ -5,10 +5,8 @@ import { expandFormFromDb } from "../../form-converter";
 import { getReadableId } from "../../readable-id";
 import { MutationResolvers } from "../../../generated/graphql/types";
 import { checkIsAuthenticated } from "../../../common/permissions";
-import { getFormOrFormNotFound, getFullForm } from "../../database";
-import { getFullUser } from "../../../users/database";
-import { isFormContributor } from "../../permissions";
-import { NotFormContributor } from "../../errors";
+import { getFormOrFormNotFound } from "../../database";
+import { checkCanDuplicate } from "../../permissions";
 import { eventEmitter, TDEvent } from "../../../events/emitter";
 
 /**
@@ -119,20 +117,16 @@ const duplicateFormResolver: MutationResolvers["duplicateForm"] = async (
 
   const existingForm = await getFormOrFormNotFound({ id });
 
-  const fullUser = await getFullUser(user);
-  const fullExistingForm = await getFullForm(existingForm);
-
-  if (!isFormContributor(fullUser, fullExistingForm)) {
-    throw new NotFormContributor();
-  }
+  await checkCanDuplicate(user, existingForm);
 
   const newForm = await duplicateForm(user, existingForm);
 
-  if (fullExistingForm.temporaryStorage) {
-    await duplicateTemporaryStorageDetail(
-      newForm,
-      fullExistingForm.temporaryStorage
-    );
+  const temporaryStorageDetail = await prisma.form
+    .findUnique({ where: { id: existingForm.id } })
+    .temporaryStorageDetail();
+
+  if (temporaryStorageDetail) {
+    await duplicateTemporaryStorageDetail(newForm, temporaryStorageDetail);
   }
 
   eventEmitter.emit(TDEvent.CreateForm, {

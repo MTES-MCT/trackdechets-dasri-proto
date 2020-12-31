@@ -60,7 +60,7 @@ describe("{ mutation { markAsTempStored } }", () => {
     );
   });
 
-  test("the temp storer of the BSD can mark it as TEMP_STORED", async () => {
+  test("the temp storer of the BSD can mark it as TEMP_STORER_ACCEPTED", async () => {
     const { user, company: tempStorerCompany } = await userWithCompanyFactory(
       "MEMBER"
     );
@@ -99,20 +99,20 @@ describe("{ mutation { markAsTempStored } }", () => {
       where: { id: form.id }
     });
 
-    expect(formAfterMutation.status).toEqual("TEMP_STORED");
+    expect(formAfterMutation.status).toEqual("TEMP_STORER_ACCEPTED");
 
     // check relevant statusLog is created
     const statusLogs = await prisma.statusLog.findMany({
       where: {
         form: { id: form.id },
         user: { id: user.id },
-        status: "TEMP_STORED"
+        status: "TEMP_STORER_ACCEPTED"
       }
     });
     expect(statusLogs.length).toEqual(1);
   });
 
-  test("should fill the signature date when not provided", async () => {
+  test("should leave the signature date empty when not provided", async () => {
     const { user, company: tempStorerCompany } = await userWithCompanyFactory(
       "MEMBER"
     );
@@ -145,9 +145,7 @@ describe("{ mutation { markAsTempStored } }", () => {
     const updatedTemporaryStorageDetail = await prisma.form
       .findUnique({ where: { id: form.id } })
       .temporaryStorageDetail();
-    expect(
-      new Date(updatedTemporaryStorageDetail.tempStorerSignedAt).toDateString()
-    ).toBe(new Date().toDateString());
+    expect(updatedTemporaryStorageDetail.tempStorerSignedAt).toBeNull();
   });
 
   test("the temp storer of the BSD can mark it as REFUSED", async () => {

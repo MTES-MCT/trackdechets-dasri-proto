@@ -52,6 +52,52 @@ describe("Test Form reception", () => {
         id: form.id,
         receivedInfo: {
           receivedBy: "Bill",
+          receivedAt: "2019-01-17T10:22:00+0100"
+        }
+      }
+    });
+
+    const frm = await prisma.form.findUnique({ where: { id: form.id } });
+
+    expect(frm.status).toBe("RECEIVED");
+    expect(frm.wasteAcceptationStatus).toBe(null);
+    expect(frm.receivedBy).toBe("Bill");
+    expect(frm.quantityReceived).toBe(null);
+
+    // when form is received, we clean up currentTransporterSiret
+    expect(frm.currentTransporterSiret).toEqual("");
+
+    // A StatusLog object is created
+    const logs = await prisma.statusLog.findMany({
+      where: { form: { id: frm.id }, user: { id: recipient.id } }
+    });
+    expect(logs.length).toBe(1);
+    expect(logs[0].status).toBe("RECEIVED");
+  });
+
+  it("should mark a sent form as accepted if wasteAcceptationStatus is ACCEPTED", async () => {
+    const {
+      emitterCompany,
+      recipient,
+      recipientCompany,
+      form: initialForm
+    } = await prepareDB();
+    const form = await prisma.form.update({
+      where: { id: initialForm.id },
+      data: { currentTransporterSiret: "5678" }
+    });
+    await prepareRedis({
+      emitterCompany,
+      recipientCompany
+    });
+
+    const { mutate } = makeClient(recipient);
+
+    await mutate(MARK_AS_RECEIVED, {
+      variables: {
+        id: form.id,
+        receivedInfo: {
+          receivedBy: "Bill",
           receivedAt: "2019-01-17T10:22:00+0100",
           signedAt: "2019-01-17T10:22:00+0100",
           wasteAcceptationStatus: "ACCEPTED",
@@ -62,7 +108,7 @@ describe("Test Form reception", () => {
 
     const frm = await prisma.form.findUnique({ where: { id: form.id } });
 
-    expect(frm.status).toBe("RECEIVED");
+    expect(frm.status).toBe("ACCEPTED");
     expect(frm.wasteAcceptationStatus).toBe("ACCEPTED");
     expect(frm.receivedBy).toBe("Bill");
     expect(frm.quantityReceived).toBe(11);
@@ -75,7 +121,7 @@ describe("Test Form reception", () => {
       where: { form: { id: frm.id }, user: { id: recipient.id } }
     });
     expect(logs.length).toBe(1);
-    expect(logs[0].status).toBe("RECEIVED");
+    expect(logs[0].status).toBe("ACCEPTED");
   });
 
   it("should not accept negative values", async () => {
@@ -234,6 +280,7 @@ describe("Test Form reception", () => {
     });
     expect(logs.length).toBe(0);
   });
+
   it("should mark a sent form as partially refused", async () => {
     const {
       emitterCompany,
@@ -263,7 +310,7 @@ describe("Test Form reception", () => {
 
     const frm = await prisma.form.findUnique({ where: { id: form.id } });
     // form was not accepted
-    expect(frm.status).toBe("RECEIVED");
+    expect(frm.status).toBe("ACCEPTED");
     expect(frm.wasteAcceptationStatus).toBe("PARTIALLY_REFUSED");
     expect(frm.receivedBy).toBe("Carol");
     expect(frm.wasteRefusalReason).toBe("Dolor sit amet");
@@ -274,7 +321,7 @@ describe("Test Form reception", () => {
       where: { form: { id: frm.id }, user: { id: recipient.id } }
     });
     expect(logs.length).toBe(1);
-    expect(logs[0].status).toBe("RECEIVED");
+    expect(logs[0].status).toBe("ACCEPTED");
   });
 
   it("should not accept to edit a received form", async () => {
@@ -410,7 +457,7 @@ describe("Test Form reception", () => {
 
     const frm = await prisma.form.findUnique({ where: { id: form.id } });
 
-    expect(frm.status).toBe("RECEIVED");
+    expect(frm.status).toBe("ACCEPTED");
     expect(frm.wasteAcceptationStatus).toBe("ACCEPTED");
     expect(frm.receivedBy).toBe("Bill");
     expect(frm.quantityReceived).toBe(11);
@@ -423,7 +470,7 @@ describe("Test Form reception", () => {
       where: { form: { id: frm.id }, user: { id: recipient.id } }
     });
     expect(logs.length).toBe(1);
-    expect(logs[0].status).toBe("RECEIVED");
+    expect(logs[0].status).toBe("ACCEPTED");
   });
 
   it("should not mark as received a form with segment not taken over", async () => {

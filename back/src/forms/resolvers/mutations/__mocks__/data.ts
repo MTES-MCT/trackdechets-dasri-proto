@@ -54,7 +54,8 @@ export function getNewValidPrismaForm(): Partial<PrismaForm> {
     ],
     wasteDetailsQuantity: 1.5,
     wasteDetailsQuantityType: "REAL",
-    wasteDetailsConsistence: "SOLID"
+    wasteDetailsConsistence: "SOLID",
+    wasteDetailsPop: false
   };
 }
 

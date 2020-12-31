@@ -7,8 +7,7 @@ import {
 } from "../../../generated/graphql/types";
 import { eventEmitter, TDEvent } from "../../../events/emitter";
 import { GraphQLContext } from "../../../types";
-import { getUserCompanies } from "../../../users/database";
-import { MissingTempStorageFlag, NotFormContributor } from "../../errors";
+import { MissingTempStorageFlag } from "../../errors";
 import {
   expandFormFromDb,
   flattenFormInput,
@@ -16,6 +15,8 @@ import {
 } from "../../form-converter";
 import { getReadableId } from "../../readable-id";
 import { draftFormSchema } from "../../validation";
+import { checkIsFormContributor } from "../../permissions";
+import { FormSirets } from "../../types";
 
 const createFormResolver = async (
   parent: ResolversParentTypes["Mutation"],
@@ -30,19 +31,25 @@ const createFormResolver = async (
     ...formContent
   } = createFormInput;
 
-  const formInputSirets = [
-    formContent.emitter?.company?.siret,
-    formContent.recipient?.company?.siret,
-    formContent.trader?.company?.siret,
-    formContent.transporter?.company?.siret,
-    formContent.ecoOrganisme?.siret
-  ];
+  const formSirets: FormSirets = {
+    emitterCompanySiret: formContent.emitter?.company?.siret,
+    recipientCompanySiret: formContent.recipient?.company?.siret,
+    transporterCompanySiret: formContent.transporter?.company?.siret,
+    traderCompanySiret: formContent.trader?.company?.siret,
+    ecoOrganismeSiret: formContent.ecoOrganisme?.siret,
+    ...(temporaryStorageDetail?.destination?.company?.siret
+      ? {
+          destinationCompanySiret:
+            temporaryStorageDetail.destination.company.siret
+        }
+      : {})
+  };
 
-  const userCompanies = await getUserCompanies(user.id);
-  const userSirets = userCompanies.map(c => c.siret);
-  if (!formInputSirets.some(siret => userSirets.includes(siret))) {
-    throw new NotFormContributor();
-  }
+  await checkIsFormContributor(
+    user,
+    formSirets,
+    "Vous ne pouvez pas créer un bordereau sur lequel votre entreprise n'apparait pas"
+  );
 
   const form = flattenFormInput(formContent);
   const formCreateInput: Prisma.FormCreateInput = {
