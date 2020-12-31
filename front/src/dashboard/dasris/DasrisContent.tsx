@@ -9,9 +9,9 @@ import {
 
 import routes from "common/routes";
 // import "./SlipsContent.scss";
-// import ActTab from "./tabs/ActTab";
+import ActTab from "./tabs/ActTab";
 import DraftsTab from "./tabs/DraftsTab";
-// import FollowTab from "./tabs/FollowTab";
+import FollowTab from "./tabs/FollowTab";
 // import HistoryTab from "./tabs/HistoryTab";
 // import SlipDetail from "../slip/SlipDetail";
 
@@ -20,7 +20,22 @@ export default function DasrisContent() {
 
   return (
     <div>
-      <DraftsTab />
+      <Switch>
+        <Route path={routes.dashboard.dasris.drafts}>
+          <DraftsTab />
+        </Route>
+        <Route path={routes.dashboard.dasris.act}>
+          <ActTab />
+        </Route>
+        <Route path={routes.dashboard.dasris.follow}>
+          <FollowTab />
+        </Route>
+        <Redirect
+          to={generatePath(routes.dashboard.dasris.drafts, {
+            siret,
+          })}
+        />
+      </Switch>
     </div>
   );
 }

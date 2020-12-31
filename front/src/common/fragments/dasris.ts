@@ -39,6 +39,13 @@ export const transporterFragment = gql`
   ${companyFragment}
 `;
 
+export const transportFragment = gql`
+  fragment TransportFragment on DasriTransport {
+    handedOverAt
+    takenOverAt
+  }
+`;
+
 const emitterFragment = gql`
   fragment EmitterFragment on DasriEmitter {
     company {
@@ -87,6 +94,9 @@ const mutableDasriFieldsFragment = gql`
     transporter {
       ...TransporterFragment
     }
+    transport {
+      ... TransportFragment
+    }
     recipient {
       ...RecipientFragment
     }
@@ -94,6 +104,7 @@ const mutableDasriFieldsFragment = gql`
   ${emitterFragment}
   ${emissionFragment}
   ${transporterFragment}
+  ${transportFragment}
   ${recipientFragment}
 `;
 
@@ -102,4 +113,11 @@ export const fullDasriFragment = gql`
     ...MutableDasriFieldsFragment
   }
   ${mutableDasriFieldsFragment}
+`;
+
+export const dasriStatusChangeFragment = gql`
+  fragment StatusChange on Dasri {
+    id
+    status
+  }
 `;

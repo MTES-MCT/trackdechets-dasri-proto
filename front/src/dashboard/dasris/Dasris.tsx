@@ -1,7 +1,7 @@
 import React from "react";
 
-import { BsdActions } from "common/bsd-actions/BsdActions";
-
+import { BsdActions, DynamicActions } from "common/bsd-actions/BsdActions";
+import { DateTime } from "luxon";
 import { statusLabels } from "../constants";
 import Shorten from "common/components/Shorten";
 import { Dasri } from "generated/graphql/types";
@@ -27,6 +27,9 @@ export default function Dasris({
         <thead>
           <tr className="td-table__head-tr">
             {hiddenFields.indexOf("readableId") === -1 && <th>Numéro</th>}
+            {hiddenFields.indexOf("sentAt") === -1 && (
+              <th>Date d'enlèvement</th>
+            )}
             <th>
               <span>Emetteur</span>
             </th>
@@ -38,6 +41,8 @@ export default function Dasris({
             </th>
 
             <th>Quantité</th>
+      
+            {hiddenFields.indexOf("status") === -1 && <th>Statut</th>}
 
             {dynamicActions && <th>Mes actions</th>}
             <th></th>
@@ -53,7 +58,7 @@ export default function Dasris({
               )}
               {hiddenFields.indexOf("sentAt") === -1 && (
                 <td>
-                  {/* {!!s.sentAt && DateTime.fromISO(s.sentAt).toLocaleString()} */}
+            {!!s.transport?.takenOverAt && DateTime.fromISO(s.transport.takenOverAt).toLocaleString()}   
                 </td>
               )}
 
@@ -82,7 +87,11 @@ export default function Dasris({
                 <td>{statusLabels[s.status]}</td>
               )}
 
-              {dynamicActions && <td></td>}
+              {dynamicActions && (
+                <td>
+                  <DynamicActions bsd={s} siret={siret} />{" "}
+                </td>
+              )}
               <td>
                 {" "}
                 <BsdActions

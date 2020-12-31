@@ -44,6 +44,24 @@ export default function DashboardMenu({ me, handleCompanyChange }: IProps) {
                   Brouillon
                 </NavLink>
               </li>
+              <li>
+                <NavLink
+                  to={generatePath(routes.dashboard.dasris.act, { siret })}
+                  className="sidebar__link sidebar__link--indented"
+                  activeClassName="sidebar__link--active"
+                >
+                  Pour Action
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={generatePath(routes.dashboard.dasris.follow, { siret })}
+                  className="sidebar__link sidebar__link--indented"
+                  activeClassName="sidebar__link--active"
+                >
+                  Suivi
+                </NavLink>
+              </li>
             </ul>
             <p className="sidebar__chapter">Mes bordereaux</p>
             <ul>
