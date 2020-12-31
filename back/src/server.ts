@@ -1,38 +1,38 @@
 import { CaptureConsole } from "@sentry/integrations";
+import * as Sentry from "@sentry/node";
 import {
+  ApolloError,
   ApolloServer,
   makeExecutableSchema,
-  ApolloError,
   UserInputError
 } from "apollo-server-express";
-import express from "express";
-import passport from "passport";
-import session from "express-session";
-import rateLimit from "express-rate-limit";
-import RateLimitRedisStore from "rate-limit-redis";
+import { json, urlencoded } from "body-parser";
 import redisStore from "connect-redis";
-import depthLimit from "graphql-depth-limit";
-import bodyParser from "body-parser";
 import cors from "cors";
-import graphqlBodyParser from "./common/middlewares/graphqlBodyParser";
+import express from "express";
+import rateLimit from "express-rate-limit";
+import session from "express-session";
+import depthLimit from "graphql-depth-limit";
 import { applyMiddleware } from "graphql-middleware";
-import { sentry } from "graphql-middleware-sentry";
-import { authRouter } from "./routers/auth-router";
-import { downloadFileHandler } from "./common/file-download";
-import { oauth2Router } from "./routers/oauth2-router";
+import passport from "passport";
+import RateLimitRedisStore from "rate-limit-redis";
 import prisma from "src/prisma";
-import { userActivationHandler } from "./users/activation";
-import { typeDefs, resolvers } from "./schema";
-import { getUIBaseURL } from "./utils";
 import { passportBearerMiddleware, passportJwtMiddleware } from "./auth";
-import { GraphQLContext } from "./types";
 import { ErrorCode } from "./common/errors";
-import { redisClient } from "./common/redis";
-import loggingMiddleware from "./common/middlewares/loggingMiddleware";
+import { downloadFileHandler } from "./common/file-download";
 import errorHandler from "./common/middlewares/errorHandler";
+import graphqlBodyParser from "./common/middlewares/graphqlBodyParser";
+import loggingMiddleware from "./common/middlewares/loggingMiddleware";
+import { redisClient } from "./common/redis";
+import { authRouter } from "./routers/auth-router";
+import { oauth2Router } from "./routers/oauth2-router";
+import { resolvers, typeDefs } from "./schema";
+import { userActivationHandler } from "./users/activation";
+import { getUIBaseURL } from "./utils";
 
 const {
   SENTRY_DSN,
+  SENTRY_ENVIRONMENT,
   SESSION_SECRET,
   SESSION_COOKIE_HOST,
   SESSION_COOKIE_SECURE,
@@ -41,63 +41,22 @@ const {
   NODE_ENV
 } = process.env;
 
-const UI_BASE_URL = getUIBaseURL();
-
-/**
- * Custom report error for sentry middleware
- * It decides whether or not the error should be captured
- */
-export function reportError(res: Error | any) {
-  const whiteList = [
-    ErrorCode.GRAPHQL_PARSE_FAILED,
-    ErrorCode.GRAPHQL_VALIDATION_FAILED,
-    ErrorCode.BAD_USER_INPUT,
-    ErrorCode.UNAUTHENTICATED,
-    ErrorCode.FORBIDDEN
-  ];
-
-  if (res.extensions && whiteList.includes(res.extensions.code)) {
-    return false;
-  }
-  return true;
+if (SENTRY_DSN) {
+  Sentry.init({
+    dsn: SENTRY_DSN,
+    environment: SENTRY_ENVIRONMENT,
+    integrations: [new CaptureConsole({ levels: ["error"] })]
+  });
 }
 
-/**
- * Sentry configuration
- * Capture console.error statements
- */
-const sentryMiddleware = () =>
-  sentry<GraphQLContext>({
-    config: {
-      dsn: SENTRY_DSN,
-      environment: NODE_ENV,
-      integrations: [new CaptureConsole({ levels: ["error"] })]
-    },
-    forwardErrors: true,
-    withScope: (scope, error, context) => {
-      const reqUser = !!context.user ? context.user.email : "anonymous";
-      scope.setUser({
-        email: reqUser
-      });
-
-      scope.setExtra("body", context.req.body);
-      scope.setExtra("origin", context.req.headers.origin);
-      scope.setExtra("user-agent", context.req.headers["user-agent"]);
-      scope.setExtra("ip", context.req.headers["x-real-ip"]);
-      scope.setTag("service", "api");
-    },
-    reportError
-  });
+const UI_BASE_URL = getUIBaseURL();
 
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers
 });
 
-export const schemaWithMiddleware = applyMiddleware(
-  schema,
-  ...[...(SENTRY_DSN ? [sentryMiddleware()] : [])]
-);
+export const schemaWithMiddleware = applyMiddleware(schema);
 
 // GraphQL endpoint
 const graphQLPath = "/";
@@ -135,10 +94,83 @@ export const server = new ApolloServer({
       return new ApolloError("Erreur serveur", ErrorCode.INTERNAL_SERVER_ERROR);
     }
     return err;
-  }
+  },
+  plugins: [
+    {
+      // The following plugin is mostly taken from:
+      // https://blog.sentry.io/2020/07/22/handling-graphql-errors-using-sentry
+      requestDidStart(requestContext) {
+        return {
+          didEncounterErrors(errorContext) {
+            if (!SENTRY_DSN) {
+              return;
+            }
+
+            if (!errorContext.operation) {
+              // If we couldn't parse the operation, don't do anything here
+              return;
+            }
+
+            for (const err of errorContext.errors) {
+              if (
+                [
+                  ErrorCode.GRAPHQL_PARSE_FAILED,
+                  ErrorCode.GRAPHQL_VALIDATION_FAILED,
+                  ErrorCode.BAD_USER_INPUT,
+                  ErrorCode.UNAUTHENTICATED,
+                  ErrorCode.FORBIDDEN
+                ].includes(err.extensions?.code)
+              ) {
+                // Ignore consumer errors
+                continue;
+              }
+
+              Sentry.withScope(scope => {
+                // Annotate whether failing operation was query/mutation/subscription
+                scope.setTag("kind", errorContext.operation.operation);
+
+                scope.setExtra("query", errorContext.request.query);
+                scope.setExtra("variables", errorContext.request.variables);
+
+                if (err.path) {
+                  scope.addBreadcrumb({
+                    category: "query-path",
+                    message: err.path.join(" > "),
+                    level: Sentry.Severity.Debug
+                  });
+                }
+
+                if (requestContext.context.user?.email) {
+                  scope.setUser({
+                    email: requestContext.context.user.email
+                  });
+                }
+
+                ["origin", "user-agent", "x-real-ip"].forEach(key => {
+                  if (errorContext.request.http?.headers.get(key)) {
+                    scope.setExtra(
+                      key,
+                      errorContext.request.http.headers.get(key)
+                    );
+                  }
+                });
+
+                Sentry.captureException(err);
+              });
+            }
+          }
+        };
+      }
+    }
+  ]
 });
 
 export const app = express();
+
+if (SENTRY_DSN) {
+  // The request handler must be the first middleware on the app
+  app.use(Sentry.Handlers.requestHandler());
+}
 
 const RATE_LIMIT_WINDOW_SECONDS = 60;
 const MAX_REQUESTS_PER_WINDOW = 1000;
@@ -158,9 +190,9 @@ app.use(
  * parse application/x-www-form-urlencoded
  * used when submitting login form
  */
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(urlencoded({ extended: false }));
 
-app.use(bodyParser.json());
+app.use(json());
 
 // allow application/graphql header
 app.use(graphqlBodyParser);
@@ -248,5 +280,9 @@ server.applyMiddleware({
   path: graphQLPath
 });
 
-// error handler
+if (SENTRY_DSN) {
+  // The error handler must be before any other error middleware and after all controllers
+  app.use(Sentry.Handlers.errorHandler());
+}
+
 app.use(errorHandler);
