@@ -74,6 +74,7 @@ const mockedForm = {
   transporterCompanyPhone: "06 18 76 02 96",
   recipientCompanyMail: "recipient@example.com",
   wasteDetailsConsistence: "SOLID",
+  wasteDetailsPop: false,
   traderCompanyPhone: "",
   noTraceability: null,
   emitterCompanySiret: "12343606600011",
@@ -114,7 +115,8 @@ const formPayload = (wasteAcceptationStatus): TDEventPayload<Form> => ({
     updatedAt: new Date("2019-10-16T07:45:13.959Z"),
     wasteAcceptationStatus,
     wasteRefusalReason: "Non conforme",
-    quantityReceived: 21.3
+    quantityReceived: 21.3,
+    wasteDetailsPop: false
   } as Form,
   updatedFields: {
     wasteAcceptationStatus: "<a value>",
@@ -128,7 +130,8 @@ const formPayload = (wasteAcceptationStatus): TDEventPayload<Form> => ({
     isImportedFromPaper: false,
     status: "SENT",
     createdAt: new Date("2019-10-16T07:45:13.959Z"),
-    updatedAt: new Date("2019-10-16T07:45:13.959Z")
+    updatedAt: new Date("2019-10-16T07:45:13.959Z"),
+    wasteDetailsPop: false
   } as Form
 });
 
