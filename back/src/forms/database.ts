@@ -15,10 +15,7 @@ import { FullForm } from "./types";
  * @param form
  */
 export async function getFullForm(form: Form): Promise<FullForm> {
-  const owner = await prisma.form
-    .findUnique({ where: { id: form.id } })
-    .owner();
-  const temporaryStorage = await prisma.form
+  const temporaryStorageDetail = await prisma.form
     .findUnique({ where: { id: form.id } })
     .temporaryStorageDetail();
   const transportSegments = await prisma.form
@@ -26,8 +23,7 @@ export async function getFullForm(form: Form): Promise<FullForm> {
     .transportSegments();
   return {
     ...form,
-    owner,
-    temporaryStorage,
+    temporaryStorageDetail,
     transportSegments
   };
 }
@@ -102,6 +98,10 @@ export function getFormsRightFilter(siret: string, roles?: FormRole[]) {
 }
 
 export function stringifyDates(obj: Form) {
+  if (!obj) {
+    return null;
+  }
+
   return {
     ...obj,
     ...(obj?.createdAt && { createdAt: obj.createdAt.toISOString() }),

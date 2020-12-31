@@ -1,3 +1,4 @@
+import { WasteAcceptationStatus } from "@prisma/client";
 import { Machine } from "xstate";
 import { PROCESSING_OPERATIONS_GROUPEMENT_CODES } from "../../common/constants";
 import { Event, EventType, FormState } from "./types";
@@ -35,6 +36,10 @@ const machine = Machine<any, Event>(
               cond: "isFormRefusedByTempStorage"
             },
             {
+              target: FormState.TempStorerAccepted,
+              cond: "isFormAcceptedByTempStorage"
+            },
+            {
               target: FormState.TempStored
             }
           ],
@@ -44,6 +49,10 @@ const machine = Machine<any, Event>(
               cond: "isFormRefused"
             },
             {
+              target: FormState.Accepted,
+              cond: "isFormAccepted"
+            },
+            {
               target: FormState.Received
             }
           ]
@@ -51,6 +60,19 @@ const machine = Machine<any, Event>(
       },
       [FormState.Refused]: { type: "final" },
       [FormState.Received]: {
+        on: {
+          [EventType.MarkAsAccepted]: [
+            {
+              target: FormState.Refused,
+              cond: "isFormRefused"
+            },
+            {
+              target: FormState.Accepted
+            }
+          ]
+        }
+      },
+      [FormState.Accepted]: {
         on: {
           [EventType.MarkAsProcessed]: [
             {
@@ -78,6 +100,19 @@ const machine = Machine<any, Event>(
         on: { [EventType.MarkAsProcessed]: { target: FormState.Processed } }
       },
       [FormState.TempStored]: {
+        on: {
+          [EventType.MarkAsTempStorerAccepted]: [
+            {
+              target: FormState.Refused,
+              cond: "isFormRefusedByTempStorage"
+            },
+            {
+              target: FormState.TempStorerAccepted
+            }
+          ]
+        }
+      },
+      [FormState.TempStorerAccepted]: {
         on: {
           [EventType.MarkAsResealed]: [
             {
@@ -113,6 +148,10 @@ const machine = Machine<any, Event>(
               cond: "isFormRefused"
             },
             {
+              target: FormState.Accepted,
+              cond: "isFormAccepted"
+            },
+            {
               target: FormState.Received
             }
           ]
@@ -133,9 +172,22 @@ const machine = Machine<any, Event>(
         ),
       isFormRefused: (_, event) =>
         event.formUpdateInput?.wasteAcceptationStatus === "REFUSED",
+      isFormAccepted: (_, event) =>
+        [
+          WasteAcceptationStatus.ACCEPTED,
+          WasteAcceptationStatus.PARTIALLY_REFUSED
+        ].includes(event.formUpdateInput?.wasteAcceptationStatus as any),
       isFormRefusedByTempStorage: (_, event) =>
         event.formUpdateInput?.temporaryStorageDetail?.update
-          ?.tempStorerWasteAcceptationStatus === "REFUSED"
+          ?.tempStorerWasteAcceptationStatus === "REFUSED",
+      isFormAcceptedByTempStorage: (_, event) =>
+        [
+          WasteAcceptationStatus.ACCEPTED,
+          WasteAcceptationStatus.PARTIALLY_REFUSED
+        ].includes(
+          event.formUpdateInput?.temporaryStorageDetail?.update
+            ?.tempStorerWasteAcceptationStatus as any
+        )
     }
   }
 );

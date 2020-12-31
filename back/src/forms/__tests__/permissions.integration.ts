@@ -1,4 +1,4 @@
-import { Form, User } from "@prisma/client";
+import { Form, User, Status } from "@prisma/client";
 import prisma from "src/prisma";
 import { resetDatabase } from "../../../integration-tests/helper";
 import { ErrorCode } from "../../common/errors";
@@ -10,74 +10,74 @@ import {
   userWithCompanyFactory
 } from "../../__tests__/factories";
 import {
+  checkCanRead,
+  checkCanDuplicate,
+  checkCanUpdate,
+  checkCanDelete,
   checkCanMarkAsProcessed,
   checkCanMarkAsReceived,
   checkCanMarkAsResent,
   checkCanMarkAsSealed,
   checkCanMarkAsTempStored,
-  checkCanReadUpdateDeleteForm,
   checkCanSignedByTransporter,
   checkSecurityCode
 } from "../permissions";
 
-async function checkOwnerPermission(
-  permission: (user: User, form: Form) => Promise<boolean>
-) {
-  const user = await userFactory();
-  const form = await formFactory({ ownerId: user.id });
-  return permission(user, form);
-}
-
 async function checkEmitterPermission(
-  permission: (user: User, form: Form) => Promise<boolean>
+  permission: (user: User, form: Form) => Promise<boolean>,
+  formStatus = Status.DRAFT
 ) {
   const owner = await userFactory();
   const { user, company } = await userWithCompanyFactory("MEMBER");
   const form = await formFactory({
     ownerId: owner.id,
-    opt: { emitterCompanySiret: company.siret }
+    opt: { emitterCompanySiret: company.siret, status: formStatus }
   });
   return permission(user, form);
 }
 
 async function checkRecipientPermission(
-  permission: (user: User, form: Form) => Promise<boolean>
+  permission: (user: User, form: Form) => Promise<boolean>,
+  formStatus = Status.DRAFT
 ) {
   const owner = await userFactory();
   const { user, company } = await userWithCompanyFactory("MEMBER");
   const form = await formFactory({
     ownerId: owner.id,
-    opt: { recipientCompanySiret: company.siret }
+    opt: { recipientCompanySiret: company.siret, status: formStatus }
   });
   return permission(user, form);
 }
 
 async function checkTransporterPermission(
-  permission: (user: User, form: Form) => Promise<boolean>
+  permission: (user: User, form: Form) => Promise<boolean>,
+  formStatus = Status.DRAFT
 ) {
   const owner = await userFactory();
   const { user, company } = await userWithCompanyFactory("MEMBER");
   const form = await formFactory({
     ownerId: owner.id,
-    opt: { transporterCompanySiret: company.siret }
+    opt: { transporterCompanySiret: company.siret, status: formStatus }
   });
   return permission(user, form);
 }
 
 async function checkTraderPermission(
-  permission: (user: User, form: Form) => Promise<boolean>
+  permission: (user: User, form: Form) => Promise<boolean>,
+  formStatus = Status.DRAFT
 ) {
   const owner = await userFactory();
   const { user, company } = await userWithCompanyFactory("MEMBER");
   const form = await formFactory({
     ownerId: owner.id,
-    opt: { traderCompanySiret: company.siret }
+    opt: { traderCompanySiret: company.siret, status: formStatus }
   });
   return permission(user, form);
 }
 
 async function checkEcoOrganismePermission(
-  permission: (user: User, form: Form) => Promise<boolean>
+  permission: (user: User, form: Form) => Promise<boolean>,
+  formStatus = Status.DRAFT
 ) {
   const owner = await userFactory();
   const { user, company } = await userWithCompanyFactory("MEMBER");
@@ -92,19 +92,24 @@ async function checkEcoOrganismePermission(
     ownerId: owner.id,
     opt: {
       ecoOrganismeSiret: ecoOrganisme.siret,
-      ecoOrganismeName: ecoOrganisme.name
+      ecoOrganismeName: ecoOrganisme.name,
+      status: formStatus
     }
   });
   return permission(user, form);
 }
 
 async function checkTransporterAfterTempStoragePermission(
-  permission: (user: User, form: Form) => Promise<boolean>
+  permission: (user: User, form: Form) => Promise<boolean>,
+  formStatus = Status.DRAFT
 ) {
   const owner = await userFactory();
   const { user, company } = await userWithCompanyFactory("MEMBER");
   const form = await formWithTempStorageFactory({
-    ownerId: owner.id
+    ownerId: owner.id,
+    opt: {
+      status: formStatus
+    }
   });
   const tempStorageDetail = await prisma.form
     .findUnique({ where: { id: form.id } })
@@ -117,12 +122,16 @@ async function checkTransporterAfterTempStoragePermission(
 }
 
 async function checkDestinationAfterTempStoragePermission(
-  permission: (user: User, form: Form) => Promise<boolean>
+  permission: (user: User, form: Form) => Promise<boolean>,
+  formStatus = Status.DRAFT
 ) {
   const owner = await userFactory();
   const { user, company } = await userWithCompanyFactory("MEMBER");
   const form = await formWithTempStorageFactory({
-    ownerId: owner.id
+    ownerId: owner.id,
+    opt: {
+      status: formStatus
+    }
   });
   const tempStorageDetail = await prisma.form
     .findUnique({ where: { id: form.id } })
@@ -135,12 +144,16 @@ async function checkDestinationAfterTempStoragePermission(
 }
 
 async function checkMultiModalTransporterPermission(
-  permission: (user: User, form: Form) => Promise<boolean>
+  permission: (user: User, form: Form) => Promise<boolean>,
+  formStatus = Status.DRAFT
 ) {
   const owner = await userFactory();
   const { user, company } = await userWithCompanyFactory("MEMBER");
   const form = await formWithTempStorageFactory({
-    ownerId: owner.id
+    ownerId: owner.id,
+    opt: {
+      status: formStatus
+    }
   });
   await prisma.transportSegment.create({
     data: {
@@ -152,20 +165,28 @@ async function checkMultiModalTransporterPermission(
 }
 
 async function checkRandomUserPermission(
-  permission: (user: User, form: Form) => Promise<boolean>
+  permission: (user: User, form: Form) => Promise<boolean>,
+  formStatus = Status.DRAFT
 ) {
   const owner = await userFactory();
   const user = await userFactory();
   const form = await formWithTempStorageFactory({
-    ownerId: owner.id
+    ownerId: owner.id,
+    opt: {
+      status: formStatus
+    }
   });
   return permission(user, form);
 }
 
-describe("checkCanReadUpdateDeleteForm", () => {
+describe.each([
+  checkCanRead,
+  checkCanDuplicate,
+  checkCanUpdate,
+  checkCanDelete,
+  checkCanMarkAsSealed
+])("%p", permission => {
   afterAll(resetDatabase);
-
-  const permission = checkCanReadUpdateDeleteForm;
 
   it("should deny access to random user", async () => {
     expect.assertions(1);
@@ -174,11 +195,6 @@ describe("checkCanReadUpdateDeleteForm", () => {
     } catch (err) {
       expect(err.extensions.code).toEqual(ErrorCode.FORBIDDEN);
     }
-  });
-
-  it("should allow owner", async () => {
-    const check = await checkOwnerPermission(permission);
-    expect(check).toEqual(true);
   });
 
   it("should allow emitter", async () => {
@@ -218,50 +234,6 @@ describe("checkCanReadUpdateDeleteForm", () => {
 
   it("should allow multimodal transporter", async () => {
     const check = await checkMultiModalTransporterPermission(permission);
-    expect(check).toEqual(true);
-  });
-});
-
-describe("checkCanMarkAsSealed", () => {
-  afterAll(resetDatabase);
-
-  const permission = checkCanMarkAsSealed;
-
-  it("should deny access to random user", async () => {
-    expect.assertions(1);
-    try {
-      await checkRandomUserPermission(permission);
-    } catch (err) {
-      expect(err.extensions.code).toEqual(ErrorCode.FORBIDDEN);
-    }
-  });
-  it("should allow owner", async () => {
-    const check = await checkOwnerPermission(permission);
-    expect(check).toEqual(true);
-  });
-
-  it("should allow emitter", async () => {
-    const check = await checkEmitterPermission(permission);
-    expect(check).toEqual(true);
-  });
-
-  it("should allow recipient", async () => {
-    const check = await checkRecipientPermission(permission);
-    expect(check).toEqual(true);
-  });
-
-  it("should allow transporter", async () => {
-    const check = await checkTransporterPermission(permission);
-    expect(check).toEqual(true);
-  });
-
-  it("should allow trader", async () => {
-    const check = await checkTraderPermission(permission);
-    expect(check).toEqual(true);
-  });
-
-  it("should allow destination after temp storage", async () => {
-    const check = await checkDestinationAfterTempStoragePermission(permission);
     expect(check).toEqual(true);
   });
 });
@@ -394,7 +366,7 @@ describe("checkSecurityCode", () => {
     const company = await companyFactory();
     const checkFn = () => checkSecurityCode(company.siret, 1258478956);
     expect(checkFn).rejects.toThrow(
-      "Le code de sécurité de l'émetteur du bordereau est invalide."
+      "Le code de signature de l'émetteur du bordereau est invalide."
     );
   });
 });

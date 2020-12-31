@@ -166,7 +166,8 @@ function flattenWasteDetailsInput(input: { wasteDetails?: WasteDetailsInput }) {
     wasteDetailsQuantity: chain(input.wasteDetails, w => w.quantity),
     wasteDetailsQuantityType: chain(input.wasteDetails, w => w.quantityType),
     wasteDetailsName: chain(input.wasteDetails, w => w.name),
-    wasteDetailsConsistence: chain(input.wasteDetails, w => w.consistence)
+    wasteDetailsConsistence: chain(input.wasteDetails, w => w.consistence),
+    wasteDetailsPop: chain(input.wasteDetails, w => w.pop)
   };
 }
 
@@ -518,7 +519,8 @@ export function expandFormFromDb(form: PrismaForm): GraphQLForm {
       ),
       quantity: form.wasteDetailsQuantity,
       quantityType: form.wasteDetailsQuantityType,
-      consistence: form.wasteDetailsConsistence
+      consistence: form.wasteDetailsConsistence,
+      pop: form.wasteDetailsPop
     }),
     trader: nullIfNoValues<Trader>({
       company: nullIfNoValues<FormCompany>({

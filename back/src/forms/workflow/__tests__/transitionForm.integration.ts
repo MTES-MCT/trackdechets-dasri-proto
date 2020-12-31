@@ -31,7 +31,7 @@ describe("transition form", () => {
       where: { id: form.id }
     });
 
-    const nextStatus = "RECEIVED";
+    const nextStatus = "ACCEPTED";
 
     expect(updatedForm.status).toEqual(nextStatus);
 
