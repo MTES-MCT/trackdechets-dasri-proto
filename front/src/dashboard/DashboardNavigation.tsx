@@ -120,6 +120,18 @@ export function DashboardNav({
                 </li>
                 <li>
                   <NavLink
+                    to={generatePath(routes.dashboard.transport.dasriToCollect, {
+                      siret: currentSiret,
+                    })}
+                    className={`${styles.dashboardNavLink} ${styles.dashboardNavIndented}`}
+                    activeClassName="sidebar__link--active"
+                    onClick={() => onClick()}
+                  >
+                    Dasri à collecter
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
                     to={generatePath(routes.dashboard.transport.collected, {
                       siret: currentSiret,
                     })}
