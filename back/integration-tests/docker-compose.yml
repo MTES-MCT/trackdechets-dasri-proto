@@ -26,3 +26,6 @@ services:
       NODE_ENV: test
       VIRTUAL_HOST: $API_HOST
       LETSENCRYPT_HOST: $API_HOST
+      EMAIL_BACKEND: "sendinblue"
+      MAIN_TEMPLATE_ID: "9"
+
