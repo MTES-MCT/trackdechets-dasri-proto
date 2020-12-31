@@ -7,13 +7,13 @@ import { userMails } from "../users/mails";
  *
  * @param baseDate Date
  * @param daysAgo Integer
- * @return a date formatted as "YYYY-MM-DD"
+ * @return a date at 00:00:00
  */
-export const xDaysAgo = (baseDate: Date, daysAgo: number): string => {
+export const xDaysAgo = (baseDate: Date, daysAgo: number): Date => {
   const clonedDate = new Date(baseDate.getTime()); // avoid mutating baseDate
-  return new Date(clonedDate.setDate(clonedDate.getDate() - daysAgo))
-    .toISOString()
-    .split("T")[0];
+  clonedDate.setDate(clonedDate.getDate() - daysAgo);
+
+  return new Date(clonedDate.toDateString());
 };
 
 /**
