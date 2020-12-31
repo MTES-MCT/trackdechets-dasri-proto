@@ -92,6 +92,7 @@ function incomingWasteWhereInput(sirets: string[]): Prisma.FormWhereInput {
                         "SEALED",
                         "SENT",
                         "TEMP_STORED",
+                        "TEMP_STORER_ACCEPTED",
                         "RESENT"
                       ]
                     }
@@ -129,7 +130,17 @@ function transportedWasteWhereInput(sirets: string[]): Prisma.FormWhereInput {
               transporterCompanySiret: { in: sirets }
             }
           },
-          { status: { notIn: ["DRAFT", "SEALED", "SENT", "TEMP_STORED"] } }
+          {
+            status: {
+              notIn: [
+                "DRAFT",
+                "SEALED",
+                "SENT",
+                "TEMP_STORED",
+                "TEMP_STORER_ACCEPTED"
+              ]
+            }
+          }
         ]
       },
       // multi-modal
