@@ -8,14 +8,14 @@ import prisma from "src/prisma";
 )
 export class MigrateAcceptedForms implements Updater {
   async run() {
-    await prisma.forms.updateMany({
+    await prisma.form.updateMany({
       where: {
         status: "RECEIVED"
       },
       data: { status: "ACCEPTED" }
     });
 
-    await prisma.forms.updateMany({
+    await prisma.form.updateMany({
       where: {
         status: "TEMP_STORED"
       },
