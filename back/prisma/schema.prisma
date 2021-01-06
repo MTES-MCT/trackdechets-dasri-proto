@@ -156,6 +156,7 @@ model Company {
   transporterReceipt     TransporterReceipt?  @relation(fields: [transporterReceiptId], references: [id])
   CompanyAssociation     CompanyAssociation[]
   MembershipRequest      MembershipRequest[]
+  allowDasriTakeOverWithoutSignature Boolean @default(false)
 }
 
 // Companies with restricted diffusion of SIRENE information (police, army, etc)
@@ -508,8 +509,9 @@ model UserActivationHash {
 // Dasri models
 
 enum DasriStatus {
-  DRAFT
+  DRAFT 
   SEALED
+  SIGNED_BY_EMITTER
   SENT
   RECEIVED
   PROCESSED
