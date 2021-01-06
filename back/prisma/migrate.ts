@@ -2,7 +2,7 @@ import path from "path";
 import { migrate } from "postgres-migrations";
 
 const dbConfig = {
-  database: "prisma",
+  database: process.env.POSTGRES_DATABASE,
   user: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   host: process.env.POSTGRES_HOST,
