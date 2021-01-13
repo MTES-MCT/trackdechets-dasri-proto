@@ -16,7 +16,7 @@ const markAsReadyResolver: MutationResolvers["dasriMarkAsReady"] = async (
   const dasri = await getDasriOrDasriNotFound({ id });
   await checkCanMarkDasriAsReady(user, dasri);
 
-  const sealedDasri = await dasriTransition(user, dasri, {
+  const sealedDasri = await dasriTransition(dasri, {
     type: DasriEventType.MarkAsReady
   });
 
