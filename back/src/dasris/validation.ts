@@ -13,9 +13,9 @@ const wasteCodes = DASRI_WASTE_CODES.map(el => el.code);
 // set yup default error messages
 configureYup();
 
-// ************************************************
-// BREAK DOWN FORM TYPE INTO INDIVIDUAL FRAME TYPES
-// ************************************************
+// *************************************************
+// BREAK DOWN DASRI TYPE INTO INDIVIDUAL FRAME TYPES
+// *************************************************
 
 type Emitter = Pick<
   Dasri,
@@ -40,8 +40,8 @@ type Emission = Pick<
   | "emitterWasteVolume"
   | "emitterWastePackagingsInfo"
   | "handedOverToTransporterAt"
-  | "emitterSignedBy"
-  | "emitterSignedAt"
+  | "emissionSignedBy"
+  | "emissionSignedAt"
 >;
 
 type Transporter = Pick<
@@ -53,8 +53,8 @@ type Transporter = Pick<
   | "transporterCompanyPhone"
   | "transporterCompanyMail"
   | "transporterReceipt"
-  | "transporterDepartment"
-  | "transporterValidityLimit"
+  | "transporterReceiptDepartment"
+  | "transporterReceiptValidityLimit"
 >;
 type Transport = Pick<
   Dasri,
@@ -67,8 +67,8 @@ type Transport = Pick<
   | "transporterWasteQuantityType"
   | "transporterWasteVolume"
   | "handedOverToRecipientAt"
-  | "transporterSignedBy"
-  | "transporterSignedAt"
+  | "transportSignedBy"
+  | "transportSignedAt"
 >;
 type Recipient = Pick<
   Dasri,
@@ -88,9 +88,15 @@ type Reception = Pick<
   | "recipientWasteQuantity"
   | "recipientWasteVolume"
   | "receivedAt"
+  | "receptionSignedBy"
+  | "receptionSignedAt"
+>;
+type Operation = Pick<
+  Dasri,
   | "processingOperation"
-  | "recipientSignedBy"
-  | "recipientSignedAt"
+  | "processedAt"
+  | "operationSignedBy"
+  | "operationSignedAt"
 >;
 
 // *********************
@@ -107,7 +113,7 @@ const MISSING_COMPANY_EMAIL = "L'email de l'entreprise est obligatoire";
 const INVALID_SIRET_LENGTH = "Le SIRET doit faire 14 caractères numériques";
 
 const INVALID_DASRI_WASTE_CODE =
-  "Le code déchet n'est pas autorisé pour les DASRI";
+  "Ce code déchet n'est pas autorisé pour les DASRI";
 
 export const emitterSchema: yup.ObjectSchema<
   Partial<Emitter>
@@ -242,12 +248,12 @@ export const transporterSchema: yup.ObjectSchema<
   transporterIsExemptedOfReceipt: yup.boolean().notRequired().nullable(),
   transporterReceipt: yup.string().ensure().required(),
 
-  transporterDepartment: yup
+  transporterReceiptDepartment: yup
     .string()
     .ensure()
     .required("Le département du transporteur est obligatoire"),
 
-  transporterValidityLimit: validDatetime({
+  transporterReceiptValidityLimit: validDatetime({
     verboseFieldName: "date de validité"
   })
 });
@@ -261,9 +267,34 @@ export const transportSchema: yup.ObjectSchema<
 
   transporterWasteRefusedQuantity: yup
     .number()
-    .nullable()
-    .notRequired()
-    .min(0, "La quantité doit être supérieure à 0"),
+    .when("transporterWasteAcceptationStatus", (type, schema) =>
+      ["REFUSED", "PARTIALLY_REFUSED"].includes(type)
+        ? schema
+            .required("La quantité de déchets refusés doit être précisée.")
+            .min(0, "La quantité doit être supérieure à 0")
+        : schema
+            .nullable()
+            .notRequired()
+            .test(
+              "is-empty",
+              "Le champ transporterWasteRefusedQuantity ne doit pas être rensigné si le déchet est accepté ",
+              v => !v
+            )
+    ),
+  transporterWasteRefusalReason: yup
+    .string()
+    .when("transporterWasteAcceptationStatus", (type, schema) =>
+      ["REFUSED", "PARTIALLY_REFUSED"].includes(type)
+        ? schema.required("Vous devez saisir un motif de refus")
+        : schema
+            .nullable()
+            .notRequired()
+            .test(
+              "is-empty",
+              "Le champ transporterWasteRefusalReason ne doit pas être rensigné si le déchet est accepté ",
+              v => !v
+            )
+    ),
   transporterWasteQuantity: yup
     .number()
     .required("La quantité du déchet en tonnes est obligatoire")
@@ -308,7 +339,39 @@ export const recipientSchema: yup.ObjectSchema<
     .required(`Destinataire: ${MISSING_COMPANY_EMAIL}`)
 });
 
-export const draftDasriSchema = yup.object().shape({
+export const receptionSchema: yup.ObjectSchema<
+  Partial<Reception>
+> = yup.object().shape({
+  recipientWasteAcceptationStatus: yup
+    .mixed<WasteAcceptationStatus>()
+    .required(),
+
+  recipientWasteRefusedQuantity: yup
+    .number()
+    .nullable()
+    .notRequired()
+    .min(0, "La quantité doit être supérieure à 0"),
+  recipientWasteQuantity: yup
+    .number()
+    .required("La quantité du déchet en tonnes est obligatoire")
+    .min(0, "La quantité doit être supérieure à 0"),
+
+  recipientWastePackagingsInfo: yup
+    .array()
+    .required("Le détail du conditionnement est obligatoire")
+    .of(packagingInfo)
+});
+export const processingSchema: yup.ObjectSchema<
+  Partial<Operation>
+> = yup.object().shape({
+  processingOperation: yup
+    .string()
+    .label("Opération d’élimination / valorisation")
+    .ensure()
+    .required()
+});
+
+export const dasriDraftSchema = yup.object().shape({
   emitterCompanySiret: yup
     .string()
     .nullable()
@@ -343,3 +406,16 @@ export const draftDasriSchema = yup.object().shape({
     required: false
   })
 });
+
+export const okForEmissionSignatureSchema = emitterSchema.concat(
+  emissionSchema
+);
+export const okForTransportSignatureSchema = transporterSchema.concat(
+  transportSchema
+);
+export const okForReceptionSignatureSchema = recipientSchema.concat(
+  receptionSchema
+);
+export const okForProcessingSignatureSchema = okForReceptionSignatureSchema.concat(
+  processingSchema
+);
