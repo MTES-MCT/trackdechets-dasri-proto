@@ -35,7 +35,11 @@ input DasriRecipientWasteDetailInput {
   quantity: Int
   volume: Int
 }
-
+input DasriWasteAcceptationInput {
+  status: WasteAcceptationStatusInput
+  refusalReason: String
+  refusedQuantity: Int
+}
 input DasriEmissionInput {
   wasteCode: String
   wasteDetailsOnuCode: String
@@ -44,9 +48,9 @@ input DasriEmissionInput {
 }
 input DasriTransportInput {
   wasteDetails: DasriWasteDetailInput
-
   takenOverAt: DateTime
   handedOverAt: DateTime
+  wasteAcceptation: DasriWasteAcceptationInput
 }
 
 input DasriTransporterInput {
@@ -57,10 +61,10 @@ input DasriTransporterInput {
   receipt: String
 
   "Département"
-  department: String
+  receiptDepartment: String
 
   "Limite de validité du récipissé"
-  validityLimit: DateTime
+  receiptValidityLimit: DateTime
 }
 
 input DasriRecipientInput {
@@ -71,11 +75,11 @@ input DasriRecipientInput {
 input DasriReceptionInput {
   wasteDetails: DasriWasteDetailInput
   receivedAt: DateTime
+}
+input DasriOperationInput {
   processingOperation: String
   processedAt: DateTime
 }
-
- 
 
 input DasriInput {
   customId: String
@@ -85,6 +89,7 @@ input DasriInput {
   transport: DasriTransportInput
   recipient: DasriRecipientInput
   reception: DasriReceptionInput
+  operation: DasriOperationInput
 }
 
 input DasriCreateInput {
@@ -97,6 +102,7 @@ input DasriCreateInput {
   transport: DasriTransportInput
   recipient: DasriRecipientInput
   reception: DasriReceptionInput
+  operation: DasriOperationInput
 }
 
 input DasriUpdateInput {
@@ -112,4 +118,17 @@ input DasriUpdateInput {
   transport: DasriTransportInput
   recipient: DasriRecipientInput
   reception: DasriReceptionInput
+  operation: DasriOperationInput
+}
+
+enum DasriSignatureType {
+  EMISSION
+  TRANSPORT
+  RECEPTION
+  OPERATION
+}
+
+input DasriSignatureInput {
+  type: DasriSignatureType!
+  signedBy: String!
 }

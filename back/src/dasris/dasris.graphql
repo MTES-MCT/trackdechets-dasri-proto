@@ -21,6 +21,9 @@ enum DasriStatus {
   """
   SEALED
 
+  "Optionnel, signé par la pred"
+  READY_FOR_TAKEOVER
+
   "BSD envoyé vers l'établissement de destination"
   SENT
 
@@ -33,6 +36,18 @@ enum DasriStatus {
   "Déchet refusé"
   REFUSED
 }
+
+# "Statuts d'acceptation d'un déchet"
+# enum WasteAcceptationStatus {
+#   "Accepté"
+#   ACCEPTED
+
+#   "Refusé"
+#   REFUSED
+
+#   "Partiellement refusé"
+#   PARTIALLY_REFUSED
+# }
 
 "Type de packaging du déchet"
 enum DasriPackagings {
@@ -53,20 +68,6 @@ enum DasriPackagings {
 
   "Autre"
   AUTRE
-}
-
-type DasriTransporter {
-  "Établissement collecteur - transporteur"
-  company: FormCompany
-
-  "N° de récipissé"
-  receipt: String
-
-  "Département"
-  department: String
-
-  "Limite de validité du récipissé"
-  validityLimit: DateTime
 }
 
 "Émetteur du BSD, Personne responsable de l'émimination des déchets (PRED)"
@@ -94,10 +95,10 @@ type DasriTransporter {
   receipt: String
 
   "Département"
-  department: String
+  receiptDepartment: String
 
   "Limite de validité du récipissé"
-  validityLimit: DateTime
+  receiptValidityLimit: DateTime
 }
 
 "Informations sur le conditionnement Dasri"
@@ -130,7 +131,7 @@ type DasriEmission {
 }
 
 type DasriWasteAcceptation {
-  status: String
+  status: WasteAcceptationStatusInput
   refusalReason: String
   refusedQuantity: Int
 }
@@ -147,9 +148,14 @@ type DasriTransport {
 type DasriReception {
   wasteDetails: DasriWasteDetails
   wasteAcceptation: DasriWasteAcceptation
+  receivedAt: DateTime
   signedBy: String
   signedAt: DateTime
-  receivedAt: DateTime
+}
+
+type DasriOperation {
+  signedBy: String
+  signedAt: DateTime
   processingOperation: String
   processedAt: DateTime
 }
@@ -170,6 +176,7 @@ type Dasri {
 
   recipient: DasriRecipient
   reception: DasriReception
+  operation: DasriOperation
 }
 
 type Query {
@@ -276,7 +283,9 @@ type Mutation {
     dasriUpdateInput: DasriUpdateInput!
   ): Dasri!
 
-  "Marque un dasri brouillon comme prêt à être transporté"
+  "Marque un dasri brouillon comme prêt à être emporté"
   dasriMarkAsReady("ID d'un Dasri" id: ID!): Dasri
 
+  "Appose une signature sur un Dasri"
+  dasriSign(id: ID!, signatureInput: DasriSignatureInput!): Dasri
 }
