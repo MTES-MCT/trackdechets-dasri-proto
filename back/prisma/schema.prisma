@@ -484,6 +484,12 @@ model User {
   MembershipRequest   MembershipRequest[]
   StatusLog           StatusLog[]
   UserActivationHash  UserActivationHash[]
+  
+  Dasri Dasri[] @relation("DasriOwnedBy")
+  dasriEmissionSignatures Dasri[] @relation("DasriEmissionSignature")
+  dasriTransportSignatures Dasri[] @relation("DasriTransportSignature")
+  dasriReceptionSignatures Dasri[] @relation("DasriReceptionSignature")
+  dasriOperationignatures Dasri[] @relation("DasriOperationSignature")
 }
 
 model UserAccountHash {
@@ -511,7 +517,7 @@ model UserActivationHash {
 enum DasriStatus {
   DRAFT 
   SEALED
-  SIGNED_BY_EMITTER
+  READY_FOR_TAKEOVER
   SENT
   RECEIVED
   PROCESSED
@@ -525,7 +531,7 @@ model Dasri {
   createdAt                          DateTime                @default(now())
   updatedAt                          DateTime                @updatedAt
   ownerId                            String
-  owner                              User                    @relation(fields: [ownerId], references: [id])
+  owner                              User                    @relation("DasriOwnedBy", fields: [ownerId], references: [id])
   isDeleted                          Boolean?                @default(false)
   
   // emitter
@@ -552,8 +558,10 @@ model Dasri {
   emitterWastePackagingsInfo         Json?
   handedOverToTransporterAt          DateTime?
 
-  emitterSignedBy                    String?
-  emitterSignedAt                    DateTime?
+  emissionSignedBy                    String?
+  emissionSignatory                User? @relation("DasriEmissionSignature",fields: [emissionSignatoryId], references: [id])
+  emissionSignatoryId              String?
+  emissionSignedAt                    DateTime?
   
 // transporter
 
@@ -564,8 +572,8 @@ model Dasri {
   transporterCompanyContact          String?
   transporterCompanyMail             String?
   transporterReceipt                 String?
-  transporterDepartment              String?
-  transporterValidityLimit           DateTime?
+  transporterReceiptDepartment              String?
+  transporterReceiptValidityLimit           DateTime?
   
   // transport
   transporterWasteAcceptationStatus  WasteAcceptationStatus?
@@ -581,8 +589,10 @@ model Dasri {
 
   handedOverToRecipientAt            DateTime?
 
-  transporterSignedBy                String?
-  transporterSignedAt                DateTime?
+  transportSignedBy                String?
+  transportSignatory                User? @relation("DasriTransportSignature", fields: [transportSignatoryId], references: [id])
+  transportSignatoryId              String?
+  transportSignedAt                DateTime?
 
   // recipient
   recipientCompanyName               String?
@@ -605,6 +615,13 @@ model Dasri {
   processingOperation                String?
   processedAt                        DateTime?
 
-  recipientSignedBy                  String?
-  recipientSignedAt                  DateTime?
+  receptionSignedBy                  String?
+  receptionSignatory                User? @relation("DasriReceptionSignature", fields: [receptionSignatoryId], references: [id])
+  receptionSignatoryId              String?
+  receptionSignedAt                  DateTime?
+
+  operationSignedBy                  String?
+  operationSignatory                User? @relation("DasriOperationSignature", fields: [operationSignatoryId], references: [id])
+  operationSignatoryId              String?
+  operationSignedAt                  DateTime?
 }
