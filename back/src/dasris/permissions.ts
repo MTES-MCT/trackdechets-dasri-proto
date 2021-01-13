@@ -47,16 +47,13 @@ export function isDasriContributor(user: FullUser, dasri: FullDasri) {
 
 /**
  * Only users who belongs to a company that appears on the dasri
- * can read, update or delete it
+ * can update it
  */
-export async function checkCanReadUpdateDeleteDasri(
-  user: User,
-  dasri: FullDasri
-) {
-  // user with companies
+export async function checkCanUpdateDasri(user: User, dasri: Dasri) {
   const fullUser = await getFullUser(user);
+  const fullDasri = await getFullDasri(dasri);
 
-  if (!isDasriContributor(fullUser, dasri)) {
+  if (!isDasriContributor(fullUser, fullDasri)) {
     throw new NotDasriContributor();
   }
 
@@ -68,7 +65,7 @@ export async function checkCanMarkDasriAsReady(user: User, dasri: Dasri) {
   const fullDasri = await getFullDasri(dasri);
   if (!isDasriContributor(fullUser, fullDasri)) {
     throw new ForbiddenError(
-      "Vous n'êtes pas autorisé à marquer ce sasri comme prêt"
+      "Vous n'êtes pas autorisé à marquer ce dasri comme prêt"
     );
   }
 
