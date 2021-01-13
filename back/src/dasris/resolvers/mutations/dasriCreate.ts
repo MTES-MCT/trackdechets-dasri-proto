@@ -7,7 +7,7 @@ import { GraphQLContext } from "../../../types";
 import { expandDasriFromDb, flattenDasriInput } from "../../dasri-converter";
 import { getReadableId } from "../../dasri-readable-id";
 import { checkIsAuthenticated } from "../../../common/permissions";
-import { draftDasriSchema } from "../../validation";
+import { dasriDraftSchema } from "../../validation";
 
 const dasriCreateResolver = async (
   parent: ResolversParentTypes["Mutation"],
@@ -17,7 +17,7 @@ const dasriCreateResolver = async (
   const user = checkIsAuthenticated(context);
 
   const flattenedInput = flattenDasriInput(dasriCreateInput);
-  await draftDasriSchema.validate(flattenedInput);
+  await dasriDraftSchema.validate(flattenedInput);
   try {
     const newDasri = await prisma.dasri.create({
       data: {
