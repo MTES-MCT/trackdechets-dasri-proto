@@ -7,7 +7,7 @@ import { Prisma, Dasri } from "@prisma/client";
 import { DasriRole } from "../generated/graphql/types";
 import { FullDasri } from "./types";
 /**
- * Retrieves a form by id or readableId or throw a FormNotFound error
+ * Retrieves a dasri by id or readableId or throw a DasriNotFound error
  */
 export async function getDasriOrDasriNotFound({
   id,
@@ -16,13 +16,15 @@ export async function getDasriOrDasriNotFound({
   if (!id && !readableId) {
     throw new UserInputError("You should specify an id or a readableId");
   }
-  const form = await prisma.dasri.findUnique({
-    where: { id: id ? id : readableId }
+
+  const dasri = await prisma.dasri.findUnique({
+    where: id ? { id } : { readableId }
   });
-  if (form == null || form.isDeleted == true) {
+
+  if (dasri == null || dasri.isDeleted == true) {
     throw new DasriNotFound(id ? id.toString() : readableId);
   }
-  return form;
+  return dasri;
 }
 
 /**
