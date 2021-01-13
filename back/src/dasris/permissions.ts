@@ -2,7 +2,7 @@ import { Company, Dasri, User } from "@prisma/client";
 
 import { getFullUser } from "../users/database";
 import { getFullDasri } from "./database";
-import { FullUser } from "../users/types";
+import { DasriSirets } from "src/dasris/types";
 import { ForbiddenError } from "apollo-server-express";
 
 import { NotDasriContributor } from "./errors";
@@ -12,7 +12,7 @@ function isDasriOwner(user: User, dasri: { owner: User }) {
   return dasri.owner?.id === user.id;
 }
 
-function isDasriEmitter(user: { companies: Company[] }, dasri: Dasri) {
+function isDasriEmitter(user: { companies: Company[] }, dasri: DasriSirets) {
   if (!dasri.emitterCompanySiret) {
     return false;
   }
@@ -20,7 +20,7 @@ function isDasriEmitter(user: { companies: Company[] }, dasri: Dasri) {
   return sirets.includes(dasri.emitterCompanySiret);
 }
 
-function isDasriRecipient(user: { companies: Company[] }, dasri: Dasri) {
+function isDasriRecipient(user: { companies: Company[] }, dasri: DasriSirets) {
   if (!dasri.recipientCompanySiret) {
     return false;
   }
@@ -28,7 +28,10 @@ function isDasriRecipient(user: { companies: Company[] }, dasri: Dasri) {
   return sirets.includes(dasri.recipientCompanySiret);
 }
 
-function isDasriTransporter(user: { companies: Company[] }, dasri: Dasri) {
+function isDasriTransporter(
+  user: { companies: Company[] },
+  dasri: DasriSirets
+) {
   if (!dasri.transporterCompanySiret) {
     return false;
   }
@@ -36,13 +39,23 @@ function isDasriTransporter(user: { companies: Company[] }, dasri: Dasri) {
   return sirets.includes(dasri.transporterCompanySiret);
 }
 
-export function isDasriContributor(user: FullUser, dasri: FullDasri) {
+export async function isDasriContributor(user: User, dasri: DasriSirets) {
+  const fullUser = await getFullUser(user);
   return [
-    isDasriOwner,
     isDasriEmitter,
     isDasriTransporter,
     isDasriRecipient
-  ].some(isFormRole => isFormRole(user, dasri));
+  ].some(isFormRole => isFormRole(fullUser, dasri));
+}
+
+export async function checkIsDasriContributor(user: User, dasri: DasriSirets) {
+  const isContributor = await isDasriContributor(user, dasri);
+
+  if (!isContributor) {
+    throw new NotDasriContributor();
+  }
+
+  return true;
 }
 
 /**

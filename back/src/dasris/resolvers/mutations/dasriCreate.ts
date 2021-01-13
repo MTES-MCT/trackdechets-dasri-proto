@@ -8,6 +8,7 @@ import { expandDasriFromDb, flattenDasriInput } from "../../dasri-converter";
 import { getReadableId } from "../../dasri-readable-id";
 import { checkIsAuthenticated } from "../../../common/permissions";
 import { dasriDraftSchema } from "../../validation";
+import { checkIsDasriContributor } from "../../permissions";
 
 const dasriCreateResolver = async (
   parent: ResolversParentTypes["Mutation"],
@@ -15,6 +16,14 @@ const dasriCreateResolver = async (
   context: GraphQLContext
 ) => {
   const user = checkIsAuthenticated(context);
+
+  const formSirets = {
+    emitterCompanySiret: dasriCreateInput.emitter?.company?.siret,
+    recipientCompanySiret: dasriCreateInput.recipient?.company?.siret,
+    transporterCompanySiret: dasriCreateInput.transporter?.company?.siret
+  };
+
+  await checkIsDasriContributor(user, formSirets);
 
   const flattenedInput = flattenDasriInput(dasriCreateInput);
   await dasriDraftSchema.validate(flattenedInput);
