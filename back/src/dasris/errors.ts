@@ -1,4 +1,4 @@
-import { UserInputError, ForbiddenError } from "apollo-server-express";
+import { UserInputError } from "apollo-server-express";
 
 export class DasriNotFound extends UserInputError {
   constructor(id: string) {
@@ -10,14 +10,6 @@ export class MissingIdOrReadableId extends UserInputError {
   constructor() {
     super(
       "L'id ou le readableId doit être fourni pour identifier le bordereau."
-    );
-  }
-}
-
-export class NotDasriContributor extends ForbiddenError {
-  constructor() {
-    super(
-      "Vous n'êtes pas autorisé à accéder à un bordereau sur lequel votre entreprise n'apparait pas."
     );
   }
 }

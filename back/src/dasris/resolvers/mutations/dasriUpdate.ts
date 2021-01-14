@@ -7,12 +7,12 @@ import {
 } from "../../../generated/graphql/types";
 
 import { checkIsAuthenticated } from "../../../common/permissions";
-import { checkCanUpdateDasri } from "../../permissions";
+import { checkIsDasriContributor } from "../../permissions";
 
 import { GraphQLContext } from "../../../types";
 import { getDasriOrDasriNotFound } from "../../database";
 import { dasriDraftSchema } from "../../validation";
-import { UserInputError } from "apollo-server-express";
+import { ForbiddenError } from "apollo-server-express";
 
 const fieldsAllowedForUpdateOnceReceived = [
   "processingOperation",
@@ -83,7 +83,11 @@ const dasriUpdateResolver = async (
 
   const existingDasri = await getDasriOrDasriNotFound({ id });
 
-  await checkCanUpdateDasri(user, existingDasri);
+  await checkIsDasriContributor(
+    user,
+    existingDasri,
+    "Vous ne pouvez pas modifier un bordereau sur lequel votre entreprise n'apparait pas"
+  );
 
   const flattened = flattenDasriInput(dasriContent);
 
@@ -91,22 +95,19 @@ const dasriUpdateResolver = async (
   await dasriDraftSchema.validate(dasriUpdateInput);
 
   const flattenedFields = Object.keys(flattened);
-  // console.log(flattened)
+
   // except for draft and sealed status, update fields are whitelisted
   if (!["DRAFT", "SEALED"].includes(existingDasri.status)) {
     const allowedFields = getFieldsAllorwedForUpdate(existingDasri);
 
     const diff = flattenedFields.filter(el => !allowedFields.includes(el));
+
     if (!!diff.length) {
-      const errMessage = `Les champs suivants ne peuvent plus être modifiés: ${diff.join()}`;
-      throw new UserInputError(errMessage);
+      const errMessage = `Des champs ont été verrouillés via signature et ne peuvent plus être modifiés: ${diff.join()}`;
+      throw new ForbiddenError(errMessage);
     }
   }
-  console.log(
-    ["REFUSED", "PARTIALLY_REFUSED"].includes(
-      flattened.transporterWasteAcceptationStatus
-    )
-  );
+
   const updatedDasri = await prisma.dasri.update({
     where: { id },
     data: flattened

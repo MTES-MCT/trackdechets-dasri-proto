@@ -5,7 +5,7 @@ import { getFullDasri } from "./database";
 import { DasriSirets } from "src/dasris/types";
 import { ForbiddenError } from "apollo-server-express";
 
-import { NotDasriContributor } from "./errors";
+import { NotFormContributor } from "src/forms/errors";
 import { FullDasri } from "./types";
 
 function isDasriOwner(user: User, dasri: { owner: User }) {
@@ -41,6 +41,7 @@ function isDasriTransporter(
 
 export async function isDasriContributor(user: User, dasri: DasriSirets) {
   const fullUser = await getFullUser(user);
+
   return [
     isDasriEmitter,
     isDasriTransporter,
@@ -48,38 +49,15 @@ export async function isDasriContributor(user: User, dasri: DasriSirets) {
   ].some(isFormRole => isFormRole(fullUser, dasri));
 }
 
-export async function checkIsDasriContributor(user: User, dasri: DasriSirets) {
+export async function checkIsDasriContributor(
+  user: User,
+  dasri: DasriSirets,
+  errorMsg: string
+) {
   const isContributor = await isDasriContributor(user, dasri);
 
   if (!isContributor) {
-    throw new NotDasriContributor();
-  }
-
-  return true;
-}
-
-/**
- * Only users who belongs to a company that appears on the dasri
- * can update it
- */
-export async function checkCanUpdateDasri(user: User, dasri: Dasri) {
-  const fullUser = await getFullUser(user);
-  const fullDasri = await getFullDasri(dasri);
-
-  if (!isDasriContributor(fullUser, fullDasri)) {
-    throw new NotDasriContributor();
-  }
-
-  return true;
-}
-
-export async function checkCanMarkDasriAsReady(user: User, dasri: Dasri) {
-  const fullUser = await getFullUser(user);
-  const fullDasri = await getFullDasri(dasri);
-  if (!isDasriContributor(fullUser, fullDasri)) {
-    throw new ForbiddenError(
-      "Vous n'êtes pas autorisé à marquer ce dasri comme prêt"
-    );
+    throw new NotFormContributor(errorMsg);
   }
 
   return true;

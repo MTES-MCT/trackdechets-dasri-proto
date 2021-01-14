@@ -23,7 +23,11 @@ const dasriCreateResolver = async (
     transporterCompanySiret: dasriCreateInput.transporter?.company?.siret
   };
 
-  await checkIsDasriContributor(user, formSirets);
+  await checkIsDasriContributor(
+    user,
+    formSirets,
+    "Vous ne pouvez pas créer un bordereau sur lequel votre entreprise n'apparaît pas"
+  );
 
   const flattenedInput = flattenDasriInput(dasriCreateInput);
   await dasriDraftSchema.validate(flattenedInput);

@@ -2,19 +2,19 @@ import { checkIsAuthenticated } from "../../../common/permissions";
 import { MutationResolvers } from "../../../generated/graphql/types";
 import { getDasriOrDasriNotFound } from "../../database";
 import { expandDasriFromDb } from "../../dasri-converter";
-import { checkCanMarkDasriAsReady } from "../../permissions";
+import { checkIsDasriContributor } from "../../permissions";
 
 import dasriTransition from "../../workflow/dasriTransition";
 import { DasriEventType } from "../../workflow/types";
 
 const markAsReadyResolver: MutationResolvers["dasriMarkAsReady"] = async (
-  parent,
+  _,
   { id },
   context
 ) => {
   const user = checkIsAuthenticated(context);
   const dasri = await getDasriOrDasriNotFound({ id });
-  await checkCanMarkDasriAsReady(user, dasri);
+  await checkIsDasriContributor(user, dasri, "nope");
 
   const sealedDasri = await dasriTransition(dasri, {
     type: DasriEventType.MarkAsReady

@@ -22,15 +22,8 @@ import {
   DasriPackagingInfo,
   DasriPackagingInfoInput
 } from "../generated/graphql/types";
+import { chain, nullIfNoValues, safeInput } from "src/forms/form-converter";
 import { Prisma, Dasri, DasriStatus, QuantityType } from "@prisma/client";
-
-/**
- * Return null if all object values are null
- * obj otherwise
- */
-export function nullIfNoValues<T>(obj: T): T | null {
-  return Object.values(obj).some(v => v !== null) ? obj : null;
-}
 
 export function expandDasriFromDb(dasri: Dasri): GqlDasri {
   return {
@@ -135,20 +128,6 @@ export function expandDasriFromDb(dasri: Dasri): GqlDasri {
   };
 }
 
-/**
- * Discard undefined fields in a flatten input
- * It is used to prevent overriding existing data when
- * updating records
- */
-export function safeInput<K>(obj: K): Partial<K> {
-  return Object.keys(obj).reduce((acc, curr) => {
-    return {
-      ...acc,
-      ...(obj[curr] !== undefined ? { [curr]: obj[curr] } : {})
-    };
-  }, {});
-}
-
 type computeTotalVolumeFn = (
   packagingInfos: DasriPackagingInfoInput[]
 ) => number;
@@ -157,7 +136,7 @@ type computeTotalVolumeFn = (
  */
 const computeTotalVolume: computeTotalVolumeFn = packagingInfos => {
   if (!packagingInfos) {
-    return null;
+    return undefined;
   }
   return packagingInfos.reduce(
     (acc, packaging) =>
@@ -165,21 +144,6 @@ const computeTotalVolume: computeTotalVolumeFn = packagingInfos => {
     0
   );
 };
-/**
- * Equivalent to a typescript optional chaining operator foo?.bar
- * except that it returns "null" instead of "undefined" if "null" is encountered in the chain
- * It allows to differentiate between voluntary null update and field omission that should
- * not update any data
- */
-export function chain<T, K>(o: T, getter: (o: T) => K): K | null | undefined {
-  if (o === null) {
-    return null;
-  }
-  if (o === undefined) {
-    return undefined;
-  }
-  return getter(o);
-}
 
 function flattenEmitterInput(input: { emitter?: DasriEmitterInput }) {
   return {
@@ -245,7 +209,7 @@ function flattenEmissionInput(input: { emission?: DasriEmissionInput }) {
 function flattenTransporterInput(input: {
   transporter?: DasriTransporterInput;
 }) {
-  return {
+  return safeInput({
     transporterCompanyName: chain(input.transporter, t =>
       chain(t.company, c => c.name)
     ),
@@ -271,9 +235,11 @@ function flattenTransporterInput(input: {
       t => t.receiptDepartment
     ),
     transporterReceiptValidityLimit: chain(input.transporter, t =>
-      t.receiptValidityLimit ? new Date(t.receiptValidityLimit) : null
+      t.receiptValidityLimit
+        ? new Date(t.receiptValidityLimit)
+        : t.receiptValidityLimit
     )
-  };
+  });
 }
 function flattenTransportInput(input: { transport?: DasriTransportInput }) {
   const transporterWastePackagingsInfo = chain(input.transport, t =>
@@ -281,10 +247,10 @@ function flattenTransportInput(input: { transport?: DasriTransportInput }) {
   );
   return {
     transporterTakenOverAt: chain(input.transport, t =>
-      t.takenOverAt ? new Date(t.takenOverAt) : null
+      t.takenOverAt ? new Date(t.takenOverAt) : t.takenOverAt
     ),
     handedOverToRecipientAt: chain(input.transport, t =>
-      t.handedOverAt ? new Date(t.handedOverAt) : null
+      t.handedOverAt ? new Date(t.handedOverAt) : t.handedOverAt
     ),
     transporterWasteQuantity: chain(input.transport, t =>
       chain(t.wasteDetails, w => w.quantity)
@@ -339,7 +305,7 @@ function flattenReceptiontInput(input: { reception?: DasriReceptionInput }) {
     ),
     recipientWasteVolume: computeTotalVolume(recipientWastePackagingsInfo),
     receivedAt: chain(input.reception, r =>
-      r.receivedAt ? new Date(r.receivedAt) : null
+      r.receivedAt ? new Date(r.receivedAt) : r.receivedAt
     ),
 
     recipientWastePackagingsInfo
@@ -350,7 +316,7 @@ function flattenOperationInput(input: { operation?: DasriOperationInput }) {
   return {
     processingOperation: chain(input.operation, r => r.processingOperation),
     processedAt: chain(input.operation, r =>
-      r.processedAt ? new Date(r.processedAt) : null
+      r.processedAt ? new Date(r.processedAt) : r.processedAt
     )
   };
 }
