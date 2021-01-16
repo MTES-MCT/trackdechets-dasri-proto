@@ -1,8 +1,8 @@
 import { Server as HttpServer } from "http";
 import { Server as HttpsServer } from "https";
-import { redisClient } from "src/common/redis";
-import prisma from "src/prisma";
-import { app } from "src/server";
+import { redisClient } from "../src/common/redis";
+import prisma from "../src/prisma";
+import { app } from "../src/server";
 
 let httpServerInstance: HttpServer | HttpsServer = null;
 
@@ -30,7 +30,7 @@ export async function resetDatabase() {
   // We need a longer than 5sec timeout...
   jest.setTimeout(10000);
 
-  await prisma.$executeRaw("SELECT truncate_tables();");
+  await prisma.$executeRaw('SELECT "default$default".truncate_tables();');
 }
 
 /**
