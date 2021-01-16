@@ -3,9 +3,7 @@ import { dasriFactory } from "./factories";
 import { userFactory } from "src/__tests__/factories";
 
 describe("Test Factories", () => {
-  afterAll(async () => {
-    await resetDatabase();
-  });
+  afterAll(resetDatabase);
 
   test("should create a user", async () => {
     const usr = await userFactory();
@@ -17,6 +15,5 @@ describe("Test Factories", () => {
 
     expect(dasri.id).toBeTruthy();
     expect(dasri.readableId).toBeTruthy();
-    console.log(dasri.readableId);
   });
 });

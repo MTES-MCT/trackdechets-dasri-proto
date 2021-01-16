@@ -3,24 +3,21 @@ import { dasriFactory } from "./factories";
 import { getDasriOrDasriNotFound } from "../database";
 import { resetDatabase } from "../../../integration-tests/helper";
 import { ErrorCode } from "src/common/errors";
-import { User } from "@prisma/client";
-
-let user: User = null;
 
 describe("getDasriOrDasriNotFound", () => {
   afterAll(resetDatabase);
 
-  beforeAll(async () => {
-    user = await userFactory();
-  });
+  afterEach(resetDatabase);
 
   it("should get a dasri by id", async () => {
+    const user = await userFactory();
     const created = await dasriFactory({ ownerId: user.id });
     const retrieved = await getDasriOrDasriNotFound({ id: created.id });
     expect(created.id).toEqual(retrieved.id);
   });
 
   it("should get a dasri by readableId", async () => {
+    const user = await userFactory();
     const created = await dasriFactory({ ownerId: user.id });
 
     const retrieved = await getDasriOrDasriNotFound({
@@ -31,6 +28,7 @@ describe("getDasriOrDasriNotFound", () => {
 
   it("should throw DasriNotFound exception if dasri is deleted", async () => {
     expect.assertions(2);
+    const user = await userFactory();
     const dasri = await dasriFactory({
       ownerId: user.id,
       opt: { isDeleted: true }

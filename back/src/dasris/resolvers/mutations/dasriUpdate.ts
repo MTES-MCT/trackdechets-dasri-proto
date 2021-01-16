@@ -1,6 +1,6 @@
 import { expandDasriFromDb, flattenDasriInput } from "../../dasri-converter";
 import { Dasri, DasriStatus } from "@prisma/client";
-import prisma from "src/prisma";
+import prisma from "../../../prisma";
 import {
   ResolversParentTypes,
   MutationDasriUpdateArgs

@@ -22,7 +22,7 @@ import {
   DasriPackagingInfo,
   DasriPackagingInfoInput
 } from "../generated/graphql/types";
-import { chain, nullIfNoValues, safeInput } from "src/forms/form-converter";
+import { chain, nullIfNoValues, safeInput } from "../forms/form-converter";
 import { Prisma, Dasri, DasriStatus, QuantityType } from "@prisma/client";
 
 export function expandDasriFromDb(dasri: Dasri): GqlDasri {

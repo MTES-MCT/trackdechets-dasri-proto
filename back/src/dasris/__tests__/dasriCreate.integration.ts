@@ -1,38 +1,8 @@
-import { resetDatabase } from "integration-tests/helper";
-import { ErrorCode } from "src/common/errors";
-import { userFactory, userWithCompanyFactory } from "src/__tests__/factories";
-import makeClient from "src/__tests__/testClient";
+import { resetDatabase } from "../../../integration-tests/helper";
+import { ErrorCode } from "../../common/errors";
+import { userFactory, userWithCompanyFactory } from "../../__tests__/factories";
+import makeClient from "../../__tests__/testClient";
 
-const CREATE_DASRId = `
-mutation CreateDasri($vhuFormInput: VhuFormInput!) {
-    createVhuForm(vhuFormInput: $vhuFormInput) {
-      id
-      recipient {
-        company {
-            siret
-        }
-      }
-      emitter {
-        company {
-            siret
-        }
-      }
-      transporter {
-        company {
-          siret
-          name
-          address
-          contact
-          mail
-          phone
-        }
-      }
-      wasteDetails {
-        quantity
-      }
-    }
-  }
-`;
 const DASRI_CREATE = `
 mutation DasriCreate($input: DasriCreateInput!) {
   dasriCreate(dasriCreateInput: $input)  {
@@ -120,6 +90,7 @@ mutation DasriCreate($input: DasriCreateInput!) {
 }
 `;
 describe("Mutation.createDasri", () => {
+
   afterEach(resetDatabase);
 
   it("should disallow unauthenticated user", async () => {
@@ -153,7 +124,7 @@ describe("Mutation.createDasri", () => {
         }
       }
     });
-    console.log(errors);
+
     expect(errors).toEqual([
       expect.objectContaining({
         message:

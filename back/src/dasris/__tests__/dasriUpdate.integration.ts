@@ -1,8 +1,8 @@
-import { resetDatabase } from "integration-tests/helper";
-import { ErrorCode } from "src/common/errors";
+import { resetDatabase } from "../../../integration-tests/helper";
+import { ErrorCode } from "../../common/errors";
 import { dasriFactory } from "./factories";
-import { userWithCompanyFactory } from "src/__tests__/factories";
-import makeClient from "src/__tests__/testClient";
+import { userWithCompanyFactory } from "../../__tests__/factories";
+import makeClient from "../../__tests__/testClient";
 import { DasriStatus } from "@prisma/client";
 const DASRI_UPDATE = `
 mutation DasriUpdate($input: DasriUpdateInput!) {
@@ -95,7 +95,7 @@ describe("Mutation.dasriUpdate", () => {
       }
     });
     const { errors } = await mutate(DASRI_UPDATE, {
-      variables: { input: { id: 1 } }
+      variables: { input: { id: dasri.id } }
     });
 
     expect(errors).toEqual([
@@ -108,7 +108,7 @@ describe("Mutation.dasriUpdate", () => {
     ]);
   });
 
-  it("should disallow a user to update a form they are not part of", async () => {
+  it("should disallow a user to update a dasri they are not part of", async () => {
     const { user: anotherUser, company } = await userWithCompanyFactory(
       "MEMBER"
     );
@@ -199,62 +199,6 @@ describe("Mutation.dasriUpdate", () => {
       expect(data.dasriUpdate.emitter.company.mail).toBe("test@test.test");
     }
   );
-
-  // it("should disallow isDraft update after any signature", async () => {
-  //   const { user, company } = await userWithCompanyFactory("MEMBER");
-  //   const form = await vhuFormFactory({
-  //     ownerId: user.id,
-  //     opt: {
-  //       emitterCompanySiret: company.siret,
-  //       emitterSignature: {
-  //         create: {
-  //           signatory: { connect: { id: user.id } },
-  //           signedBy: "The Signatory"
-  //         }
-  //       }
-  //     }
-  //   });
-
-  //   const { mutate } = makeClient(user);
-  //   const vhuFormInput = {
-  //     isDraft: true
-  //   };
-  //   const { errors } = await mutate(EDIT_VHU_FORM, {
-  //     variables: { id: form.id, vhuFormInput }
-  //   });
-
-  //   expect(errors).toEqual([
-  //     expect.objectContaining({
-  //       message:
-  //         "Des champs ont été vérouillés via signature et ne peuvent plus être modifiés: isDraft",
-  //       extensions: expect.objectContaining({
-  //         code: ErrorCode.FORBIDDEN
-  //       })
-  //     })
-  //   ]);
-  // });
-
-  // it("should allow emitter fields update before emitter signature", async () => {
-  //   const { user, company } = await userWithCompanyFactory("MEMBER");
-  //   const form = await vhuFormFactory({
-  //     ownerId: user.id,
-  //     opt: {
-  //       emitterCompanySiret: company.siret
-  //     }
-  //   });
-
-  //   const { mutate } = makeClient(user);
-  //   const vhuFormInput = {
-  //     emitter: {
-  //       agreement: "new agreement"
-  //     }
-  //   };
-  //   const { data } = await mutate(EDIT_VHU_FORM, {
-  //     variables: { id: form.id, vhuFormInput }
-  //   });
-
-  //   expect(data.editVhuForm.emitter.agreement).toBe("new agreement");
-  // });
 
   it("should disallow emitter fields update after emission signature", async () => {
     const { user, company } = await userWithCompanyFactory("MEMBER");

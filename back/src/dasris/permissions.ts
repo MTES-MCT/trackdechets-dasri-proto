@@ -1,16 +1,10 @@
-import { Company, Dasri, User } from "@prisma/client";
+import { Company, User } from "@prisma/client";
 
 import { getFullUser } from "../users/database";
-import { getFullDasri } from "./database";
-import { DasriSirets } from "src/dasris/types";
-import { ForbiddenError } from "apollo-server-express";
 
-import { NotFormContributor } from "src/forms/errors";
-import { FullDasri } from "./types";
+import { DasriSirets } from "./types";
 
-function isDasriOwner(user: User, dasri: { owner: User }) {
-  return dasri.owner?.id === user.id;
-}
+import { NotFormContributor } from "../forms/errors";
 
 function isDasriEmitter(user: { companies: Company[] }, dasri: DasriSirets) {
   if (!dasri.emitterCompanySiret) {

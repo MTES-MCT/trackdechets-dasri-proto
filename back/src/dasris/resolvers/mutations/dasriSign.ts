@@ -1,27 +1,28 @@
 import { checkIsAuthenticated } from "../../../common/permissions";
-import { MutationResolvers } from "../../../generated/graphql/types";
+
 import { getDasriOrDasriNotFound } from "../../database";
 import { expandDasriFromDb } from "../../dasri-converter";
 
 import {
   MutationDasriSignArgs,
-  DasriSignatureType
-} from "src/generated/graphql/types";
+  DasriSignatureType,
+  MutationResolvers
+} from "../../../generated/graphql/types";
 import { ObjectSchema } from "yup";
 import { UserInputError } from "apollo-server-express";
 
 import { Dasri, DasriStatus } from "@prisma/client";
 import dasriTransition from "../../workflow/dasriTransition";
 import { DasriEventType } from "../../workflow/types";
-import { checkIsCompanyMember } from "src/users/permissions";
+import { checkIsCompanyMember } from "../../../users/permissions";
 import {
   okForEmissionSignatureSchema,
   okForReceptionSignatureSchema,
   okForTransportSignatureSchema,
   okForProcessingSignatureSchema
 } from "../../validation";
-import { getCompanyOrCompanyNotFound } from "src/companies/database";
-import { connect } from "node-mailjet";
+import { getCompanyOrCompanyNotFound } from "../../../companies/database";
+
 const dasriSign: MutationResolvers["dasriSign"] = async (
   _,
   { id, signatureInput }: MutationDasriSignArgs,

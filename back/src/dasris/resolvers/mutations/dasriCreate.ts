@@ -36,7 +36,7 @@ const dasriCreateResolver = async (
       data: {
         ...flattenedInput,
         readableId: await getReadableId(),
-        owner: { connect: { id: user?.id } }
+        owner: { connect: { id: user.id } }
       }
     });
     return expandDasriFromDb(newDasri);

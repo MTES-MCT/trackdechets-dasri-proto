@@ -1,10 +1,10 @@
-import { Dasri, Prisma, DasriStatus, User } from "@prisma/client";
-import prisma from "src/prisma";
+import { Dasri, Prisma, DasriStatus } from "@prisma/client";
+import prisma from "../../prisma";
 import { DasriEvent } from "./types";
 import machine from "./machine";
 import { InvalidTransition } from "../../forms/errors";
 import { ObjectSchema } from "yup";
-import { DasriEventType } from "./types";
+
 /**
  * Transition a form from initial state (ex: DRAFT) to next state (ex: SEALED)
  * Allowed transitions are defined as a state machine using xstate

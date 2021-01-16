@@ -1,5 +1,5 @@
-import { resetDatabase } from "integration-tests/helper";
-import prisma from "src/prisma";
+import { resetDatabase } from "../../../../../integration-tests/helper";
+import prisma from "../../../../prisma";
 import { ErrorCode } from "../../../../common/errors";
 import {
   companyFactory,
@@ -58,6 +58,55 @@ describe("{ mutation { markAsTempStored } }", () => {
     expect(errors[0].message).toEqual(
       "Vous ne pouvez pas passer ce bordereau à l'état souhaité."
     );
+  });
+
+  test("the temp storer of the BSD can mark it as TEMP_STORED", async () => {
+    const { user, company: tempStorerCompany } = await userWithCompanyFactory(
+      "MEMBER"
+    );
+
+    const emitterCompany = await companyFactory();
+
+    const form = await formFactory({
+      ownerId: user.id,
+      opt: {
+        status: "SENT",
+        emitterCompanySiret: emitterCompany.siret,
+        recipientCompanySiret: tempStorerCompany.siret,
+        recipientIsTempStorage: true,
+        temporaryStorageDetail: { create: {} }
+      }
+    });
+
+    const { mutate } = makeClient(user);
+
+    await mutate(MARK_AS_TEMP_STORED, {
+      variables: {
+        id: form.id,
+        tempStoredInfos: {
+          receivedBy: "John Doe",
+          receivedAt: "2018-12-11T00:00:00.000Z",
+          quantityReceived: 2.4,
+          quantityType: "REAL"
+        }
+      }
+    });
+
+    const formAfterMutation = await prisma.form.findUnique({
+      where: { id: form.id }
+    });
+
+    expect(formAfterMutation.status).toEqual("TEMP_STORED");
+
+    // check relevant statusLog is created
+    const statusLogs = await prisma.statusLog.findMany({
+      where: {
+        form: { id: form.id },
+        user: { id: user.id },
+        status: "TEMP_STORED"
+      }
+    });
+    expect(statusLogs.length).toEqual(1);
   });
 
   test("the temp storer of the BSD can mark it as TEMP_STORER_ACCEPTED", async () => {
