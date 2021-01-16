@@ -1,6 +1,6 @@
 import * as readline from "readline";
 import { Packagings } from "src/generated/graphql/types";
-import prisma from "src/prisma";
+import prisma from "../../src/prisma";
 import { registerUpdater, Updater } from "./helper/helper";
 
 @registerUpdater(
