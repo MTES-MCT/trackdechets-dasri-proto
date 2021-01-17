@@ -558,13 +558,12 @@ model Dasri {
   emitterWastePackagingsInfo         Json?
   handedOverToTransporterAt          DateTime?
 
-  emissionSignedBy                    String?
-  emissionSignatory                User? @relation("DasriEmissionSignature",fields: [emissionSignatoryId], references: [id])
-  emissionSignatoryId              String?
-  emissionSignedAt                    DateTime?
+  emissionSignedBy                   String?
+  emissionSignatory                  User? @relation("DasriEmissionSignature",fields: [emissionSignatoryId], references: [id])
+  emissionSignatoryId                String?
+  emissionSignedAt                   DateTime?
   
 // transporter
-
   transporterCompanyName             String?
   transporterCompanySiret            String?
   transporterCompanyAddress          String?
@@ -572,8 +571,8 @@ model Dasri {
   transporterCompanyContact          String?
   transporterCompanyMail             String?
   transporterReceipt                 String?
-  transporterReceiptDepartment              String?
-  transporterReceiptValidityLimit           DateTime?
+  transporterReceiptDepartment       String?
+  transporterReceiptValidityLimit    DateTime?
   
   // transport
   transporterWasteAcceptationStatus  WasteAcceptationStatus?
@@ -589,10 +588,10 @@ model Dasri {
 
   handedOverToRecipientAt            DateTime?
 
-  transportSignedBy                String?
-  transportSignatory                User? @relation("DasriTransportSignature", fields: [transportSignatoryId], references: [id])
-  transportSignatoryId              String?
-  transportSignedAt                DateTime?
+  transportSignedBy                  String?
+  transportSignatory                 User? @relation("DasriTransportSignature", fields: [transportSignatoryId], references: [id])
+  transportSignatoryId               String?
+  transportSignedAt                  DateTime?
 
   // recipient
   recipientCompanyName               String?
@@ -603,7 +602,6 @@ model Dasri {
   recipientCompanyMail               String?
 
   // reception
-
   recipientWastePackagingsInfo       Json?
   recipientWasteAcceptationStatus    WasteAcceptationStatus?
   recipientWasteRefusalReason        String?
@@ -615,13 +613,13 @@ model Dasri {
   processingOperation                String?
   processedAt                        DateTime?
 
-  receptionSignedBy                  String?
+  receptionSignedBy                 String?
   receptionSignatory                User? @relation("DasriReceptionSignature", fields: [receptionSignatoryId], references: [id])
   receptionSignatoryId              String?
-  receptionSignedAt                  DateTime?
+  receptionSignedAt                 DateTime?
 
   operationSignedBy                  String?
-  operationSignatory                User? @relation("DasriOperationSignature", fields: [operationSignatoryId], references: [id])
-  operationSignatoryId              String?
+  operationSignatory                 User? @relation("DasriOperationSignature", fields: [operationSignatoryId], references: [id])
+  operationSignatoryId               String?
   operationSignedAt                  DateTime?
 }
