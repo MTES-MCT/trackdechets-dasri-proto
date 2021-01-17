@@ -4,7 +4,7 @@ import prisma from "../../src/prisma";
 @registerUpdater(
   "Migrate the forms to received forms to the new accepted status",
   "Replace RECEIVED with ACCEPTED, and TEMP_STORED to TEMP_STORER_ACCEPTED",
-  true
+  false
 )
 export class MigrateAcceptedForms implements Updater {
   async run() {
