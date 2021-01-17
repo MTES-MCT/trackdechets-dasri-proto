@@ -2,7 +2,7 @@ import { userFactory } from "../../__tests__/factories";
 import { dasriFactory } from "./factories";
 import { getDasriOrDasriNotFound } from "../database";
 import { resetDatabase } from "../../../integration-tests/helper";
-import { ErrorCode } from "src/common/errors";
+import { ErrorCode } from "../../common/errors";
 
 describe("getDasriOrDasriNotFound", () => {
   afterAll(resetDatabase);

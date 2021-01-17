@@ -1,6 +1,6 @@
-import { resetDatabase } from "integration-tests/helper";
+import { resetDatabase } from "../../../integration-tests/helper";
 import { dasriFactory } from "./factories";
-import { userFactory } from "src/__tests__/factories";
+import { userFactory } from "../../__tests__/factories";
 
 describe("Test Factories", () => {
   afterAll(resetDatabase);

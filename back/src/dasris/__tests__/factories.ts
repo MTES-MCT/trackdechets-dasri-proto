@@ -1,4 +1,4 @@
-import prisma from "src/prisma";
+import prisma from "../../prisma";
 import { DasriStatus, QuantityType, Prisma } from "@prisma/client";
 
  
