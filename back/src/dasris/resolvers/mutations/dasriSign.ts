@@ -32,12 +32,12 @@ const dasriSign: MutationResolvers["dasriSign"] = async (
   const dasri = await getDasriOrDasriNotFound({ id });
   const signatureParams = dasriSignatureMapping[signatureInput.type];
 
-  // Which siret is involved in curent signatrue process ?
+  // Which siret is involved in curent signature process ?
   const siretWhoSigns = signatureParams.authorizedSiret(dasri);
   // Is this siret belonging to concrete user ?
   await checkIsCompanyMember({ id: user.id }, { siret: siretWhoSigns });
-
-  checkEmitterAllowsDirectTakeOver({ signatureParams, dasri });
+  
+  await checkEmitterAllowsDirectTakeOver({ signatureParams, dasri });
 
   const data = {
     [signatureParams.by]: signatureInput.signedBy,
@@ -132,7 +132,7 @@ const checkEmitterAllowsDirectTakeOver: checkEmitterAllowsDirectTakeOverFn = asy
 }) => {
   if (
     signatureParams.eventType === DasriEventType.SignTransport &&
-    dasri.status === DasriStatus.READY_FOR_TAKEOVER
+    dasri.status === DasriStatus.SEALED
   ) {
     const emitterCompany = await getCompanyOrCompanyNotFound({
       siret: dasri.emitterCompanySiret

@@ -32,7 +32,8 @@ const fieldsAllowedForUpdateOnceSent = fieldsAllowedForUpdateOnceReceived.concat
     "recipientWasteRefusedQuantity",
     "recipientWasteQuantity",
     "recipientWasteVolume",
-    "receivedAt"
+    "receivedAt",
+    "handedOverToRecipientAt"
   ]
 );
 const fieldsAllowedForUpdateOnceSignedByEmitter = fieldsAllowedForUpdateOnceSent.concat(

@@ -205,14 +205,14 @@ export const emissionSchema: yup.ObjectSchema<
     .required(`La mention ADR est obligatoire.`),
   emitterWasteQuantity: yup
     .number()
-    .required("La quantité du déchet en tonnes est obligatoire")
-    .min(0, "La quantité doit être supérieure à 0"),
+    .required("La quantité du déchet émis en tonnes est obligatoire")
+    .min(0, "La quantité émise doit être supérieure à 0"),
   emitterWasteQuantityType: yup
     .mixed<QuantityType>()
-    .required("Le type de quantité (réelle ou estimée) doit être précisé"),
+    .required("Le type de quantité (réelle ou estimée) émis doit être précisé"),
   emitterWastePackagingsInfo: yup
     .array()
-    .required("Le détail du conditionnement est obligatoire")
+    .required("Le détail du conditionnement émis est obligatoire")
     .of(packagingInfo)
 });
 
@@ -277,7 +277,7 @@ export const transportSchema: yup.ObjectSchema<
             .notRequired()
             .test(
               "is-empty",
-              "Le champ transporterWasteRefusedQuantity ne doit pas être rensigné si le déchet est accepté ",
+              "Le champ transporterWasteRefusedQuantity ne doit pas être renseigné si le déchet est accepté ",
               v => !v
             )
     ),
@@ -291,21 +291,31 @@ export const transportSchema: yup.ObjectSchema<
             .notRequired()
             .test(
               "is-empty",
-              "Le champ transporterWasteRefusalReason ne doit pas être rensigné si le déchet est accepté ",
+              "Le champ transporterWasteRefusalReason ne doit pas être renseigné si le déchet est accepté ",
               v => !v
             )
     ),
   transporterWasteQuantity: yup
     .number()
-    .required("La quantité du déchet en tonnes est obligatoire")
-    .min(0, "La quantité doit être supérieure à 0"),
+    .required("La quantité du déchet transporté en tonnes est obligatoire")
+    .min(0, "La quantité transportée doit être supérieure à 0"),
   transporterWasteQuantityType: yup
     .mixed<QuantityType>()
-    .required("Le type de quantité (réelle ou estimée) doit être précisé"),
+    .required(
+      "Le type de quantité (réelle ou estimée) transportée doit être précisé"
+    ),
   transporterWastePackagingsInfo: yup
     .array()
-    .required("Le détail du conditionnement est obligatoire")
-    .of(packagingInfo)
+    .required("Le détail du conditionnement transporté est obligatoire")
+    .of(packagingInfo),
+  transporterTakenOverAt: validDatetime({
+    verboseFieldName: "date de prise en charge par le transporteur",
+    required: true
+  }),
+  handedOverToRecipientAt: validDatetime({
+    verboseFieldName: "date de remise du déchet au destinataire",
+    required: false
+  })
 });
 
 export const recipientSchema: yup.ObjectSchema<
@@ -410,9 +420,11 @@ export const dasriDraftSchema = yup.object().shape({
 export const okForEmissionSignatureSchema = emitterSchema.concat(
   emissionSchema
 );
-export const okForTransportSignatureSchema = transporterSchema.concat(
-  transportSchema
-);
+// we need to also check check emission, transition from SELAED to SENT is allaowed if emitting company allows it
+export const okForTransportSignatureSchema = transporterSchema
+  .concat(transportSchema)
+  .concat(okForEmissionSignatureSchema);
+
 export const okForReceptionSignatureSchema = recipientSchema.concat(
   receptionSchema
 );
