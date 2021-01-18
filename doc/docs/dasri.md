@@ -71,7 +71,7 @@ C -->|"dasriSign (RECEPTION *)"| G(REFUSED)
  \* si champ wasteAcceptation correspondant  est REFUSED
 ## Exemples
 
-Vous pouvez consulter [ce test d'intégration](https://github.com/MTES-MCT/trackdechets/blob/master/back/src/forms/workflow/__tests__/workflow.integration.ts) écrit en Node.js pour voir des exemples concrets d'utilisation de l'API pour différents cas d'usage (acheminement direct du producteur à l'installation de traitement, entreposage provisoire, multi-modal, etc)
+A venir
 
 ## DASRI au format pdf
 
