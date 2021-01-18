@@ -31,7 +31,7 @@ generates:
       scalarDefaults:
         DateTime: new Date().toISOString()
         URL: "https://example.com"
-  documentation/api-reference.md:
+  ../doc/docs/api-reference.md:
     schema: "!./src/**/*.private.graphql"
     plugins:
       - graphql-markdown-plugin.js
