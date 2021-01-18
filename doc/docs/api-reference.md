@@ -64,6 +64,181 @@ SIRET de l'établissement
 </td>
 </tr>
 <tr>
+<td colspan="2" valign="top"><strong>dasri</strong></td>
+<td valign="top"><a href="#dasri">Dasri</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">id</td>
+<td valign="top"><a href="#id">ID</a></td>
+<td>
+
+Identifiant opaque du BSD
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">readableId</td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+
+Identifiant lisible du BSD
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>dasris</strong></td>
+<td valign="top">[<a href="#dasri">Dasri</a>!]!</td>
+<td>
+
+Renvoie les Dasri de l'établissement sélectionné.
+Si aucun SIRET n'est précisé et que l'utilisateur est membre d'une seule entreprise
+alors les Dasri de cette entreprise sont retournés.
+Si l'utilisateur est membre de 2 entreprises ou plus, vous devez obligatoirement
+préciser un SIRET
+Si l'utilisateur n'est membre d'aucune entreprise, un tableau vide sera renvoyé
+
+Vous pouvez filtrer:
+- par rôle que joue votre entreprise sur le Dasri via `role`
+- par date de dernière modification via `updatedAfter`
+- par date d'envoi via `sentAfter`
+- par statut du Dasri via `status`
+- par code déchet via `wasteCode`
+- par SIRET d'une entreprise présente n'importe où sur le bordereau via `siretPresentOnForm`
+
+Par défaut:
+- tous les BSD accessibles sont retournés
+- les BSD sont classés par date de création, de la plus récente à la plus vieille
+- les résultats sont paginés par 50. Il est possible de modifier cette valeur via `first` ou `last` en fonction du curseur utilisé
+- pour afficher la suite des résultats, utiliser `cursorAfter` ou `cursorBefore`
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">siret</td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+
+SIRET d'un établissement dont je suis membre
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">after</td>
+<td valign="top"><a href="#id">ID</a></td>
+<td>
+
+(Optionnel) PAGINATION
+Permet en conjonction avec `first` de paginer "en avant"
+(des Dasri les plus récents aux Dasri les plus anciens)
+Curseur après lequel les Dasri doivent être retournés
+Attend un identifiant (propriété `id`) de BSD
+Défaut à vide, pour retourner les Dasri les plus récents
+Le BSD précisé dans le curseur ne fait pas partie du résultat
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">first</td>
+<td valign="top"><a href="#int">Int</a></td>
+<td>
+
+(Optionnel) PAGINATION
+Permet en conjonction avec `after` de paginer "en avant"
+(des Dasri les plus récents aux Dasri les plus anciens)
+Nombre de Dasri retournés après le `cursorAfter`
+Défaut à 50, maximum à 500
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">before</td>
+<td valign="top"><a href="#id">ID</a></td>
+<td>
+
+(Optionnel) PAGINATION
+Permet en conjonction avec `last` de paginer "en arrière"
+(des Dasri les plus anciens aux Dasri les plus récents)
+Curseur avant lequel les Dasri doivent être retournés
+Attend un identifiant (propriété `id`) de BSD
+Défaut à vide, pour retourner les Dasri les plus anciens
+Le BSD précisé dans le curseur ne fait pas partie du résultat
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">last</td>
+<td valign="top"><a href="#int">Int</a></td>
+<td>
+
+(Optionnel) PAGINATION
+Nombre de Dasri retournés avant le `before`
+Défaut à 50, maximum à 500
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">updatedAfter</td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+
+(Optionnel) Retourne les Dasri modifiés après la date
+Filtre sur la date de dernière modification
+Au format (YYYY-MM-DD)
+Par défaut vide, aucun filtre n'est appliqué
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">status</td>
+<td valign="top">[<a href="#dasristatus">DasriStatus</a>!]</td>
+<td>
+
+(Optionnel) Filtre sur les statuts des Dasri
+Si aucun filtre n'est passé, les Dasri seront retournés quel que soit leur statut
+Défaut à vide.
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">siretPresentOnForm</td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+
+(Optionnel) Siret d'une autre entreprise présente sur le Dasri
+Vous n'avez pas besoin d'être membre de cette entreprise.
+Seuls les Dasri où cette entreprise apparait (dans n'importe quel cadre) seront retournés.
+Défaut à vide.
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">wasteCode</td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+
+(Optionnel) Code déchet pour affiner la recherche
+18 01 03* (DASRI d'origine humaine) ou 18 02 02* (DASRI d'origine animale)
+Défaut à vide.
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">roles</td>
+<td valign="top">[<a href="#dasrirole">DasriRole</a>!]</td>
+<td>
+
+(Optionnel) Filtre sur le role de demandeur dans le dasri
+Par exemple:
+ - `roles: [TRANSPORTER]` renverra les Dasri pour lesquels je suis transporteur
+ - `roles: [EMITTER, RECIPIENT]` renverra les Dasri dont je suis l'émetteur ou le destinataire final
+Voir `DasriRole` pour la liste des roles sur lesquels il est possible de filtrer.
+Si aucune filtre n'est passé, les Dasri seront retournés quel que soit votre role dessus.
+Défaut à vide.
+
+</td>
+</tr>
+<tr>
 <td colspan="2" valign="top"><strong>ecoOrganismes</strong></td>
 <td valign="top">[<a href="#ecoorganisme">EcoOrganisme</a>!]!</td>
 <td>
@@ -557,6 +732,83 @@ Crée un nouveau bordereau
 <td>
 
 Payload de création d'un bordereau
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>dasriCreate</strong></td>
+<td valign="top"><a href="#dasri">Dasri</a>!</td>
+<td>
+
+Crée un nouveau dasri
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">dasriCreateInput</td>
+<td valign="top"><a href="#dasricreateinput">DasriCreateInput</a>!</td>
+<td>
+
+Payload de création d'un dasri
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>dasriMarkAsReady</strong></td>
+<td valign="top"><a href="#dasri">Dasri</a></td>
+<td>
+
+Marque un dasri brouillon comme prêt (SEALED)
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">id</td>
+<td valign="top"><a href="#id">ID</a>!</td>
+<td>
+
+ID d'un Dasri
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>dasriSign</strong></td>
+<td valign="top"><a href="#dasri">Dasri</a></td>
+<td>
+
+Appose une signature sur un Dasri, verrouille les cadres correspondant
+
+Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
+Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">id</td>
+<td valign="top"><a href="#id">ID</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">signatureInput</td>
+<td valign="top"><a href="#dasrisignatureinput">DasriSignatureInput</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>dasriUpdate</strong></td>
+<td valign="top"><a href="#dasri">Dasri</a>!</td>
+<td>
+
+Met à jour un dasri existant
+Par défaut, tous les champs sont modifiables.
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">dasriUpdateInput</td>
+<td valign="top"><a href="#dasriupdateinput">DasriUpdateInput</a>!</td>
+<td>
+
+Payload de mise à jour d'un dasri
 
 </td>
 </tr>
@@ -1717,6 +1969,502 @@ Statistiques d'un établissement
 Liste des statistiques
 
 </td>
+</tr>
+</tbody>
+</table>
+
+### Dasri
+
+Bordereau Dasri
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>id</strong></td>
+<td valign="top"><a href="#id">ID</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>readableId</strong></td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>customId</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>status</strong></td>
+<td valign="top"><a href="#dasristatus">DasriStatus</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>createdAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>updatedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emitter</strong></td>
+<td valign="top"><a href="#dasriemitter">DasriEmitter</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emission</strong></td>
+<td valign="top"><a href="#dasriemission">DasriEmission</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transporter</strong></td>
+<td valign="top"><a href="#dasritransporter">DasriTransporter</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transport</strong></td>
+<td valign="top"><a href="#dasritransport">DasriTransport</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>recipient</strong></td>
+<td valign="top"><a href="#dasrirecipient">DasriRecipient</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>reception</strong></td>
+<td valign="top"><a href="#dasrireception">DasriReception</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>operation</strong></td>
+<td valign="top"><a href="#dasrioperation">DasriOperation</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriEmission
+
+Informations relatives au déchet émis
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>wasteCode</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wasteDetailsOnuCode</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
+<td valign="top"><a href="#dasriwastedetails">DasriWasteDetails</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>handedOverAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedBy</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriEmitter
+
+Émetteur du Dasri, Personne responsable de l'émimination des déchets (PRED)
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#formcompany">FormCompany</a></td>
+<td>
+
+Établissement émetteur
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>workSite</strong></td>
+<td valign="top"><a href="#worksite">WorkSite</a></td>
+<td>
+
+Site d'emport du déceht, si différent de celle de l'émetteur
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>handOverToTransporterAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td>
+
+Date de remise au tranporteur
+
+</td>
+</tr>
+</tbody>
+</table>
+
+### DasriOperation
+
+Informations relatives au traitement du Dasri
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>signedBy</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>processingOperation</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>processedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriPackagingInfo
+
+Informations sur le conditionnement Dasri
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>type</strong></td>
+<td valign="top"><a href="#dasripackagings">DasriPackagings</a>!</td>
+<td>
+
+Type de conditionnement
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>other</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+
+Description du conditionnement dans le cas où le type de conditionnement est `AUTRE`
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>quantity</strong></td>
+<td valign="top"><a href="#int">Int</a>!</td>
+<td>
+
+Nombre de colis associés à ce conditionnement
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>volume</strong></td>
+<td valign="top"><a href="#int">Int</a>!</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriReception
+
+Informations relatives à la réception du Dasri
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
+<td valign="top"><a href="#dasriwastedetails">DasriWasteDetails</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wasteAcceptation</strong></td>
+<td valign="top"><a href="#dasriwasteacceptation">DasriWasteAcceptation</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receivedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedBy</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriRecipient
+
+Destinataire du Dasri
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#formcompany">FormCompany</a></td>
+<td>
+
+Installation destinataire
+
+</td>
+</tr>
+</tbody>
+</table>
+
+### DasriTransport
+
+Informations relatives au transport du Dasri
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
+<td valign="top"><a href="#dasriwastedetails">DasriWasteDetails</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wasteAcceptation</strong></td>
+<td valign="top"><a href="#dasriwasteacceptation">DasriWasteAcceptation</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>handedOverAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>takenOverAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedBy</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriTransporter
+
+Collecteur transporteur
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#formcompany">FormCompany</a></td>
+<td>
+
+Établissement de destination
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receipt</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+
+N° de récipissé
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receiptDepartment</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+
+Département
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receiptValidityLimit</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td>
+
+Limite de validité du récipissé
+
+</td>
+</tr>
+</tbody>
+</table>
+
+### DasriWasteAcceptation
+
+Informations relatives à l'acceptation ou au refus du déchet (Dasri)
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>status</strong></td>
+<td valign="top"><a href="#wasteacceptationstatusinput">WasteAcceptationStatusInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>refusalReason</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>refusedQuantity</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriWasteDetails
+
+Détail sur le décehte proprement dit du Dasri
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>quantity</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>quantityType</strong></td>
+<td valign="top"><a href="#quantitytype">QuantityType</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>volume</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>packagingInfos</strong></td>
+<td valign="top">[<a href="#dasripackaginginfo">DasriPackagingInfo</a>!]</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -4154,6 +4902,558 @@ Annexe 2
 </tbody>
 </table>
 
+### DasriCreateInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>customId</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+
+Identifiant custom
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emitter</strong></td>
+<td valign="top"><a href="#dasriemitterinput">DasriEmitterInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emission</strong></td>
+<td valign="top"><a href="#dasriemissioninput">DasriEmissionInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transporter</strong></td>
+<td valign="top"><a href="#dasritransporterinput">DasriTransporterInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transport</strong></td>
+<td valign="top"><a href="#dasritransportinput">DasriTransportInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>recipient</strong></td>
+<td valign="top"><a href="#dasrirecipientinput">DasriRecipientInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>reception</strong></td>
+<td valign="top"><a href="#dasrireceptioninput">DasriReceptionInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>operation</strong></td>
+<td valign="top"><a href="#dasrioperationinput">DasriOperationInput</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriEmissionInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>wasteCode</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wasteDetailsOnuCode</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
+<td valign="top"><a href="#dasriwastedetailinput">DasriWasteDetailInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>handedOverAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriEmitterInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#companyinput">CompanyInput</a></td>
+<td>
+
+Établissement émetteur
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>workSite</strong></td>
+<td valign="top"><a href="#worksiteinput">WorkSiteInput</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>customId</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emitter</strong></td>
+<td valign="top"><a href="#dasriemitterinput">DasriEmitterInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emission</strong></td>
+<td valign="top"><a href="#dasriemissioninput">DasriEmissionInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transporter</strong></td>
+<td valign="top"><a href="#dasritransporterinput">DasriTransporterInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transport</strong></td>
+<td valign="top"><a href="#dasritransportinput">DasriTransportInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>recipient</strong></td>
+<td valign="top"><a href="#dasrirecipientinput">DasriRecipientInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>reception</strong></td>
+<td valign="top"><a href="#dasrireceptioninput">DasriReceptionInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>operation</strong></td>
+<td valign="top"><a href="#dasrioperationinput">DasriOperationInput</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriOperationInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>processingOperation</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>processedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriPackagingInfoInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>type</strong></td>
+<td valign="top"><a href="#dasripackagings">DasriPackagings</a>!</td>
+<td>
+
+Type de conditionnement
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>other</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+
+Description du conditionnement dans le cas où le type de conditionnement est `AUTRE`
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>volume</strong></td>
+<td valign="top"><a href="#int">Int</a>!</td>
+<td>
+
+Nombre de colis associés à ce conditionnement
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>quantity</strong></td>
+<td valign="top"><a href="#int">Int</a>!</td>
+<td>
+
+Nombre de colis associés à ce conditionnement
+
+</td>
+</tr>
+</tbody>
+</table>
+
+### DasriReceptionInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
+<td valign="top"><a href="#dasriwastedetailinput">DasriWasteDetailInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receivedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriRecipientInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#companyinput">CompanyInput</a></td>
+<td>
+
+Établissement émetteur
+
+</td>
+</tr>
+</tbody>
+</table>
+
+### DasriRecipientWasteDetailInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>quantity</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>volume</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriSignatureInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>type</strong></td>
+<td valign="top"><a href="#dasrisignaturetype">DasriSignatureType</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedBy</strong></td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriTransportInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
+<td valign="top"><a href="#dasriwastedetailinput">DasriWasteDetailInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>takenOverAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>handedOverAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wasteAcceptation</strong></td>
+<td valign="top"><a href="#dasriwasteacceptationinput">DasriWasteAcceptationInput</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriTransporterInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#companyinput">CompanyInput</a></td>
+<td>
+
+Établissement collecteur - transporteur
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receipt</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+
+N° de récipissé
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receiptDepartment</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+
+Département
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receiptValidityLimit</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td>
+
+Limite de validité du récipissé
+
+</td>
+</tr>
+</tbody>
+</table>
+
+### DasriUpdateInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>id</strong></td>
+<td valign="top"><a href="#id">ID</a>!</td>
+<td>
+
+Identifiant opaque
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>customId</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+
+Identifiant custom
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emitter</strong></td>
+<td valign="top"><a href="#dasriemitterinput">DasriEmitterInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emission</strong></td>
+<td valign="top"><a href="#dasriemissioninput">DasriEmissionInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transporter</strong></td>
+<td valign="top"><a href="#dasritransporterinput">DasriTransporterInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transport</strong></td>
+<td valign="top"><a href="#dasritransportinput">DasriTransportInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>recipient</strong></td>
+<td valign="top"><a href="#dasrirecipientinput">DasriRecipientInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>reception</strong></td>
+<td valign="top"><a href="#dasrireceptioninput">DasriReceptionInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>operation</strong></td>
+<td valign="top"><a href="#dasrioperationinput">DasriOperationInput</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriWasteAcceptationInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>status</strong></td>
+<td valign="top"><a href="#wasteacceptationstatusinput">WasteAcceptationStatusInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>refusalReason</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>refusedQuantity</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriWasteDetailInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>quantity</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>quantityType</strong></td>
+<td valign="top"><a href="#quantitytype">QuantityType</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>packagingInfos</strong></td>
+<td valign="top">[<a href="#dasripackaginginfoinput">DasriPackagingInfoInput</a>!]</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
 ### DestinationInput
 
 <table>
@@ -5710,11 +7010,6 @@ Payload d'une adresse chantier
 </thead>
 <tbody>
 <tr>
-<td colspan="2" valign="top"><strong>name</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
 <td colspan="2" valign="top"><strong>address</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
@@ -5725,12 +7020,17 @@ Payload d'une adresse chantier
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>postalCode</strong></td>
+<td colspan="2" valign="top"><strong>infos</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>infos</strong></td>
+<td colspan="2" valign="top"><strong>name</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>postalCode</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
@@ -5855,6 +7155,196 @@ Gazeux
 <td>
 
 Pâteux
+
+</td>
+</tr>
+</tbody>
+</table>
+
+### DasriPackagings
+
+Type de packaging du déchet
+
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>BOITE_CARTON</strong></td>
+<td>
+
+Caisse en carton avec sac en plastique
+
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>FUT</strong></td>
+<td>
+
+Fûts ou jerrican à usage unique
+
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>BOITE_PERFORANTS</strong></td>
+<td>
+
+Boîtes et Mini-collecteurs pour déchets perforants
+
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>GRAND_EMBALLAGE</strong></td>
+<td>
+
+Grand emballage
+
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>VRAC</strong></td>
+<td>
+
+Grand récipient pour vrac
+
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>AUTRE</strong></td>
+<td>
+
+Autre
+
+</td>
+</tr>
+</tbody>
+</table>
+
+### DasriRole
+
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>TRANSPORTER</strong></td>
+<td>
+
+Les Dasri dont je suis transporteur
+
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>RECIPIENT</strong></td>
+<td>
+
+Les Dasri dont je suis la destination de traitement
+
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>EMITTER</strong></td>
+<td>
+
+Les Dasri dont je suis l'émetteur
+
+</td>
+</tr>
+</tbody>
+</table>
+
+### DasriSignatureType
+
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>EMISSION</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>TRANSPORT</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>RECEPTION</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>OPERATION</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DasriStatus
+
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>DRAFT</strong></td>
+<td>
+
+Dasri à l'état de brouillon
+
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>SEALED</strong></td>
+<td>
+
+Dasri scellé (publié)
+
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>READY_FOR_TAKEOVER</strong></td>
+<td>
+
+Optionnel, Dasri signé par la PRED (émetteur)
+
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>SENT</strong></td>
+<td>
+
+Dasri envoyé vers l'établissement de destination
+
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>RECEIVED</strong></td>
+<td>
+
+Dasri reçu par l'établissement de destination
+
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>PROCESSED</strong></td>
+<td>
+
+Dasri dont les déchets ont été traités
+
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>REFUSED</strong></td>
+<td>
+
+Déchet refusé
 
 </td>
 </tr>
