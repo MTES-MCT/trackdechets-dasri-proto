@@ -13,7 +13,7 @@ import {
   flattenFormInput,
   flattenTemporaryStorageDetailInput
 } from "../../form-converter";
-import { getReadableId } from "../../readable-id";
+import getReadableId from "../../../common/readableId";
 import { draftFormSchema } from "../../validation";
 import { checkIsFormContributor } from "../../permissions";
 import { FormSirets } from "../../types";

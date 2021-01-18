@@ -2,7 +2,7 @@ import { Status, Form, TemporaryStorageDetail, User } from "@prisma/client";
 import prisma from "../../../prisma";
 
 import { expandFormFromDb } from "../../form-converter";
-import { getReadableId } from "../../readable-id";
+import getReadableId from "../../../common/readableId";
 import { MutationResolvers } from "../../../generated/graphql/types";
 import { checkIsAuthenticated } from "../../../common/permissions";
 import { getFormOrFormNotFound } from "../../database";

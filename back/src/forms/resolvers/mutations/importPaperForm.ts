@@ -13,7 +13,7 @@ import {
   flattenImportPaperFormInput
 } from "../../form-converter";
 import { checkCanImportForm } from "../../permissions";
-import { getReadableId } from "../../readable-id";
+import getReadableId from "../../../common/readableId";
 import { processedFormSchema } from "../../validation";
 import transitionForm from "../../workflow/transitionForm";
 import { EventType } from "../../workflow/types";

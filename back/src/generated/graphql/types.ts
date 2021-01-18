@@ -322,6 +322,7 @@ export type CreateTransporterReceiptInput = {
   department: Scalars['String'];
 };
 
+/** Bordereau Dasri */
 export type Dasri = {
   __typename?: 'Dasri';
   id: Scalars['ID'];
@@ -351,6 +352,7 @@ export type DasriCreateInput = {
   operation?: Maybe<DasriOperationInput>;
 };
 
+/** Informations relatives au déchet émis */
 export type DasriEmission = {
   __typename?: 'DasriEmission';
   wasteCode?: Maybe<Scalars['String']>;
@@ -368,12 +370,14 @@ export type DasriEmissionInput = {
   handedOverAt?: Maybe<Scalars['DateTime']>;
 };
 
-/** Émetteur du BSD, Personne responsable de l'émimination des déchets (PRED) */
+/** Émetteur du Dasri, Personne responsable de l'émimination des déchets (PRED) */
 export type DasriEmitter = {
   __typename?: 'DasriEmitter';
   /** Établissement émetteur */
   company?: Maybe<FormCompany>;
+  /** Site d'emport du déceht, si différent de celle de l'émetteur */
   workSite?: Maybe<WorkSite>;
+  /** Date de remise au tranporteur */
   handOverToTransporterAt?: Maybe<Scalars['DateTime']>;
 };
 
@@ -394,6 +398,7 @@ export type DasriInput = {
   operation?: Maybe<DasriOperationInput>;
 };
 
+/** Informations relatives au traitement du Dasri */
 export type DasriOperation = {
   __typename?: 'DasriOperation';
   signedBy?: Maybe<Scalars['String']>;
@@ -434,7 +439,7 @@ export type DasriPackagingInfoInput = {
 export type DasriPackagings = 
   /** Caisse en carton avec sac en plastique */
   | 'BOITE_CARTON'
-  /** Fûts ou jérrican à usage unique */
+  /** Fûts ou jerrican à usage unique */
   | 'FUT'
   /** Boîtes et Mini-collecteurs pour déchets perforants */
   | 'BOITE_PERFORANTS'
@@ -445,6 +450,7 @@ export type DasriPackagings =
   /** Autre */
   | 'AUTRE';
 
+/** Informations relatives à la réception du Dasri */
 export type DasriReception = {
   __typename?: 'DasriReception';
   wasteDetails?: Maybe<DasriWasteDetails>;
@@ -459,6 +465,7 @@ export type DasriReceptionInput = {
   receivedAt?: Maybe<Scalars['DateTime']>;
 };
 
+/** Destinataire du Dasri */
 export type DasriRecipient = {
   __typename?: 'DasriRecipient';
   /** Installation destinataire */
@@ -476,11 +483,11 @@ export type DasriRecipientWasteDetailInput = {
 };
 
 export type DasriRole = 
-  /** Les BSD's dont je suis transporteur */
+  /** Les Dasri dont je suis transporteur */
   | 'TRANSPORTER'
-  /** Les BSD's dont je suis la destination de traitement */
+  /** Les Dasri dont je suis la destination de traitement */
   | 'RECIPIENT'
-  /** Les BSD's dont je suis l'émetteur */
+  /** Les Dasri dont je suis l'émetteur */
   | 'EMITTER';
 
 export type DasriSignatureInput = {
@@ -497,22 +504,20 @@ export type DasriSignatureType =
 export type DasriStatus = 
   /** Dasri à l'état de brouillon */
   | 'DRAFT'
-  /**
-   * BSD finalisé
-   * Les champs sont validés pour détecter des valeurs manquantes ou erronnées
-   */
+  /** Dasri scellé (publié) */
   | 'SEALED'
-  /** Optionnel, signé par la pred */
+  /** Optionnel, Dasri signé par la PRED (émetteur) */
   | 'READY_FOR_TAKEOVER'
-  /** BSD envoyé vers l'établissement de destination */
+  /** Dasri envoyé vers l'établissement de destination */
   | 'SENT'
-  /** BSD reçu par l'établissement de destination */
+  /** Dasri reçu par l'établissement de destination */
   | 'RECEIVED'
-  /** BSD dont les déchets ont été traités */
+  /** Dasri dont les déchets ont été traités */
   | 'PROCESSED'
   /** Déchet refusé */
   | 'REFUSED';
 
+/** Informations relatives au transport du Dasri */
 export type DasriTransport = {
   __typename?: 'DasriTransport';
   wasteDetails?: Maybe<DasriWasteDetails>;
@@ -568,6 +573,7 @@ export type DasriUpdateInput = {
   operation?: Maybe<DasriOperationInput>;
 };
 
+/** Informations relatives à l'acceptation ou au refus du déchet (Dasri) */
 export type DasriWasteAcceptation = {
   __typename?: 'DasriWasteAcceptation';
   status?: Maybe<WasteAcceptationStatusInput>;
@@ -587,6 +593,7 @@ export type DasriWasteDetailInput = {
   packagingInfos?: Maybe<Array<DasriPackagingInfoInput>>;
 };
 
+/** Détail sur le décehte proprement dit du Dasri */
 export type DasriWasteDetails = {
   __typename?: 'DasriWasteDetails';
   quantity?: Maybe<Scalars['Int']>;
@@ -1163,11 +1170,19 @@ export type Mutation = {
   createUploadLink: UploadLink;
   /** Crée un nouveau dasri */
   dasriCreate: Dasri;
-  /** Marque un dasri brouillon comme prêt à être emporté */
+  /** Marque un dasri brouillon comme prêt (SEALED) */
   dasriMarkAsReady?: Maybe<Dasri>;
-  /** Appose une signature sur un Dasri */
+  /**
+   * Appose une signature sur un Dasri, verrouille les cadres correspondant
+   * 
+   * Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
+   * Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport
+   */
   dasriSign?: Maybe<Dasri>;
-  /** Met à jour un dasri existant */
+  /**
+   * Met à jour un dasri existant
+   * Par défaut, tous les champs sont modifiables.
+   */
   dasriUpdate: Dasri;
   /** Supprime un BSD */
   deleteForm?: Maybe<Form>;
@@ -1785,6 +1800,29 @@ export type Query = {
    */
   companyInfos: CompanyPublic;
   dasri?: Maybe<Dasri>;
+  /**
+   * Renvoie les Dasri de l'établissement sélectionné.
+   * Si aucun SIRET n'est précisé et que l'utilisateur est membre d'une seule entreprise
+   * alors les Dasri de cette entreprise sont retournés.
+   * Si l'utilisateur est membre de 2 entreprises ou plus, vous devez obligatoirement
+   * préciser un SIRET
+   * Si l'utilisateur n'est membre d'aucune entreprise, un tableau vide sera renvoyé
+   * 
+   * Vous pouvez filtrer:
+   * - par rôle que joue votre entreprise sur le Dasri via `role`
+   * - par date de dernière modification via `updatedAfter`
+   * - par date d'envoi via `sentAfter`
+   * - par statut du Dasri via `status`
+   * - par code déchet via `wasteCode`
+   * - par SIRET d'une entreprise présente n'importe où sur le bordereau via `siretPresentOnForm`
+   * 
+   * Par défaut:
+   * - tous les BSD accessibles sont retournés
+   * - les BSD sont classés par date de création, de la plus récente à la plus vieille
+   * - les résultats sont paginés par 50. Il est possible de modifier cette valeur
+   * via `first` ou `last` en fonction du curseur utilisé
+   * - pour afficher la suite des résultats, utiliser `cursorAfter` ou `cursorBefore`
+   */
   dasris: Array<Dasri>;
   /** Renvoie la liste des éco-organismes */
   ecoOrganismes: Array<EcoOrganisme>;

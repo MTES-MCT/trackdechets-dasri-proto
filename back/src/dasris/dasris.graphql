@@ -1,60 +1,45 @@
 scalar DateTime
 
 enum DasriRole {
-  "Les BSD's dont je suis transporteur"
+  "Les Dasri dont je suis transporteur"
   TRANSPORTER
-  "Les BSD's dont je suis la destination de traitement"
+  "Les Dasri dont je suis la destination de traitement"
   RECIPIENT
-  "Les BSD's dont je suis l'émetteur"
+  "Les Dasri dont je suis l'émetteur"
   EMITTER
 }
 
 enum DasriStatus {
-  """
-  Dasri à l'état de brouillon
-  """
+  "Dasri à l'état de brouillon"
   DRAFT
 
-  """
-  BSD finalisé
-  Les champs sont validés pour détecter des valeurs manquantes ou erronnées
-  """
+  "Dasri scellé (publié)"
   SEALED
 
-  "Optionnel, signé par la pred"
+  "Optionnel, Dasri signé par la PRED (émetteur)"
   READY_FOR_TAKEOVER
 
-  "BSD envoyé vers l'établissement de destination"
+  "Dasri envoyé vers l'établissement de destination"
   SENT
 
-  "BSD reçu par l'établissement de destination"
+  "Dasri reçu par l'établissement de destination"
   RECEIVED
 
-  "BSD dont les déchets ont été traités"
+  "Dasri dont les déchets ont été traités"
   PROCESSED
 
   "Déchet refusé"
   REFUSED
 }
 
-# "Statuts d'acceptation d'un déchet"
-# enum WasteAcceptationStatus {
-#   "Accepté"
-#   ACCEPTED
-
-#   "Refusé"
-#   REFUSED
-
-#   "Partiellement refusé"
-#   PARTIALLY_REFUSED
-# }
+ 
 
 "Type de packaging du déchet"
 enum DasriPackagings {
   "Caisse en carton avec sac en plastique"
   BOITE_CARTON
 
-  "Fûts ou jérrican à usage unique"
+  "Fûts ou jerrican à usage unique"
   FUT
 
   "Boîtes et Mini-collecteurs pour déchets perforants"
@@ -70,13 +55,17 @@ enum DasriPackagings {
   AUTRE
 }
 
-"Émetteur du BSD, Personne responsable de l'émimination des déchets (PRED)"
+"Émetteur du Dasri, Personne responsable de l'émimination des déchets (PRED)"
 type DasriEmitter {
   "Établissement émetteur"
   company: FormCompany
+  "Site d'emport du déceht, si différent de celle de l'émetteur"
   workSite: WorkSite
+  "Date de remise au tranporteur"
   handOverToTransporterAt: DateTime
 }
+
+"Destinataire du Dasri"
 type DasriRecipient {
   """
   Installation destinataire
@@ -114,6 +103,7 @@ type DasriPackagingInfo {
 
   volume: Int!
 }
+"Détail sur le décehte proprement dit du Dasri"
 type DasriWasteDetails {
   quantity: Int
   quantityType: QuantityType
@@ -121,6 +111,7 @@ type DasriWasteDetails {
   packagingInfos: [DasriPackagingInfo!]
 }
 
+"Informations relatives au déchet émis"
 type DasriEmission {
   wasteCode: String
   wasteDetailsOnuCode: String
@@ -130,12 +121,14 @@ type DasriEmission {
   signedAt: DateTime
 }
 
+"Informations relatives à l'acceptation ou au refus du déchet (Dasri)"
 type DasriWasteAcceptation {
   status: WasteAcceptationStatusInput
   refusalReason: String
   refusedQuantity: Int
 }
 
+"Informations relatives au transport du Dasri"
 type DasriTransport {
   wasteDetails: DasriWasteDetails
   wasteAcceptation: DasriWasteAcceptation
@@ -145,6 +138,7 @@ type DasriTransport {
   signedAt: DateTime
 }
 
+"Informations relatives à la réception du Dasri"
 type DasriReception {
   wasteDetails: DasriWasteDetails
   wasteAcceptation: DasriWasteAcceptation
@@ -153,6 +147,7 @@ type DasriReception {
   signedAt: DateTime
 }
 
+"Informations relatives au traitement du Dasri"
 type DasriOperation {
   signedBy: String
   signedAt: DateTime
@@ -160,6 +155,7 @@ type DasriOperation {
   processedAt: DateTime
 }
 
+"Bordereau Dasri"
 type Dasri {
   id: ID!
   readableId: String!
@@ -180,6 +176,28 @@ type Dasri {
 }
 
 type Query {
+  """
+  Renvoie les Dasri de l'établissement sélectionné.
+  Si aucun SIRET n'est précisé et que l'utilisateur est membre d'une seule entreprise
+  alors les Dasri de cette entreprise sont retournés.
+  Si l'utilisateur est membre de 2 entreprises ou plus, vous devez obligatoirement
+  préciser un SIRET
+  Si l'utilisateur n'est membre d'aucune entreprise, un tableau vide sera renvoyé
+
+  Vous pouvez filtrer:
+  - par rôle que joue votre entreprise sur le Dasri via `role`
+  - par date de dernière modification via `updatedAfter`
+  - par date d'envoi via `sentAfter`
+  - par statut du Dasri via `status`
+  - par code déchet via `wasteCode`
+  - par SIRET d'une entreprise présente n'importe où sur le bordereau via `siretPresentOnForm`
+
+  Par défaut:
+  - tous les BSD accessibles sont retournés
+  - les BSD sont classés par date de création, de la plus récente à la plus vieille
+  - les résultats sont paginés par 50. Il est possible de modifier cette valeur via `first` ou `last` en fonction du curseur utilisé
+  - pour afficher la suite des résultats, utiliser `cursorAfter` ou `cursorBefore`
+  """
   dasris(
     "SIRET d'un établissement dont je suis membre"
     siret: String
@@ -187,18 +205,18 @@ type Query {
     """
     (Optionnel) PAGINATION
     Permet en conjonction avec `first` de paginer "en avant"
-    (des bordereaux les plus récents aux bordereaux les plus anciens)
-    Curseur après lequel les bordereaux doivent être retournés
+    (des Dasri les plus récents aux Dasri les plus anciens)
+    Curseur après lequel les Dasri doivent être retournés
     Attend un identifiant (propriété `id`) de BSD
-    Défaut à vide, pour retourner les bordereaux les plus récents
+    Défaut à vide, pour retourner les Dasri les plus récents
     Le BSD précisé dans le curseur ne fait pas partie du résultat
     """
     after: ID
     """
     (Optionnel) PAGINATION
     Permet en conjonction avec `after` de paginer "en avant"
-    (des bordereaux les plus récents aux bordereaux les plus anciens)
-    Nombre de bordereaux retournés après le `cursorAfter`
+    (des Dasri les plus récents aux Dasri les plus anciens)
+    Nombre de Dasri retournés après le `cursorAfter`
     Défaut à 50, maximum à 500
     """
     first: Int
@@ -206,23 +224,23 @@ type Query {
     """
     (Optionnel) PAGINATION
     Permet en conjonction avec `last` de paginer "en arrière"
-    (des bordereaux les plus anciens aux bordereaux les plus récents)
-    Curseur avant lequel les bordereaux doivent être retournés
+    (des Dasri les plus anciens aux Dasri les plus récents)
+    Curseur avant lequel les Dasri doivent être retournés
     Attend un identifiant (propriété `id`) de BSD
-    Défaut à vide, pour retourner les bordereaux les plus anciens
+    Défaut à vide, pour retourner les Dasri les plus anciens
     Le BSD précisé dans le curseur ne fait pas partie du résultat
     """
     before: ID
 
     """
     (Optionnel) PAGINATION
-    Nombre de bordereaux retournés avant le `before`
+    Nombre de Dasri retournés avant le `before`
     Défaut à 50, maximum à 500
     """
     last: Int
 
     """
-    (Optionnel) Retourne les BSD modifiés après la date
+    (Optionnel) Retourne les Dasri modifiés après la date
     Filtre sur la date de dernière modification
     Au format (YYYY-MM-DD)
     Par défaut vide, aucun filtre n'est appliqué
@@ -230,16 +248,16 @@ type Query {
     updatedAfter: String
 
     """
-    (Optionnel) Filtre sur les statuts des bordereaux
-    Si aucun filtre n'est passé, les bordereaux seront retournés quel que soit leur statut
+    (Optionnel) Filtre sur les statuts des Dasri
+    Si aucun filtre n'est passé, les Dasri seront retournés quel que soit leur statut
     Défaut à vide.
     """
     status: [DasriStatus!]
 
     """
-    (Optionnel) Siret d'une autre entreprise présente sur le bordereau
+    (Optionnel) Siret d'une autre entreprise présente sur le Dasri
     Vous n'avez pas besoin d'être membre de cette entreprise.
-    Seuls les bordereaux ou cette entreprise apparait (dans n'importe quel cadre) seront retournés.
+    Seuls les Dasri où cette entreprise apparait (dans n'importe quel cadre) seront retournés.
     Défaut à vide.
     """
     siretPresentOnForm: String
@@ -254,10 +272,10 @@ type Query {
     """
     (Optionnel) Filtre sur le role de demandeur dans le dasri
     Par exemple:
-     - `roles: [TRANSPORTER]` renverra les bordereaux pour lesquels je suis transporteur
-     - `roles: [EMITTER, RECIPIENT]` renverra les bordereaux dont je suis l'émetteur ou le destinataire final
+     - `roles: [TRANSPORTER]` renverra les Dasri pour lesquels je suis transporteur
+     - `roles: [EMITTER, RECIPIENT]` renverra les Dasri dont je suis l'émetteur ou le destinataire final
     Voir `DasriRole` pour la liste des roles sur lesquels il est possible de filtrer.
-    Si aucune filtre n'est passé, les bordereaux seront retournés quel que soit votre role dessus.
+    Si aucune filtre n'est passé, les Dasri seront retournés quel que soit votre role dessus.
     Défaut à vide.
     """
     roles: [DasriRole!]
@@ -277,15 +295,24 @@ type Mutation {
     dasriCreateInput: DasriCreateInput!
   ): Dasri!
 
-  "Met à jour un dasri existant"
+  """
+  Met à jour un dasri existant
+  Par défaut, tous les champs sont modifiables.
+  """
   dasriUpdate(
     "Payload de mise à jour d'un dasri"
     dasriUpdateInput: DasriUpdateInput!
   ): Dasri!
 
-  "Marque un dasri brouillon comme prêt à être emporté"
+  "Marque un dasri brouillon comme prêt (SEALED)"
   dasriMarkAsReady("ID d'un Dasri" id: ID!): Dasri
 
-  "Appose une signature sur un Dasri"
+  """Appose une signature sur un Dasri, verrouille les cadres correspondant
+  
+  Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
+  Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport
+  """ 
+
+  
   dasriSign(id: ID!, signatureInput: DasriSignatureInput!): Dasri
 }

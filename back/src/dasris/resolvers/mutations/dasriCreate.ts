@@ -5,7 +5,7 @@ import {
 } from "../../../generated/graphql/types";
 import { GraphQLContext } from "../../../types";
 import { expandDasriFromDb, flattenDasriInput } from "../../dasri-converter";
-import { getReadableId } from "../../dasri-readable-id";
+import getReadableId, { ReadableIdPrefix } from "../../../common/readableId";
 import { checkIsAuthenticated } from "../../../common/permissions";
 import { dasriDraftSchema } from "../../validation";
 import { checkIsDasriContributor } from "../../permissions";
@@ -35,7 +35,7 @@ const dasriCreateResolver = async (
     const newDasri = await prisma.dasri.create({
       data: {
         ...flattenedInput,
-        readableId: await getReadableId(),
+        readableId: await getReadableId(ReadableIdPrefix.DASRI),
         owner: { connect: { id: user.id } }
       }
     });
