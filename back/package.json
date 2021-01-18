@@ -10,6 +10,7 @@
     "watch-graphql": "npm run graphql-codegen -- --watch",
     "start": "node dist/src/index.js",
     "update": "node prisma/migrate.js",
+    "migrate": "node prisma/migrate.ts",
     "update:dev": "ts-node prisma/scripts/index.ts",
     "test": "jest",
     "build": "tsc && copyfiles -e **/*.ts src/**/*.{graphql,pdf,png,ttf} prisma/**/*.{prisma,sql} dist/",
