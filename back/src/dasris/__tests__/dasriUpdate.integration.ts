@@ -175,6 +175,40 @@ describe("Mutation.dasriUpdate", () => {
     ]);
   });
 
+  it.each([DasriStatus.PROCESSED, DasriStatus.REFUSED])(
+    "should disallow to update a %p dasri",
+    async status => {
+      const { user, company } = await userWithCompanyFactory("MEMBER");
+      const dasri = await dasriFactory({
+        ownerId: user.id,
+        opt: {
+          status: status,
+          emitterCompanySiret: company.siret
+        }
+      });
+
+      const { mutate } = makeClient(user);
+      const input = {
+        id: dasri.id,
+        emitter: { company: { mail: "test@test.test" } }
+      };
+
+      const { errors } = await mutate(DASRI_UPDATE, {
+        variables: {
+          input
+        }
+      });
+
+      expect(errors).toEqual([
+        expect.objectContaining({
+          message: `Ce bordereau n'est plus modifiable`,
+          extensions: expect.objectContaining({
+            code: ErrorCode.FORBIDDEN
+          })
+        })
+      ]);
+    }
+  );
   it.each([DasriStatus.DRAFT, DasriStatus.SEALED])(
     "should be possible to update a %p dasri",
     async status => {
@@ -460,41 +494,5 @@ describe("Mutation.dasriUpdate", () => {
       where: { id: dasri.id }
     });
     expect(dasri.processingOperation).toEqual("D10");
-  });
-
-  it("should disallow all fields update after operation signature", async () => {
-    const { user, company } = await userWithCompanyFactory("MEMBER");
-    const dasri = await dasriFactory({
-      ownerId: user.id,
-      opt: {
-        status: DasriStatus.PROCESSED,
-        emitterCompanySiret: company.siret,
-        receptionSignedBy: user.name,
-        receptionSignatory: { connect: { id: user.id } },
-        receptionSignedAt: new Date()
-      }
-    });
-
-    const { mutate } = makeClient(user);
-    const input = {
-      id: dasri.id,
-
-      reception: { wasteDetails: { quantity: 22 } }
-    };
-
-    const { errors } = await mutate(DASRI_UPDATE, {
-      variables: { input }
-    });
-
-    expect(errors).toEqual([
-      expect.objectContaining({
-        message:
-          "Des champs ont été verrouillés via signature et ne peuvent plus être modifiés: recipientWasteQuantity",
-
-        extensions: expect.objectContaining({
-          code: ErrorCode.FORBIDDEN
-        })
-      })
-    ]);
   });
 });

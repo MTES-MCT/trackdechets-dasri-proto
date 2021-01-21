@@ -90,6 +90,10 @@ const dasriUpdateResolver = async (
     "Vous ne pouvez pas modifier un bordereau sur lequel votre entreprise n'apparait pas"
   );
 
+  if (["PROCESSED", "REFUSED"].includes(existingDasri.status)) {
+    throw new ForbiddenError("Ce bordereau n'est plus modifiable");
+  }
+
   const flattened = flattenDasriInput(dasriContent);
 
   // Validate form input
