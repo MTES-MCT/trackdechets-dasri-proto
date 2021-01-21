@@ -36,7 +36,7 @@ const dasriSign: MutationResolvers["dasriSign"] = async (
   const siretWhoSigns = signatureParams.authorizedSiret(dasri);
   // Is this siret belonging to concrete user ?
   await checkIsCompanyMember({ id: user.id }, { siret: siretWhoSigns });
-  
+
   await checkEmitterAllowsDirectTakeOver({ signatureParams, dasri });
 
   const data = {
@@ -123,7 +123,7 @@ type checkEmitterAllowsDirectTakeOverFn = ({
 }) => Promise<void>;
 
 /**
- * Dasri can be taken over by transporter without signature if emitter explictly allows this in company preferences
+ * Dasri can be taken over by transporter without signature if emitter explicitly allows this in company preferences
  * Checking this in mutation code needs less code than doing it in the state machine, hence this utils
  */
 const checkEmitterAllowsDirectTakeOver: checkEmitterAllowsDirectTakeOverFn = async ({

@@ -6,7 +6,7 @@ import { checkIsDasriContributor } from "../../permissions";
 
 import dasriTransition from "../../workflow/dasriTransition";
 import { DasriEventType } from "../../workflow/types";
-
+import { okForSealedFormSchema } from "../../validation";
 const markAsReadyResolver: MutationResolvers["dasriMarkAsReady"] = async (
   _,
   { id },
@@ -16,9 +16,13 @@ const markAsReadyResolver: MutationResolvers["dasriMarkAsReady"] = async (
   const dasri = await getDasriOrDasriNotFound({ id });
   await checkIsDasriContributor(user, dasri, "nope");
 
-  const sealedDasri = await dasriTransition(dasri, {
-    type: DasriEventType.MarkAsReady
-  });
+  const sealedDasri = await dasriTransition(
+    dasri,
+    {
+      type: DasriEventType.MarkAsReady
+    },
+    okForSealedFormSchema
+  );
 
   return expandDasriFromDb(sealedDasri);
 };

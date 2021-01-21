@@ -1,7 +1,10 @@
 import { WasteAcceptationStatus, Dasri, QuantityType } from "@prisma/client";
 
 import * as yup from "yup";
-import { DASRI_WASTE_CODES } from "../common/constants";
+import {
+  DASRI_WASTE_CODES,
+  DASRI_PROCESSING_OPERATIONS_CODES
+} from "../common/constants";
 import configureYup from "../common/yup/configureYup";
 import validDatetime from "../common/yup/validDatetime";
 import {
@@ -114,6 +117,8 @@ const INVALID_SIRET_LENGTH = "Le SIRET doit faire 14 caractères numériques";
 
 const INVALID_DASRI_WASTE_CODE =
   "Ce code déchet n'est pas autorisé pour les DASRI";
+const INVALID_PROCESSING_OPERATION =
+  "Cette opération d’élimination / valorisation n'existe pas.";
 
 export const emitterSchema: yup.ObjectSchema<
   Partial<Emitter>
@@ -371,14 +376,14 @@ export const receptionSchema: yup.ObjectSchema<
     .required("Le détail du conditionnement est obligatoire")
     .of(packagingInfo)
 });
-export const processingSchema: yup.ObjectSchema<
+
+export const operationSchema: yup.ObjectSchema<
   Partial<Operation>
 > = yup.object().shape({
   processingOperation: yup
     .string()
     .label("Opération d’élimination / valorisation")
-    .ensure()
-    .required()
+    .oneOf(DASRI_PROCESSING_OPERATIONS_CODES, INVALID_PROCESSING_OPERATION)
 });
 
 export const dasriDraftSchema = yup.object().shape({
@@ -410,17 +415,33 @@ export const dasriDraftSchema = yup.object().shape({
     .matches(/^$|^\d{14}$/, {
       message: `Transporteur: ${INVALID_SIRET_LENGTH}`
     }),
-  transporterCompanyMail: yup.string().notRequired().nullable().email(),
-  transporterValidityLimit: validDatetime({
-    verboseFieldName: "date de validité",
-    required: false
-  })
+  transporterCompanyMail: yup.string().notRequired().nullable().email()
+});
+
+// validation schema for Dasri before it can be sealed
+export const okForSealedFormSchema = yup.object().shape({
+  emitterCompanySiret: yup.string().matches(/^\d{14}$/, {
+    message: `Émetteur: ${INVALID_SIRET_LENGTH}`
+  }),
+  emitterCompanyMail: yup.string().email().required(),
+  recipientCompanySiret: yup.string().matches(/^\d{14}$/, {
+    message: `Destinataire: ${INVALID_SIRET_LENGTH}`
+  }),
+  recipientCompanyMail: yup.string().email().required(),
+  wasteDetailsCode: yup
+    .string()
+    .oneOf([...wasteCodes, "", null], INVALID_DASRI_WASTE_CODE),
+  transporterCompanySiret: yup.string().matches(/^\d{14}$/, {
+    message: `Transporteur: ${INVALID_SIRET_LENGTH}`
+  }),
+  transporterCompanyMail: yup.string().email().required()
 });
 
 export const okForEmissionSignatureSchema = emitterSchema.concat(
   emissionSchema
 );
-// we need to also check check emission, transition from SELAED to SENT is allaowed if emitting company allows it
+// we need to also check check emission
+// transition from SEALED to SENT is possible if explicitly allowed by emitting company (field allowDasriTakeOverWithoutSignature)
 export const okForTransportSignatureSchema = transporterSchema
   .concat(transportSchema)
   .concat(okForEmissionSignatureSchema);
@@ -429,5 +450,5 @@ export const okForReceptionSignatureSchema = recipientSchema.concat(
   receptionSchema
 );
 export const okForProcessingSignatureSchema = okForReceptionSignatureSchema.concat(
-  processingSchema
+  operationSchema
 );

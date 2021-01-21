@@ -1,7 +1,6 @@
 import prisma from "../../prisma";
 import { DasriStatus, QuantityType, Prisma } from "@prisma/client";
 
- 
 export function getDasriReadableId() {
   const year = new Date().getFullYear().toString().slice(-2);
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -26,8 +25,6 @@ const dasriData_ = [
   { type: "GRAND_EMBALLAGE", other: "", volume: 100, quantity: 2 }
 ];
 const dasriData = {
- 
- 
   status: "DRAFT" as DasriStatus,
 
   isDeleted: false,

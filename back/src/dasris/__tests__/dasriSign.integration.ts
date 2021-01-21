@@ -75,7 +75,7 @@ const readyToReceiveData = company => ({
 });
 
 const readyToProcessData = {
-  processingOperation: "toto",
+  processingOperation: "D10",
   processedAt: new Date()
 };
 
@@ -405,6 +405,55 @@ describe("Mutation.dasriSign reception", () => {
 
 describe("Mutation.dasriSign operation", () => {
   afterEach(resetDatabase);
+
+  it("should deny operation signature on a dasri if operation code is invalid", async () => {
+    const {
+      user: emitter,
+      company: emitterCompany
+    } = await userWithCompanyFactory("MEMBER");
+    const { company: transporterCompany } = await userWithCompanyFactory(
+      "MEMBER"
+    );
+    const {
+      user: recipient,
+      company: recipientCompany
+    } = await userWithCompanyFactory("MEMBER");
+
+    const dasri = await dasriFactory({
+      ownerId: emitter.id,
+      opt: {
+        ...draftData(emitterCompany),
+        ...readyToTakeOverData(transporterCompany),
+        ...readyToReceiveData(recipientCompany),
+        ...{ processingOperation: "XYZ", processedAt: new Date() },
+        status: DasriStatus.RECEIVED
+      }
+    });
+    const { mutate } = makeClient(recipient);
+
+    const { errors } = await mutate(DASRI_SIGN, {
+      variables: {
+        id: dasri.id,
+        input: { type: "OPERATION", signedBy: "Martine" }
+      }
+    });
+
+    expect(errors).toEqual([
+      expect.objectContaining({
+        message: "Cette opération d’élimination / valorisation n'existe pas.",
+        extensions: expect.objectContaining({
+          code: ErrorCode.BAD_USER_INPUT
+        })
+      })
+    ]);
+
+    const receivedDasri = await prisma.dasri.findUnique({
+      where: { id: dasri.id }
+    });
+    expect(receivedDasri.status).toEqual("RECEIVED");
+    expect(receivedDasri.operationSignedBy).toBeNull();
+    expect(receivedDasri.operationSignatoryId).toBeNull();
+  });
 
   it("should put operation signature on a dasri", async () => {
     const {
