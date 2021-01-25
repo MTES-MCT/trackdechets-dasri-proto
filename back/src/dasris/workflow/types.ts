@@ -13,8 +13,9 @@ export enum DasriState {
 
 // Xstate event type
 export enum DasriEventType {
-  MarkAsReady = "MARK_AS_READY",
+  MarkAsReady = "MARK_AS_READY", // not very happy with the SENT naming
   SignEmission = "SIGN_EMISSION",
+  SignEmissionWithSecretCode = "SIGN_EMISSION_WITH_SECRET_CODE",
   SignTransport = "SIGN_TRANSPORT",
   SignReception = "SIGN_RECEPTION",
   SignOperation = "SIGN_OPERATION"

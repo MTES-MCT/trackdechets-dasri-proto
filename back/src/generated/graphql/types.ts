@@ -493,10 +493,12 @@ export type DasriRole =
 export type DasriSignatureInput = {
   type: DasriSignatureType;
   signedBy: Scalars['String'];
+  securityCode?: Maybe<Scalars['Int']>;
 };
 
 export type DasriSignatureType = 
   | 'EMISSION'
+  | 'EMISSION_WITH_SECRET_CODE'
   | 'TRANSPORT'
   | 'RECEPTION'
   | 'OPERATION';
@@ -4012,6 +4014,7 @@ export function createDasriSignatureInputMock(props: Partial<DasriSignatureInput
   return {
     type: "EMISSION",
     signedBy: "",
+    securityCode: null,
     ...props,
   };
 }

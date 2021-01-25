@@ -157,6 +157,88 @@ describe("Mutation.dasriSign emission", () => {
   });
 });
 
+describe("Mutation.dasriSign emission with secret code", () => {
+  afterEach(resetDatabase);
+
+  it("should deny emission signature if secret code is incorrect", async () => {
+    const { user, company } = await userWithCompanyFactory("MEMBER");
+    const {
+      user: transporter,
+      company: transporterCompany
+    } = await userWithCompanyFactory("MEMBER");
+
+    let dasri = await dasriFactory({
+      ownerId: user.id,
+      opt: {
+        ...draftData(company),
+        status: DasriStatus.SEALED,
+        transporterCompanySiret: transporterCompany.siret
+      }
+    });
+    const { mutate } = makeClient(transporter); // emitter
+
+    const { errors } = await mutate(DASRI_SIGN, {
+      variables: {
+        id: dasri.id,
+        input: {
+          type: "EMISSION_WITH_SECRET_CODE",
+          signedBy: "Joe",
+          securityCode: 9876 // should be 1234, factory default value
+        }
+      }
+    });
+
+    expect(errors).toEqual([
+      expect.objectContaining({
+        message: "Erreur, le code de sécurité est manquant ou invalide",
+        extensions: expect.objectContaining({
+          code: ErrorCode.BAD_USER_INPUT
+        })
+      })
+    ]);
+    dasri = await prisma.dasri.findUnique({
+      where: { id: dasri.id }
+    });
+    expect(dasri.status).toEqual("SEALED");
+  });
+
+  it("should put emission signature on a dasri", async () => {
+    const { user: emitter, company } = await userWithCompanyFactory("MEMBER");
+    const {
+      user: transporter,
+      company: transporterCompany
+    } = await userWithCompanyFactory("MEMBER");
+
+    const dasri = await dasriFactory({
+      ownerId: emitter.id,
+      opt: {
+        ...draftData(company),
+        status: DasriStatus.SEALED,
+        transporterCompanySiret: transporterCompany.siret
+      }
+    });
+    const { mutate } = makeClient(transporter); // emitter
+
+    await mutate(DASRI_SIGN, {
+      variables: {
+        id: dasri.id,
+        input: {
+          type: "EMISSION_WITH_SECRET_CODE",
+          signedBy: "Marcel",
+          securityCode: 1234
+        }
+      }
+    });
+
+    const readyTotakeOverDasri = await prisma.dasri.findUnique({
+      where: { id: dasri.id }
+    });
+    expect(readyTotakeOverDasri.status).toEqual("READY_FOR_TAKEOVER");
+    expect(readyTotakeOverDasri.emissionSignedBy).toEqual("Marcel");
+    expect(readyTotakeOverDasri.emissionSignatoryId).toEqual(transporter.id);
+  });
+});
+
 describe("Mutation.dasriSign transport", () => {
   afterEach(resetDatabase);
 

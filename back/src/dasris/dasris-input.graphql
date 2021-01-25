@@ -123,6 +123,7 @@ input DasriUpdateInput {
 
 enum DasriSignatureType {
   EMISSION
+  EMISSION_WITH_SECRET_CODE
   TRANSPORT
   RECEPTION
   OPERATION
@@ -131,4 +132,5 @@ enum DasriSignatureType {
 input DasriSignatureInput {
   type: DasriSignatureType!
   signedBy: String!
+  securityCode: Int
 }

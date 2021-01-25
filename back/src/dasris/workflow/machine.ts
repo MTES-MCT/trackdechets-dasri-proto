@@ -22,6 +22,9 @@ const machine = Machine<any, DasriEvent>(
           [DasriEventType.SignTransport]: [
             { target: DasriState.Sent, cond: "acceptedByTransporter" },
             { target: DasriState.Refused, cond: "refusedByTransporter" }
+          ],
+          [DasriEventType.SignEmissionWithSecretCode]: [
+            { target: DasriState.ReadyForTakeover, cond: "emissionNotSigned" }
           ]
         }
       },
@@ -64,7 +67,6 @@ const machine = Machine<any, DasriEvent>(
       emissionNotSigned: ctx => emissionNotSigned(ctx),
       acceptedByTransporter: ctx => {
         // partially or totally accepted
-
         return (
           transportNotSigned(ctx) &&
           [
@@ -82,6 +84,7 @@ const machine = Machine<any, DasriEvent>(
         );
       },
       acceptedByRecipient: ctx => {
+        // partially or totally accepted
         return (
           receptionNotSigned(ctx) &&
           [

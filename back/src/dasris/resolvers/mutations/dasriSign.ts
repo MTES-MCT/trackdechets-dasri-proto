@@ -37,7 +37,15 @@ const dasriSign: MutationResolvers["dasriSign"] = async (
   // Is this siret belonging to concrete user ?
   await checkIsCompanyMember({ id: user.id }, { siret: siretWhoSigns });
 
-  await checkEmitterAllowsDirectTakeOver({ signatureParams, dasri });
+  await checkEmitterAllowsDirectTakeOver({
+    signatureParams,
+    dasri
+  });
+  await checkEmitterAllowsSignatureWithSecretCode({
+    signatureParams,
+    dasri,
+    securityCode: signatureInput?.securityCode
+  });
 
   const data = {
     [signatureParams.by]: signatureInput.signedBy,
@@ -91,6 +99,14 @@ const dasriSignatureMapping: Record<DasriSignatureType, DasriSignatureInfos> = {
     signatoryField: "emissionSignatory",
     authorizedSiret: form => form.emitterCompanySiret
   },
+  EMISSION_WITH_SECRET_CODE: {
+    by: "emissionSignedBy",
+    at: "emissionSignedAt",
+    eventType: DasriEventType.SignEmissionWithSecretCode,
+    validator: okForEmissionSignatureSchema,
+    signatoryField: "emissionSignatory",
+    authorizedSiret: form => form.transporterCompanySiret // transporter can sign with emitter secret code (trs device)
+  },
   TRANSPORT: {
     by: "transportSignedBy",
     at: "transportSignedAt",
@@ -99,6 +115,7 @@ const dasriSignatureMapping: Record<DasriSignatureType, DasriSignatureInfos> = {
     signatoryField: "transportSignatory",
     authorizedSiret: form => form.transporterCompanySiret
   },
+
   RECEPTION: {
     by: "receptionSignedBy",
     at: "receptionSignedAt",
@@ -121,7 +138,6 @@ type checkEmitterAllowsDirectTakeOverFn = ({
   signatureParams: DasriSignatureInfos,
   dasri: Dasri
 }) => Promise<void>;
-
 /**
  * Dasri can be taken over by transporter without signature if emitter explicitly allows this in company preferences
  * Checking this in mutation code needs less code than doing it in the state machine, hence this utils
@@ -142,5 +158,38 @@ const checkEmitterAllowsDirectTakeOver: checkEmitterAllowsDirectTakeOverFn = asy
         "Erreur, l'émetteur n'a pas autorisé l'emport par le transporteur sans l'avoir préalablement signé"
       );
     }
+  }
+};
+
+type checkEmitterAllowsSignatureWithCodeFn = ({
+  signatureParams: DasriSignatureInfos,
+  dasri: Dasri,
+  securityCode: number
+}) => Promise<void>;
+/**
+ * Dasri takeOver can be processed on the transporter device
+ * To perform this, we expect a SEALED -> READY_TO_TAKEOVER signature, then a READY_TO_TAKEOVER -> SENT one
+ * This function is intended to perform checks to allow the first aforementionned transition, and verify
+ * provided code matches emitter one
+ */
+const checkEmitterAllowsSignatureWithSecretCode: checkEmitterAllowsSignatureWithCodeFn = async ({
+  signatureParams,
+  dasri,
+  securityCode
+}) => {
+  if (
+    signatureParams.eventType !== DasriEventType.SignEmissionWithSecretCode ||
+    dasri.status !== DasriStatus.SEALED
+  ) {
+    return;
+  }
+  const emitterCompany = await getCompanyOrCompanyNotFound({
+    siret: dasri.emitterCompanySiret
+  });
+
+  if (!securityCode || securityCode !== emitterCompany.securityCode) {
+    throw new UserInputError(
+      "Erreur, le code de sécurité est manquant ou invalide"
+    );
   }
 };
