@@ -493,5 +493,6 @@ describe("Mutation.dasriSign operation", () => {
     expect(receivedDasri.status).toEqual("PROCESSED");
     expect(receivedDasri.operationSignedBy).toEqual("Martine");
     expect(receivedDasri.operationSignatoryId).toEqual(recipient.id);
+    expect(receivedDasri.operationSignedAt).not.toBeNull();
   });
 });
