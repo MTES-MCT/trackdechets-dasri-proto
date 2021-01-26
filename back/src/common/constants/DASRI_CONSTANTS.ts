@@ -31,3 +31,6 @@ export const DASRI_PROCESSING_OPERATIONS = [
     description: "Pretraitement par désinfection"
   }
 ];
+export const DASRI_PROCESSING_OPERATIONS_CODES: string[] = DASRI_PROCESSING_OPERATIONS.map(
+  operation => operation.code
+);

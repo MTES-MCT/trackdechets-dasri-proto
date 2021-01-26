@@ -279,6 +279,15 @@ type Query {
     Défaut à vide.
     """
     roles: [DasriRole!]
+
+    """
+    (Optionnel) Permet de filtrer sur les dasris en attente d'une action de votre part
+    Si `true`, seul les dasris attendant une action sont renvoyés
+    Si `false`, seul les dasris n'attendant aucune action son renvoyés
+    Si vide, tous les dasris sont renvoyés
+    Défaut à vide.
+    """
+    hasNextStep: Boolean
   ): [Dasri!]!
   dasri(
     "Identifiant opaque du BSD"
@@ -311,6 +320,11 @@ type Mutation {
   
   Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
   Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport
+
+  Toutefois il existe un exception: le cadre emetteur peut être signé par le transporteur grâce au code de 
+  sécurité de l'émetteur (DasriSignatureType: EMISSION_WITH_SECRET_CODE)
+
+
   """ 
 
   

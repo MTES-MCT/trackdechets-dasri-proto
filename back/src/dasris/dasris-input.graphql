@@ -122,10 +122,19 @@ input DasriUpdateInput {
 }
 
 enum DasriSignatureType {
+  "Signature du cadre émetteur (PRED)"
   EMISSION
+
+  "Signature du cadre émetteur (PRED) par le transporteur, grâce au code de sécurité de l'émetteur"
   EMISSION_WITH_SECRET_CODE
+  
+  "Signature du cadre collecteur transporteur"
   TRANSPORT
+
+  "Signature de la réception du déchet"
   RECEPTION
+
+  "Siganture du traitement du déchet"
   OPERATION
 }
 

@@ -497,10 +497,15 @@ export type DasriSignatureInput = {
 };
 
 export type DasriSignatureType = 
+  /** Signature du cadre émetteur (PRED) */
   | 'EMISSION'
+  /** Signature du cadre émetteur (PRED) par le transporteur, grâce au code de sécurité de l'émetteur */
   | 'EMISSION_WITH_SECRET_CODE'
+  /** Signature du cadre collecteur transporteur */
   | 'TRANSPORT'
+  /** Signature de la réception du déchet */
   | 'RECEPTION'
+  /** Siganture du traitement du déchet */
   | 'OPERATION';
 
 export type DasriStatus = 
@@ -1179,6 +1184,9 @@ export type Mutation = {
    * 
    * Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
    * Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport
+   * 
+   * Toutefois il existe un exception: le cadre emetteur peut être signé par le transporteur grâce au code de 
+   * sécurité de l'émetteur (DasriSignatureType: EMISSION_WITH_SECRET_CODE)
    */
   dasriSign?: Maybe<Dasri>;
   /**
@@ -1933,6 +1941,7 @@ export type QueryDasrisArgs = {
   siretPresentOnForm?: Maybe<Scalars['String']>;
   wasteCode?: Maybe<Scalars['String']>;
   roles?: Maybe<Array<DasriRole>>;
+  hasNextStep?: Maybe<Scalars['Boolean']>;
 };
 
 

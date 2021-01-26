@@ -2,7 +2,7 @@ import { expandDasriFromDb } from "../../dasri-converter";
 import { Dasri, QueryResolvers } from "../../../generated/graphql/types";
 import prisma from "../../../prisma";
 import { checkIsAuthenticated } from "../../../common/permissions";
-import { Company } from "@prisma/client";
+import { Company, DasriStatus } from "@prisma/client";
 import { MissingSiret } from "../../../common/errors";
 import { getCompanyOrCompanyNotFound } from "../../../companies/database";
 import { checkIsCompanyMember } from "../../../users/permissions";
@@ -18,7 +18,8 @@ export async function getDasris(): Promise<Dasri[]> {
 const dasrisResolver: QueryResolvers["dasris"] = async (_, args, context) => {
   const user = checkIsAuthenticated(context);
 
-  const { siret, status, roles, ...rest } = args;
+  const { siret, status, roles, hasNextStep, ...rest } = args;
+
   let company: Company | null = null;
   if (siret) {
     // a siret is specified, check user has permission on this company
@@ -26,7 +27,7 @@ const dasrisResolver: QueryResolvers["dasris"] = async (_, args, context) => {
     await checkIsCompanyMember({ id: user.id }, { siret });
   } else {
     const userCompanies = await getUserCompanies(user.id);
-     if (userCompanies.length === 0) {
+    if (userCompanies.length === 0) {
       // the user is not member of any companies, return empty array
       return [];
     }
@@ -39,7 +40,7 @@ const dasrisResolver: QueryResolvers["dasris"] = async (_, args, context) => {
     // the user is member of only one company, use it as default
     company = userCompanies[0];
   }
- 
+
   const connectionsArgs = getCursorConnectionsArgs({
     ...rest,
     defaultPaginateBy: 50,
@@ -57,6 +58,8 @@ const dasrisResolver: QueryResolvers["dasris"] = async (_, args, context) => {
       ...(status?.length && { status: { in: status } }),
       AND: [
         getDasrisRightFilter(company.siret, roles),
+        getHasNextStepFilter(company.siret, hasNextStep),
+
         ...(rest.siretPresentOnForm
           ? [getDasrisRightFilter(rest.siretPresentOnForm, [])]
           : [])
@@ -69,3 +72,31 @@ const dasrisResolver: QueryResolvers["dasris"] = async (_, args, context) => {
 };
 
 export default dasrisResolver;
+
+function getHasNextStepFilter(siret: string, hasNextStep?: boolean | null) {
+  if (hasNextStep == null) {
+    return {};
+  }
+
+  const filter = {
+    OR: [
+      // DRAFT
+      { status: DasriStatus.DRAFT },
+      // isEmitter && SEALED
+      {
+        AND: [{ emitterCompanySiret: siret }, { status: DasriStatus.SEALED }]
+      },
+      // isRecipient && (RECEIVED || ACCEPTED )
+      {
+        AND: [
+          { recipientCompanySiret: siret },
+          {
+            OR: [{ status: DasriStatus.SENT }, { status: DasriStatus.RECEIVED }]
+          }
+        ]
+      }
+    ]
+  };
+
+  return hasNextStep ? filter : { NOT: filter };
+}
