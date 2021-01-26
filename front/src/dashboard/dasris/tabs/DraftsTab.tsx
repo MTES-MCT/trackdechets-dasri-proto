@@ -5,8 +5,8 @@ import { DuplicateFile } from "common/components/Icons";
 import { generatePath, Link, useParams } from "react-router-dom";
 import { InlineError } from "common/components/Error";
 import Loader from "common/components/Loaders";
-import { DasriStatus, Query, QueryDasrisArgs } from "generated/graphql/types";
-import { DASRIS_GET } from "../query";
+import { Query, QueryDasrisArgs } from "generated/graphql/types";
+import { DASRI_DRAFT_TAB } from "./queries";
 
 import TabContent from "./TabContent";
 import { COLORS } from "common/config";
@@ -20,8 +20,8 @@ export default function DraftsTab() {
   const { error, data, fetchMore, refetch, networkStatus } = useQuery<
     Pick<Query, "dasris">,
     Partial<QueryDasrisArgs>
-  >(DASRIS_GET, {
-    variables: { siret, status: [DasriStatus.Draft] },
+  >(DASRI_DRAFT_TAB, {
+    variables: { siret  },
     notifyOnNetworkStatusChange: true,
   });
 

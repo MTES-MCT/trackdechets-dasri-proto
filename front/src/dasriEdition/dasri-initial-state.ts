@@ -8,10 +8,10 @@ const initialCompany = {
 };
 
 const initialTransporter = {
-  isExemptedOfReceipt: false,
+
   receipt: "",
-  department: "",
-  validityLimit: null,
+  receiptDepartment: "",
+  receiptValidityLimit: null,
 
   company: initialCompany,
 };

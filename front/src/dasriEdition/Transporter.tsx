@@ -22,17 +22,17 @@ export default connect<{}, Values>(function Transporter(props) {
               transporter.transporterReceipt.receiptNumber
             );
             props.formik.setFieldValue(
-              "transporter.validityLimit",
+              "transporter.receiptValidityLimit",
               transporter.transporterReceipt.validityLimit
             );
             props.formik.setFieldValue(
-              "transporter.department",
+              "transporter.receiptDepartment",
               transporter.transporterReceipt.department
             );
           } else {
             props.formik.setFieldValue("transporter.receipt", "");
-            props.formik.setFieldValue("transporter.validityLimit", null);
-            props.formik.setFieldValue("transporter.department", "");
+            props.formik.setFieldValue("transporter.receiptValidityLimit", null);
+            props.formik.setFieldValue("transporter.receiptDepartment", "");
           }
         }}
       />

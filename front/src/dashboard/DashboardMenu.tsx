@@ -62,6 +62,15 @@ export default function DashboardMenu({ me, handleCompanyChange }: IProps) {
                   Suivi
                 </NavLink>
               </li>
+              <li>
+                <NavLink
+                  to={generatePath(routes.dashboard.dasris.history, { siret })}
+                  className="sidebar__link sidebar__link--indented"
+                  activeClassName="sidebar__link--active"
+                >
+                  Archives
+                </NavLink>
+              </li>
             </ul>
             <p className="sidebar__chapter">Mes bordereaux</p>
             <ul>

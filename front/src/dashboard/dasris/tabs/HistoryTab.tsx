@@ -2,25 +2,26 @@ import { useQuery, NetworkStatus } from "@apollo/client";
 import React from "react";
 import { InlineError } from "common/components/Error";
 import Loader from "common/components/Loaders";
-import {  Query, QueryDasrisArgs } from "generated/graphql/types";
-import { DASRI_FOLLOW_TAB } from "./queries";
+import { FormStatus, Query, QueryFormsArgs } from "generated/graphql/types";
+import { DASRI_ARCHIVE_TAB } from "./queries";
+import EmptyTab from "../../slips/tabs/EmptyTab";
 
 import Dasris from "../Dasris";
 
-import TabContent from "./TabContent";
-import EmptyTab from "../../slips/tabs/EmptyTab";
-import { useParams } from "react-router-dom";
 import { BsdTypes } from "common/bsdConstants";
 
-export default function FollowTab() {
+import TabContent from "./TabContent";
+import { useParams } from "react-router-dom";
+
+export default function HistoryTab() {
   const { siret } = useParams<{ siret: string }>();
   const { error, data, fetchMore, refetch, networkStatus } = useQuery<
     Pick<Query, "dasris">,
-    Partial<QueryDasrisArgs>
-  >(DASRI_FOLLOW_TAB, {
+    Partial<QueryFormsArgs>
+  >(DASRI_ARCHIVE_TAB, {
     variables: {
-      siret
- 
+      siret,
+    
     },
     notifyOnNetworkStatusChange: true,
   });
@@ -30,14 +31,12 @@ export default function FollowTab() {
   if (!data?.dasris?.length)
     return (
       <EmptyTab bsdType={BsdTypes.DASRI}>
-        <img src="/illu/illu_transfer.svg" alt="" />
-        <h4>Il n'y a aucun bordereau à suivre</h4>
+        <img src="/illu/illu_hello.svg" alt="" />
+        <h4>Il n'y a aucun bordereau en archive</h4>
         <p>
-          Des bordereaux apparaissent dans cet onglet lorsqu'ils sont en attente
-          d'une action extérieure. Par exemple lorsqu'en tant que producteur
-          vous attendez la réception d'un déchet ou son traitement. La colonne{" "}
-          <strong>STATUT</strong> vous renseignera sur l'état précis du
-          bordereau.
+          Des bordereaux apparaissent dans cet onnglet lorsqu'ils terminé leur
+          cycle de vie. Ils sont alors disponible en lecture seule pour
+          consultation.
         </p>
       </EmptyTab>
     );
@@ -49,12 +48,7 @@ export default function FollowTab() {
       forms={data.dasris}
       fetchMore={fetchMore}
     >
-      <Dasris
-        siret={siret}
-        dasris={data.dasris}
-        dynamicActions={true}
-        refetch={refetch}
-      />
+      <Dasris siret={siret} dasris={data.dasris} />
     </TabContent>
   );
 }

@@ -2,7 +2,7 @@ import React from "react";
 
 import { BsdActions, DynamicActions } from "common/bsd-actions/BsdActions";
 import { DateTime } from "luxon";
-import { statusLabels } from "../constants";
+import { statusLabels } from "./constants";
 import Shorten from "common/components/Shorten";
 import { Dasri } from "generated/graphql/types";
 import "./Dasris.scss";
@@ -41,7 +41,7 @@ export default function Dasris({
             </th>
 
             <th>Quantité</th>
-      
+
             {hiddenFields.indexOf("status") === -1 && <th>Statut</th>}
 
             {dynamicActions && <th>Mes actions</th>}
@@ -58,7 +58,8 @@ export default function Dasris({
               )}
               {hiddenFields.indexOf("sentAt") === -1 && (
                 <td>
-            {!!s.transport?.takenOverAt && DateTime.fromISO(s.transport.takenOverAt).toLocaleString()}   
+                  {!!s.transport?.takenOverAt &&
+                    DateTime.fromISO(s.transport.takenOverAt).toLocaleString()}
                 </td>
               )}
 

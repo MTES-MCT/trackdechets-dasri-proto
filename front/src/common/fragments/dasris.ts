@@ -29,8 +29,8 @@ export const wasteDetailsFragment = gql`
 export const transporterFragment = gql`
   fragment TransporterFragment on DasriTransporter {
     receipt
-    department
-    validityLimit
+    receiptDepartment
+    receiptValidityLimit
 
     company {
       ...CompanyFragment

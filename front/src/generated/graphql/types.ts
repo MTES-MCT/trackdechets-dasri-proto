@@ -1,5 +1,7 @@
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -19,6 +21,19 @@ export type Scalars = {
   /** Chaîne de caractère au format URL, débutant par un protocole http(s). */
   URL: string;
   JSON: any;
+};
+
+export type AcceptedFormInput = {
+  /** Statut d'acceptation du déchet (case 10) */
+  wasteAcceptationStatus: WasteAcceptationStatusInput;
+  /** Raison du refus (case 10) */
+  wasteRefusalReason: Maybe<Scalars['String']>;
+  /** Date à laquelle le déchet a été accepté ou refusé (case 10) */
+  signedAt: Scalars['DateTime'];
+  /** Nom de la personne en charge de l'acceptation' du déchet (case 10) */
+  signedBy: Scalars['String'];
+  /** Quantité réelle présentée (case 10) */
+  quantityReceived: Scalars['Float'];
 };
 
 /** Payload de création d'une annexe 2 */
@@ -116,7 +131,7 @@ export type CompanyPrivate = {
   companyTypes: Array<CompanyType>;
   /** Identifiant GEREP */
   gerepId: Maybe<Scalars['String']>;
-  /** Code de sécurité permettant de signer les BSD */
+  /** Code de signature permettant de signer les BSD */
   securityCode: Scalars['Int'];
   /** Email de contact (visible sur la fiche entreprise) */
   contactEmail: Maybe<Scalars['String']>;
@@ -306,6 +321,7 @@ export type CreateTransporterReceiptInput = {
   department: Scalars['String'];
 };
 
+/** Bordereau Dasri */
 export type Dasri = {
   __typename?: 'Dasri';
   id: Scalars['ID'];
@@ -320,6 +336,7 @@ export type Dasri = {
   transport: Maybe<DasriTransport>;
   recipient: Maybe<DasriRecipient>;
   reception: Maybe<DasriReception>;
+  operation: Maybe<DasriOperation>;
 };
 
 export type DasriCreateInput = {
@@ -331,8 +348,10 @@ export type DasriCreateInput = {
   transport: Maybe<DasriTransportInput>;
   recipient: Maybe<DasriRecipientInput>;
   reception: Maybe<DasriReceptionInput>;
+  operation: Maybe<DasriOperationInput>;
 };
 
+/** Informations relatives au déchet émis */
 export type DasriEmission = {
   __typename?: 'DasriEmission';
   wasteCode: Maybe<Scalars['String']>;
@@ -350,12 +369,14 @@ export type DasriEmissionInput = {
   handedOverAt: Maybe<Scalars['DateTime']>;
 };
 
-/** Émetteur du BSD, Personne responsable de l'émimination des déchets (PRED) */
+/** Émetteur du Dasri, Personne responsable de l'émimination des déchets (PRED) */
 export type DasriEmitter = {
   __typename?: 'DasriEmitter';
   /** Établissement émetteur */
   company: Maybe<FormCompany>;
+  /** Site d'emport du déceht, si différent de celle de l'émetteur */
   workSite: Maybe<WorkSite>;
+  /** Date de remise au tranporteur */
   handOverToTransporterAt: Maybe<Scalars['DateTime']>;
 };
 
@@ -373,6 +394,21 @@ export type DasriInput = {
   transport: Maybe<DasriTransportInput>;
   recipient: Maybe<DasriRecipientInput>;
   reception: Maybe<DasriReceptionInput>;
+  operation: Maybe<DasriOperationInput>;
+};
+
+/** Informations relatives au traitement du Dasri */
+export type DasriOperation = {
+  __typename?: 'DasriOperation';
+  signedBy: Maybe<Scalars['String']>;
+  signedAt: Maybe<Scalars['DateTime']>;
+  processingOperation: Maybe<Scalars['String']>;
+  processedAt: Maybe<Scalars['DateTime']>;
+};
+
+export type DasriOperationInput = {
+  processingOperation: Maybe<Scalars['String']>;
+  processedAt: Maybe<Scalars['DateTime']>;
 };
 
 /** Informations sur le conditionnement Dasri */
@@ -402,7 +438,7 @@ export type DasriPackagingInfoInput = {
 export enum DasriPackagings {
   /** Caisse en carton avec sac en plastique */
   BoiteCarton = 'BOITE_CARTON',
-  /** Fûts ou jérrican à usage unique */
+  /** Fûts ou jerrican à usage unique */
   Fut = 'FUT',
   /** Boîtes et Mini-collecteurs pour déchets perforants */
   BoitePerforants = 'BOITE_PERFORANTS',
@@ -414,24 +450,22 @@ export enum DasriPackagings {
   Autre = 'AUTRE'
 }
 
+/** Informations relatives à la réception du Dasri */
 export type DasriReception = {
   __typename?: 'DasriReception';
   wasteDetails: Maybe<DasriWasteDetails>;
   wasteAcceptation: Maybe<DasriWasteAcceptation>;
+  receivedAt: Maybe<Scalars['DateTime']>;
   signedBy: Maybe<Scalars['String']>;
   signedAt: Maybe<Scalars['DateTime']>;
-  receivedAt: Maybe<Scalars['DateTime']>;
-  processingOperation: Maybe<Scalars['String']>;
-  processedAt: Maybe<Scalars['DateTime']>;
 };
 
 export type DasriReceptionInput = {
   wasteDetails: Maybe<DasriWasteDetailInput>;
   receivedAt: Maybe<Scalars['DateTime']>;
-  processingOperation: Maybe<Scalars['String']>;
-  processedAt: Maybe<Scalars['DateTime']>;
 };
 
+/** Destinataire du Dasri */
 export type DasriRecipient = {
   __typename?: 'DasriRecipient';
   /** Installation destinataire */
@@ -449,32 +483,51 @@ export type DasriRecipientWasteDetailInput = {
 };
 
 export enum DasriRole {
-  /** Les BSD's dont je suis transporteur */
+  /** Les Dasri dont je suis transporteur */
   Transporter = 'TRANSPORTER',
-  /** Les BSD's dont je suis la destination de traitement */
+  /** Les Dasri dont je suis la destination de traitement */
   Recipient = 'RECIPIENT',
-  /** Les BSD's dont je suis l'émetteur */
+  /** Les Dasri dont je suis l'émetteur */
   Emitter = 'EMITTER'
+}
+
+export type DasriSignatureInput = {
+  type: DasriSignatureType;
+  signedBy: Scalars['String'];
+  securityCode: Maybe<Scalars['Int']>;
+};
+
+export enum DasriSignatureType {
+  /** Signature du cadre émetteur (PRED) */
+  Emission = 'EMISSION',
+  /** Signature du cadre émetteur (PRED) par le transporteur, grâce au code de sécurité de l'émetteur */
+  EmissionWithSecretCode = 'EMISSION_WITH_SECRET_CODE',
+  /** Signature du cadre collecteur transporteur */
+  Transport = 'TRANSPORT',
+  /** Signature de la réception du déchet */
+  Reception = 'RECEPTION',
+  /** Siganture du traitement du déchet */
+  Operation = 'OPERATION'
 }
 
 export enum DasriStatus {
   /** Dasri à l'état de brouillon */
   Draft = 'DRAFT',
-  /**
-   * BSD finalisé
-   * Les champs sont validés pour détecter des valeurs manquantes ou erronnées
-   */
+  /** Dasri scellé (publié) */
   Sealed = 'SEALED',
-  /** BSD envoyé vers l'établissement de destination */
+  /** Optionnel, Dasri signé par la PRED (émetteur) */
+  ReadyForTakeover = 'READY_FOR_TAKEOVER',
+  /** Dasri envoyé vers l'établissement de destination */
   Sent = 'SENT',
-  /** BSD reçu par l'établissement de destination */
+  /** Dasri reçu par l'établissement de destination */
   Received = 'RECEIVED',
-  /** BSD dont les déchets ont été traités */
+  /** Dasri dont les déchets ont été traités */
   Processed = 'PROCESSED',
   /** Déchet refusé */
   Refused = 'REFUSED'
 }
 
+/** Informations relatives au transport du Dasri */
 export type DasriTransport = {
   __typename?: 'DasriTransport';
   wasteDetails: Maybe<DasriWasteDetails>;
@@ -490,12 +543,12 @@ export type DasriTransporter = {
   __typename?: 'DasriTransporter';
   /** Établissement de destination */
   company: Maybe<FormCompany>;
-  /** Département */
-  department: Maybe<Scalars['String']>;
   /** N° de récipissé */
   receipt: Maybe<Scalars['String']>;
+  /** Département */
+  receiptDepartment: Maybe<Scalars['String']>;
   /** Limite de validité du récipissé */
-  validityLimit: Maybe<Scalars['DateTime']>;
+  receiptValidityLimit: Maybe<Scalars['DateTime']>;
 };
 
 export type DasriTransporterInput = {
@@ -504,15 +557,16 @@ export type DasriTransporterInput = {
   /** N° de récipissé */
   receipt: Maybe<Scalars['String']>;
   /** Département */
-  department: Maybe<Scalars['String']>;
+  receiptDepartment: Maybe<Scalars['String']>;
   /** Limite de validité du récipissé */
-  validityLimit: Maybe<Scalars['DateTime']>;
+  receiptValidityLimit: Maybe<Scalars['DateTime']>;
 };
 
 export type DasriTransportInput = {
   wasteDetails: Maybe<DasriWasteDetailInput>;
   takenOverAt: Maybe<Scalars['DateTime']>;
   handedOverAt: Maybe<Scalars['DateTime']>;
+  wasteAcceptation: Maybe<DasriWasteAcceptationInput>;
 };
 
 export type DasriUpdateInput = {
@@ -526,11 +580,19 @@ export type DasriUpdateInput = {
   transport: Maybe<DasriTransportInput>;
   recipient: Maybe<DasriRecipientInput>;
   reception: Maybe<DasriReceptionInput>;
+  operation: Maybe<DasriOperationInput>;
 };
 
+/** Informations relatives à l'acceptation ou au refus du déchet (Dasri) */
 export type DasriWasteAcceptation = {
   __typename?: 'DasriWasteAcceptation';
-  status: Maybe<Scalars['String']>;
+  status: Maybe<WasteAcceptationStatusInput>;
+  refusalReason: Maybe<Scalars['String']>;
+  refusedQuantity: Maybe<Scalars['Int']>;
+};
+
+export type DasriWasteAcceptationInput = {
+  status: Maybe<WasteAcceptationStatusInput>;
   refusalReason: Maybe<Scalars['String']>;
   refusedQuantity: Maybe<Scalars['Int']>;
 };
@@ -541,6 +603,7 @@ export type DasriWasteDetailInput = {
   packagingInfos: Maybe<Array<DasriPackagingInfoInput>>;
 };
 
+/** Détail sur le décehte proprement dit du Dasri */
 export type DasriWasteDetails = {
   __typename?: 'DasriWasteDetails';
   quantity: Maybe<Scalars['Int']>;
@@ -916,6 +979,8 @@ export enum FormStatus {
   Sent = 'SENT',
   /** BSD reçu par l'établissement de destination */
   Received = 'RECEIVED',
+  /** BSD accepté par l'établissement de destination */
+  Accepted = 'ACCEPTED',
   /** BSD dont les déchets ont été traités */
   Processed = 'PROCESSED',
   /** BSD en attente de regroupement */
@@ -928,6 +993,8 @@ export enum FormStatus {
   Refused = 'REFUSED',
   /** Déchet arrivé sur le site d'entreposage ou reconditionnement */
   TempStored = 'TEMP_STORED',
+  /** Déchet accepté par le site d'entreposage ou reconditionnement */
+  TempStorerAccepted = 'TEMP_STORER_ACCEPTED',
   /** Déchet avec les cadres 14-19 complétées (si besoin), prêt à partir du site d'entreposage ou reconditionnement */
   Resealed = 'RESEALED',
   /** Déchet envoyé du site d'entreposage ou reconditionnement vers sa destination de traitement */
@@ -1121,7 +1188,22 @@ export type Mutation = {
   createUploadLink: UploadLink;
   /** Crée un nouveau dasri */
   dasriCreate: Dasri;
-  /** Met à jour un dasri existant */
+  /** Marque un dasri brouillon comme prêt (SEALED) */
+  dasriMarkAsReady: Maybe<Dasri>;
+  /**
+   * Appose une signature sur un Dasri, verrouille les cadres correspondant
+   * 
+   * Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
+   * Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport
+   * 
+   * Toutefois il existe un exception: le cadre emetteur peut être signé par le transporteur grâce au code de 
+   * sécurité de l'émetteur (DasriSignatureType: EMISSION_WITH_SECRET_CODE)
+   */
+  dasriSign: Maybe<Dasri>;
+  /**
+   * Met à jour un dasri existant
+   * Par défaut, tous les champs sont modifiables.
+   */
   dasriUpdate: Dasri;
   /** Supprime un BSD */
   deleteForm: Maybe<Form>;
@@ -1174,6 +1256,8 @@ export type Mutation = {
    * d'un utilisateur.
    */
   login: AuthPayload;
+  /** Valide l'acceptation du BSD */
+  markAsAccepted: Maybe<Form>;
   /** Valide le traitement d'un BSD */
   markAsProcessed: Maybe<Form>;
   /** Valide la réception d'un BSD */
@@ -1186,8 +1270,8 @@ export type Mutation = {
    */
   markAsResent: Maybe<Form>;
   /**
-   * Scelle un BSD
-   * Les champs suivants sont obligatoires pour pouvoir sceller un bordereau et
+   * Finalise un BSD
+   * Les champs suivants sont obligatoires pour pouvoir finaliser un bordereau et
    * doivent avoir été renseignés au préalable
    * 
    * ```
@@ -1248,6 +1332,8 @@ export type Mutation = {
   markAsSent: Maybe<Form>;
   /** Valide la réception d'un BSD d'un entreposage provisoire ou reconditionnement */
   markAsTempStored: Maybe<Form>;
+  /** Valide l'acceptation ou le refus d'un BSD d'un entreposage provisoire ou reconditionnement */
+  markAsTempStorerAccepted: Maybe<Form>;
   /** Marque un segment de transport comme prêt à être emporté */
   markSegmentAsReadyToTakeOver: Maybe<TransportSegment>;
   /** Prépare un nouveau segment de transport multimodal */
@@ -1264,7 +1350,7 @@ export type Mutation = {
   removeUserFromCompany: CompanyPrivate;
   /**
    * USAGE INTERNE
-   * Renouvelle le code de sécurité de l'établissement
+   * Renouvelle le code de signature de l'établissement
    */
   renewSecurityCode: CompanyPrivate;
   /**
@@ -1294,10 +1380,10 @@ export type Mutation = {
    * ou après une étape d'entreposage provisoire ou de reconditionnement (signatures en case 18 et 19).
    * Cette mutation doit être appelée avec le token du collecteur-transporteur.
    * L'établissement émetteur (resp. d'entreposage provisoire ou de reconditionnement) est authentifié quant à lui
-   * grâce à son code de sécurité disponible sur le tableau de bord Trackdéchets (Mon Compte > Établissements > Sécurité).
+   * grâce à son code de signature disponible sur le tableau de bord Trackdéchets (Mon Compte > Établissements > Sécurité).
    * D'un point de vue pratique, cela implique qu'un responsable de l'établissement
    * émetteur (resp. d'entreposage provisoire ou de reconditionnement)
-   * renseigne le code de sécurité sur le terminal du collecteur-transporteur.
+   * renseigne le code de signature sur le terminal du collecteur-transporteur.
    * Dans le cas où un éco-organisme figure sur le BSD, il est également possible
    * de signer avec son code plutôt que celui de l'émetteur.
    * Il faut alors fournir le code de l'éco-organisme en indiquant qu'il est
@@ -1377,6 +1463,17 @@ export type MutationDasriCreateArgs = {
 };
 
 
+export type MutationDasriMarkAsReadyArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDasriSignArgs = {
+  id: Scalars['ID'];
+  signatureInput: DasriSignatureInput;
+};
+
+
 export type MutationDasriUpdateArgs = {
   dasriUpdateInput: DasriUpdateInput;
 };
@@ -1447,6 +1544,12 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationMarkAsAcceptedArgs = {
+  id: Scalars['ID'];
+  acceptedInfo: AcceptedFormInput;
+};
+
+
 export type MutationMarkAsProcessedArgs = {
   id: Scalars['ID'];
   processedInfo: ProcessedFormInput;
@@ -1485,6 +1588,12 @@ export type MutationMarkAsSentArgs = {
 export type MutationMarkAsTempStoredArgs = {
   id: Scalars['ID'];
   tempStoredInfos: TempStoredFormInput;
+};
+
+
+export type MutationMarkAsTempStorerAcceptedArgs = {
+  id: Scalars['ID'];
+  tempStorerAcceptedInfo: TempStorerAcceptedFormInput;
 };
 
 
@@ -1714,6 +1823,29 @@ export type Query = {
    */
   companyInfos: CompanyPublic;
   dasri: Maybe<Dasri>;
+  /**
+   * Renvoie les Dasri de l'établissement sélectionné.
+   * Si aucun SIRET n'est précisé et que l'utilisateur est membre d'une seule entreprise
+   * alors les Dasri de cette entreprise sont retournés.
+   * Si l'utilisateur est membre de 2 entreprises ou plus, vous devez obligatoirement
+   * préciser un SIRET
+   * Si l'utilisateur n'est membre d'aucune entreprise, un tableau vide sera renvoyé
+   * 
+   * Vous pouvez filtrer:
+   * - par rôle que joue votre entreprise sur le Dasri via `role`
+   * - par date de dernière modification via `updatedAfter`
+   * - par date d'envoi via `sentAfter`
+   * - par statut du Dasri via `status`
+   * - par code déchet via `wasteCode`
+   * - par SIRET d'une entreprise présente n'importe où sur le bordereau via `siretPresentOnForm`
+   * 
+   * Par défaut:
+   * - tous les BSD accessibles sont retournés
+   * - les BSD sont classés par date de création, de la plus récente à la plus vieille
+   * - les résultats sont paginés par 50. Il est possible de modifier cette valeur
+   * via `first` ou `last` en fonction du curseur utilisé
+   * - pour afficher la suite des résultats, utiliser `cursorAfter` ou `cursorBefore`
+   */
   dasris: Array<Dasri>;
   /** Renvoie la liste des éco-organismes */
   ecoOrganismes: Array<EcoOrganisme>;
@@ -1897,18 +2029,18 @@ export type QuerySearchCompaniesArgs = {
 
 /** Payload de réception d'un BSD */
 export type ReceivedFormInput = {
-  /** Statut d'acceptation du déchet (case 10) */
-  wasteAcceptationStatus: WasteAcceptationStatusInput;
-  /** Raison du refus (case 10) */
-  wasteRefusalReason: Maybe<Scalars['String']>;
   /** Nom de la personne en charge de la réception du déchet (case 10) */
   receivedBy: Scalars['String'];
   /** Date à laquelle le déchet a été reçu (case 10) */
   receivedAt: Scalars['DateTime'];
+  /** Statut d'acceptation du déchet (case 10) */
+  wasteAcceptationStatus: Maybe<WasteAcceptationStatusInput>;
+  /** Raison du refus (case 10) */
+  wasteRefusalReason: Maybe<Scalars['String']>;
   /** Date à laquelle le déchet a été accepté ou refusé (case 10) */
   signedAt: Maybe<Scalars['DateTime']>;
   /** Quantité réelle présentée (case 10) */
-  quantityReceived: Scalars['Float'];
+  quantityReceived: Maybe<Scalars['Float']>;
 };
 
 /**
@@ -2174,7 +2306,7 @@ export type TemporaryStorer = {
 
 export type TempStoredFormInput = {
   /** Statut d'acceptation du déchet (case 13) */
-  wasteAcceptationStatus: WasteAcceptationStatusInput;
+  wasteAcceptationStatus: Maybe<WasteAcceptationStatusInput>;
   /** Raison du refus (case 13) */
   wasteRefusalReason: Maybe<Scalars['String']>;
   /** Nom de la personne en charge de la réception du déchet (case 13) */
@@ -2183,6 +2315,21 @@ export type TempStoredFormInput = {
   receivedAt: Scalars['DateTime'];
   /** Date à laquelle le déchet a été accepté ou refusé (case 13). Défaut à la date d'aujourd'hui. */
   signedAt: Maybe<Scalars['DateTime']>;
+  /** Quantité réelle présentée (case 13) */
+  quantityReceived: Scalars['Float'];
+  /** Réelle ou estimée */
+  quantityType: QuantityType;
+};
+
+export type TempStorerAcceptedFormInput = {
+  /** Date à laquelle le déchet a été accepté ou refusé (case 13). */
+  signedAt: Scalars['DateTime'];
+  /** Nom de la personne en charge de l'acceptation du déchet (case 13) */
+  signedBy: Scalars['String'];
+  /** Statut d'acceptation du déchet (case 13) */
+  wasteAcceptationStatus: WasteAcceptationStatusInput;
+  /** Raison du refus (case 13) */
+  wasteRefusalReason: Maybe<Scalars['String']>;
   /** Quantité réelle présentée (case 13) */
   quantityReceived: Scalars['Float'];
   /** Réelle ou estimée */
@@ -2281,7 +2428,7 @@ export type TransporterSignatureFormInput = {
   sentAt: Scalars['DateTime'];
   /** Si oui ou non le BSD a été signé par un transporteur */
   signedByTransporter: Scalars['Boolean'];
-  /** Code de sécurité permettant d'authentifier l'émetteur */
+  /** Code de signature permettant d'authentifier l'émetteur */
   securityCode: Scalars['Int'];
   /** Dénomination de l'auteur de la signature, par défaut il s'agit de l'émetteur */
   signatureAuthor: Maybe<SignatureAuthor>;
@@ -2408,7 +2555,7 @@ export type User = {
  * * consulter/éditer les bordereaux
  * * gérer les utilisateurs de l'établissement
  * * éditer les informations de la fiche entreprise
- * * demander le renouvellement du code de sécurité
+ * * demander le renouvellement du code de signature
  * * Éditer les informations de la fiche entreprise
  * 
  * Les membres peuvent:
@@ -2465,6 +2612,8 @@ export type WasteDetails = {
   quantityType: Maybe<QuantityType>;
   /** Consistance */
   consistence: Maybe<Consistence>;
+  /** Contient des Polluants Organiques Persistants (POP) oui / non */
+  pop: Maybe<Scalars['Boolean']>;
 };
 
 /** Payload lié au détails du déchet (case 3, 4, 5, 6) */
@@ -2506,6 +2655,8 @@ export type WasteDetailsInput = {
   quantityType: Maybe<QuantityType>;
   /** Consistance */
   consistence: Maybe<Consistence>;
+  /** Contient des Polluants Organiques Persistants (POP) oui / non */
+  pop: Maybe<Scalars['Boolean']>;
 };
 
 /** Type de déchets autorisé pour une rubrique */
@@ -2537,6 +2688,16 @@ export type WorkSiteInput = {
   postalCode: Maybe<Scalars['String']>;
 };
 
+export function createAcceptedFormInputMock(props: Partial<AcceptedFormInput>): AcceptedFormInput {
+  return {
+    wasteAcceptationStatus: WasteAcceptationStatusInput.Accepted,
+    wasteRefusalReason: null,
+    signedAt: new Date().toISOString(),
+    signedBy: "",
+    quantityReceived: 0,
+    ...props,
+  };
+}
 
 export function createAppendixFormInputMock(props: Partial<AppendixFormInput>): AppendixFormInput {
   return {
@@ -2718,6 +2879,7 @@ export function createDasriMock(props: Partial<Dasri>): Dasri {
     transport: null,
     recipient: null,
     reception: null,
+    operation: null,
     ...props,
   };
 }
@@ -2731,6 +2893,7 @@ export function createDasriCreateInputMock(props: Partial<DasriCreateInput>): Da
     transport: null,
     recipient: null,
     reception: null,
+    operation: null,
     ...props,
   };
 }
@@ -2785,6 +2948,26 @@ export function createDasriInputMock(props: Partial<DasriInput>): DasriInput {
     transport: null,
     recipient: null,
     reception: null,
+    operation: null,
+    ...props,
+  };
+}
+
+export function createDasriOperationMock(props: Partial<DasriOperation>): DasriOperation {
+  return {
+    __typename: "DasriOperation",
+    signedBy: null,
+    signedAt: null,
+    processingOperation: null,
+    processedAt: null,
+    ...props,
+  };
+}
+
+export function createDasriOperationInputMock(props: Partial<DasriOperationInput>): DasriOperationInput {
+  return {
+    processingOperation: null,
+    processedAt: null,
     ...props,
   };
 }
@@ -2815,11 +2998,9 @@ export function createDasriReceptionMock(props: Partial<DasriReception>): DasriR
     __typename: "DasriReception",
     wasteDetails: null,
     wasteAcceptation: null,
+    receivedAt: null,
     signedBy: null,
     signedAt: null,
-    receivedAt: null,
-    processingOperation: null,
-    processedAt: null,
     ...props,
   };
 }
@@ -2828,8 +3009,6 @@ export function createDasriReceptionInputMock(props: Partial<DasriReceptionInput
   return {
     wasteDetails: null,
     receivedAt: null,
-    processingOperation: null,
-    processedAt: null,
     ...props,
   };
 }
@@ -2857,6 +3036,15 @@ export function createDasriRecipientWasteDetailInputMock(props: Partial<DasriRec
   };
 }
 
+export function createDasriSignatureInputMock(props: Partial<DasriSignatureInput>): DasriSignatureInput {
+  return {
+    type: DasriSignatureType.Emission,
+    signedBy: "",
+    securityCode: null,
+    ...props,
+  };
+}
+
 export function createDasriTransportMock(props: Partial<DasriTransport>): DasriTransport {
   return {
     __typename: "DasriTransport",
@@ -2874,9 +3062,9 @@ export function createDasriTransporterMock(props: Partial<DasriTransporter>): Da
   return {
     __typename: "DasriTransporter",
     company: null,
-    department: null,
     receipt: null,
-    validityLimit: null,
+    receiptDepartment: null,
+    receiptValidityLimit: null,
     ...props,
   };
 }
@@ -2885,8 +3073,8 @@ export function createDasriTransporterInputMock(props: Partial<DasriTransporterI
   return {
     company: null,
     receipt: null,
-    department: null,
-    validityLimit: null,
+    receiptDepartment: null,
+    receiptValidityLimit: null,
     ...props,
   };
 }
@@ -2896,6 +3084,7 @@ export function createDasriTransportInputMock(props: Partial<DasriTransportInput
     wasteDetails: null,
     takenOverAt: null,
     handedOverAt: null,
+    wasteAcceptation: null,
     ...props,
   };
 }
@@ -2910,6 +3099,7 @@ export function createDasriUpdateInputMock(props: Partial<DasriUpdateInput>): Da
     transport: null,
     recipient: null,
     reception: null,
+    operation: null,
     ...props,
   };
 }
@@ -2917,6 +3107,15 @@ export function createDasriUpdateInputMock(props: Partial<DasriUpdateInput>): Da
 export function createDasriWasteAcceptationMock(props: Partial<DasriWasteAcceptation>): DasriWasteAcceptation {
   return {
     __typename: "DasriWasteAcceptation",
+    status: null,
+    refusalReason: null,
+    refusedQuantity: null,
+    ...props,
+  };
+}
+
+export function createDasriWasteAcceptationInputMock(props: Partial<DasriWasteAcceptationInput>): DasriWasteAcceptationInput {
+  return {
     status: null,
     refusalReason: null,
     refusedQuantity: null,
@@ -3283,12 +3482,12 @@ export function createProcessedFormInputMock(props: Partial<ProcessedFormInput>)
 
 export function createReceivedFormInputMock(props: Partial<ReceivedFormInput>): ReceivedFormInput {
   return {
-    wasteAcceptationStatus: WasteAcceptationStatusInput.Accepted,
-    wasteRefusalReason: null,
     receivedBy: "",
     receivedAt: new Date().toISOString(),
+    wasteAcceptationStatus: null,
+    wasteRefusalReason: null,
     signedAt: null,
-    quantityReceived: 0,
+    quantityReceived: null,
     ...props,
   };
 }
@@ -3485,11 +3684,23 @@ export function createTemporaryStorerMock(props: Partial<TemporaryStorer>): Temp
 
 export function createTempStoredFormInputMock(props: Partial<TempStoredFormInput>): TempStoredFormInput {
   return {
-    wasteAcceptationStatus: WasteAcceptationStatusInput.Accepted,
+    wasteAcceptationStatus: null,
     wasteRefusalReason: null,
     receivedBy: "",
     receivedAt: new Date().toISOString(),
     signedAt: null,
+    quantityReceived: 0,
+    quantityType: QuantityType.Real,
+    ...props,
+  };
+}
+
+export function createTempStorerAcceptedFormInputMock(props: Partial<TempStorerAcceptedFormInput>): TempStorerAcceptedFormInput {
+  return {
+    signedAt: new Date().toISOString(),
+    signedBy: "",
+    wasteAcceptationStatus: WasteAcceptationStatusInput.Accepted,
+    wasteRefusalReason: null,
     quantityReceived: 0,
     quantityType: QuantityType.Real,
     ...props,
@@ -3667,6 +3878,7 @@ export function createWasteDetailsMock(props: Partial<WasteDetails>): WasteDetai
     quantity: null,
     quantityType: null,
     consistence: null,
+    pop: null,
     ...props,
   };
 }
@@ -3683,6 +3895,7 @@ export function createWasteDetailsInputMock(props: Partial<WasteDetailsInput>): 
     quantity: null,
     quantityType: null,
     consistence: null,
+    pop: null,
     ...props,
   };
 }

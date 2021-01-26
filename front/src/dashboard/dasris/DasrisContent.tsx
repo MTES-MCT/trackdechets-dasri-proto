@@ -8,12 +8,11 @@ import {
 } from "react-router-dom";
 
 import routes from "common/routes";
-// import "./SlipsContent.scss";
+
 import ActTab from "./tabs/ActTab";
 import DraftsTab from "./tabs/DraftsTab";
 import FollowTab from "./tabs/FollowTab";
-// import HistoryTab from "./tabs/HistoryTab";
-// import SlipDetail from "../slip/SlipDetail";
+import HistoryTab from "./tabs/HistoryTab";
 
 export default function DasrisContent() {
   const { siret } = useParams<{ siret: string }>();
@@ -29,6 +28,9 @@ export default function DasrisContent() {
         </Route>
         <Route path={routes.dashboard.dasris.follow}>
           <FollowTab />
+        </Route>
+        <Route path={routes.dashboard.dasris.history}>
+          <HistoryTab />
         </Route>
         <Redirect
           to={generatePath(routes.dashboard.dasris.drafts, {

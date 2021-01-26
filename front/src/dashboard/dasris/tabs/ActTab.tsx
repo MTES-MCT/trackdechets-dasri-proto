@@ -5,7 +5,7 @@ import Loader from "common/components/Loaders";
 
 import { DasriStatus, Query, QueryDasrisArgs } from "generated/graphql/types";
 
-import { DASRIS_GET } from "../query";
+import { DASRI_ACT_TAB } from "./queries";
 
 import TabContent from "./TabContent";
 import EmptyTab from "../../slips/tabs/EmptyTab";
@@ -18,13 +18,13 @@ import Dasris from "../Dasris";
 export default function ActTab() {
   const { siret } = useParams<{ siret: string }>();
 
-  const statusesWithDynamicActions = [DasriStatus.Sent, DasriStatus.Received];
+ 
   const { error, data, fetchMore, refetch, networkStatus } = useQuery<
     Pick<Query, "dasris">,
     Partial<QueryDasrisArgs>
-  >(DASRIS_GET, {
-    variables: { siret, status: statusesWithDynamicActions },
-    notifyOnNetworkStatusChange: true,
+  >(DASRI_ACT_TAB, {
+    variables: { siret  },
+    
   });
 
   if (networkStatus === NetworkStatus.loading) return <Loader />;
