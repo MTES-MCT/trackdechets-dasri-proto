@@ -24,6 +24,8 @@ input DasriEmitterInput {
   "Établissement émetteur"
   company: CompanyInput
   workSite: WorkSiteInput
+  "Champ libre émetteur"
+  customInfo: String
 }
 
 input DasriWasteDetailInput {
@@ -65,17 +67,24 @@ input DasriTransporterInput {
 
   "Limite de validité du récipissé"
   receiptValidityLimit: DateTime
+
+  "Champ libre transporteur"
+  customInfo: String
 }
 
 input DasriRecipientInput {
   "Établissement émetteur"
   company: CompanyInput
+
+  "Champ libre transporteur"
+  customInfo: String
 }
 
 input DasriReceptionInput {
   wasteDetails: DasriWasteDetailInput
   receivedAt: DateTime
 }
+
 input DasriOperationInput {
   processingOperation: String
   processedAt: DateTime
@@ -127,7 +136,7 @@ enum DasriSignatureType {
 
   "Signature du cadre émetteur (PRED) par le transporteur, grâce au code de sécurité de l'émetteur"
   EMISSION_WITH_SECRET_CODE
-  
+
   "Signature du cadre collecteur transporteur"
   TRANSPORT
 

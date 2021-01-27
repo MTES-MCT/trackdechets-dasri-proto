@@ -63,6 +63,8 @@ type DasriEmitter {
   workSite: WorkSite
   "Date de remise au tranporteur"
   handOverToTransporterAt: DateTime
+  "Champ libre"
+  customInfo: String
 }
 
 "Destinataire du Dasri"
@@ -71,6 +73,9 @@ type DasriRecipient {
   Installation destinataire
   """
   company: FormCompany
+
+  "Champ libre"
+  customInfo: String
 }
 
 """
@@ -88,6 +93,9 @@ type DasriTransporter {
 
   "Limite de validité du récipissé"
   receiptValidityLimit: DateTime
+
+  "Champ libre"
+  customInfo: String
 }
 
 "Informations sur le conditionnement Dasri"

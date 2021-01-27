@@ -39,6 +39,7 @@ export function expandDasriFromDb(dasri: Dasri): GqlDasri {
         phone: dasri.emitterCompanyPhone,
         mail: dasri.emitterCompanyMail
       }),
+      customInfo: dasri.emitterCustomInfo,
       workSite: nullIfNoValues<WorkSite>({
         name: dasri.emitterWorkSiteName,
         address: dasri.emitterWorkSiteAddress,
@@ -69,7 +70,7 @@ export function expandDasriFromDb(dasri: Dasri): GqlDasri {
         phone: dasri.transporterCompanyPhone,
         mail: dasri.transporterCompanyMail
       }),
-
+      customInfo: dasri.transporterCustomInfo,
       receipt: dasri.transporterReceipt,
       receiptDepartment: dasri.transporterReceiptDepartment,
       receiptValidityLimit: dasri.transporterReceiptValidityLimit?.toISOString()
@@ -99,8 +100,10 @@ export function expandDasriFromDb(dasri: Dasri): GqlDasri {
         address: dasri.recipientCompanyAddress,
         phone: dasri.recipientCompanyPhone,
         mail: dasri.recipientCompanyMail
-      })
+      }),
+      customInfo: dasri.recipientCustomInfo
     }),
+
     reception: nullIfNoValues<DasriReception>({
       wasteDetails: nullIfNoValues<DasriWasteDetails>({
         quantity: dasri.recipientWasteQuantity,
@@ -179,7 +182,8 @@ function flattenEmitterInput(input: { emitter?: DasriEmitterInput }) {
     ),
     emitterWorkSiteInfos: chain(input.emitter, e =>
       chain(e.workSite, w => w.infos)
-    )
+    ),
+    emitterCustomInfo: chain(input.emitter, e => e.customInfo)
   };
 }
 
@@ -238,7 +242,8 @@ function flattenTransporterInput(input: {
       t.receiptValidityLimit
         ? new Date(t.receiptValidityLimit)
         : t.receiptValidityLimit
-    )
+    ),
+    transporterCustomInfo: chain(input.transporter, e => e.customInfo)
   });
 }
 function flattenTransportInput(input: { transport?: DasriTransportInput }) {
@@ -291,7 +296,8 @@ function flattenRecipientInput(input: { recipient?: DasriRecipientInput }) {
     ),
     recipientCompanyMail: chain(input.recipient, r =>
       chain(r.company, c => c.mail)
-    )
+    ),
+    recipientCustomInfo: chain(input.recipient, e => e.customInfo)
   };
 }
 

@@ -379,12 +379,16 @@ export type DasriEmitter = {
   workSite?: Maybe<WorkSite>;
   /** Date de remise au tranporteur */
   handOverToTransporterAt?: Maybe<Scalars['DateTime']>;
+  /** Champ libre */
+  customInfo?: Maybe<Scalars['String']>;
 };
 
 export type DasriEmitterInput = {
   /** Établissement émetteur */
   company?: Maybe<CompanyInput>;
   workSite?: Maybe<WorkSiteInput>;
+  /** Champ libre émetteur */
+  customInfo?: Maybe<Scalars['String']>;
 };
 
 export type DasriInput = {
@@ -470,11 +474,15 @@ export type DasriRecipient = {
   __typename?: 'DasriRecipient';
   /** Installation destinataire */
   company?: Maybe<FormCompany>;
+  /** Champ libre */
+  customInfo?: Maybe<Scalars['String']>;
 };
 
 export type DasriRecipientInput = {
   /** Établissement émetteur */
   company?: Maybe<CompanyInput>;
+  /** Champ libre transporteur */
+  customInfo?: Maybe<Scalars['String']>;
 };
 
 export type DasriRecipientWasteDetailInput = {
@@ -546,6 +554,8 @@ export type DasriTransporter = {
   receiptDepartment?: Maybe<Scalars['String']>;
   /** Limite de validité du récipissé */
   receiptValidityLimit?: Maybe<Scalars['DateTime']>;
+  /** Champ libre */
+  customInfo?: Maybe<Scalars['String']>;
 };
 
 export type DasriTransporterInput = {
@@ -557,6 +567,8 @@ export type DasriTransporterInput = {
   receiptDepartment?: Maybe<Scalars['String']>;
   /** Limite de validité du récipissé */
   receiptValidityLimit?: Maybe<Scalars['DateTime']>;
+  /** Champ libre transporteur */
+  customInfo?: Maybe<Scalars['String']>;
 };
 
 export type DasriTransportInput = {
@@ -3128,6 +3140,7 @@ export type DasriEmitterResolvers<ContextType = GraphQLContext, ParentType exten
   company?: Resolver<Maybe<ResolversTypes['FormCompany']>, ParentType, ContextType>;
   workSite?: Resolver<Maybe<ResolversTypes['WorkSite']>, ParentType, ContextType>;
   handOverToTransporterAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  customInfo?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3158,6 +3171,7 @@ export type DasriReceptionResolvers<ContextType = GraphQLContext, ParentType ext
 
 export type DasriRecipientResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['DasriRecipient'] = ResolversParentTypes['DasriRecipient']> = {
   company?: Resolver<Maybe<ResolversTypes['FormCompany']>, ParentType, ContextType>;
+  customInfo?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3176,6 +3190,7 @@ export type DasriTransporterResolvers<ContextType = GraphQLContext, ParentType e
   receipt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   receiptDepartment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   receiptValidityLimit?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  customInfo?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3910,6 +3925,7 @@ export function createDasriEmitterMock(props: Partial<DasriEmitter>): DasriEmitt
     company: null,
     workSite: null,
     handOverToTransporterAt: null,
+    customInfo: null,
     ...props,
   };
 }
@@ -3918,6 +3934,7 @@ export function createDasriEmitterInputMock(props: Partial<DasriEmitterInput>): 
   return {
     company: null,
     workSite: null,
+    customInfo: null,
     ...props,
   };
 }
@@ -4000,6 +4017,7 @@ export function createDasriRecipientMock(props: Partial<DasriRecipient>): DasriR
   return {
     __typename: "DasriRecipient",
     company: null,
+    customInfo: null,
     ...props,
   };
 }
@@ -4007,6 +4025,7 @@ export function createDasriRecipientMock(props: Partial<DasriRecipient>): DasriR
 export function createDasriRecipientInputMock(props: Partial<DasriRecipientInput>): DasriRecipientInput {
   return {
     company: null,
+    customInfo: null,
     ...props,
   };
 }
@@ -4048,6 +4067,7 @@ export function createDasriTransporterMock(props: Partial<DasriTransporter>): Da
     receipt: null,
     receiptDepartment: null,
     receiptValidityLimit: null,
+    customInfo: null,
     ...props,
   };
 }
@@ -4058,6 +4078,7 @@ export function createDasriTransporterInputMock(props: Partial<DasriTransporterI
     receipt: null,
     receiptDepartment: null,
     receiptValidityLimit: null,
+    customInfo: null,
     ...props,
   };
 }
