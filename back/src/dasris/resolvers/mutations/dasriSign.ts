@@ -50,7 +50,8 @@ const dasriSign: MutationResolvers["dasriSign"] = async (
   const data = {
     [signatureParams.by]: signatureInput.signedBy,
     [signatureParams.at]: new Date(),
-    [signatureParams.signatoryField]: { connect: { id: user.id } }
+    [signatureParams.signatoryField]: { connect: { id: user.id } },
+    ...getFieldsUpdate({ dasri, signatureInput })
   };
 
   // Validate required fields are filled
@@ -69,6 +70,24 @@ const dasriSign: MutationResolvers["dasriSign"] = async (
 
 export default dasriSign;
 
+type getFieldsUpdateFn = ({
+  dasri: Dasri,
+  signatureInput: DasriSignatureInput
+}) => Partial<Dasri>;
+/**
+ 
+ * A few fields obey to a custom logic
+ */
+const getFieldsUpdate: getFieldsUpdateFn = ({ dasri, signatureInput }) => {
+  // on reception signature, fill handedOverToRecipientAt if not already completed
+  if (signatureInput.type === "RECEPTION" && !dasri.handedOverToRecipientAt) {
+    return {
+      handedOverToRecipientAt: dasri.receivedAt
+    };
+  }
+  return {};
+};
+
 type DasriSignatureInfos = {
   by:
     | "emissionSignedBy"
@@ -81,7 +100,7 @@ type DasriSignatureInfos = {
     | "receptionSignedAt"
     | "operationSignedAt";
   eventType: DasriEventType;
-  authorizedSiret: (form: Dasri) => string;
+  authorizedSiret: (dasri: Dasri) => string;
   signatoryField:
     | "emissionSignatory"
     | "transportSignatory"
@@ -97,7 +116,7 @@ const dasriSignatureMapping: Record<DasriSignatureType, DasriSignatureInfos> = {
     eventType: DasriEventType.SignEmission,
     validator: okForEmissionSignatureSchema,
     signatoryField: "emissionSignatory",
-    authorizedSiret: form => form.emitterCompanySiret
+    authorizedSiret: dasri => dasri.emitterCompanySiret
   },
   EMISSION_WITH_SECRET_CODE: {
     by: "emissionSignedBy",
@@ -105,7 +124,7 @@ const dasriSignatureMapping: Record<DasriSignatureType, DasriSignatureInfos> = {
     eventType: DasriEventType.SignEmissionWithSecretCode,
     validator: okForEmissionSignatureSchema,
     signatoryField: "emissionSignatory",
-    authorizedSiret: form => form.transporterCompanySiret // transporter can sign with emitter secret code (trs device)
+    authorizedSiret: dasri => dasri.transporterCompanySiret // transporter can sign with emitter secret code (trs device)
   },
   TRANSPORT: {
     by: "transportSignedBy",
@@ -113,7 +132,7 @@ const dasriSignatureMapping: Record<DasriSignatureType, DasriSignatureInfos> = {
     eventType: DasriEventType.SignTransport,
     validator: okForTransportSignatureSchema,
     signatoryField: "transportSignatory",
-    authorizedSiret: form => form.transporterCompanySiret
+    authorizedSiret: dasri => dasri.transporterCompanySiret
   },
 
   RECEPTION: {
@@ -122,7 +141,7 @@ const dasriSignatureMapping: Record<DasriSignatureType, DasriSignatureInfos> = {
     eventType: DasriEventType.SignReception,
     validator: okForReceptionSignatureSchema,
     signatoryField: "receptionSignatory",
-    authorizedSiret: form => form.recipientCompanySiret
+    authorizedSiret: dasri => dasri.recipientCompanySiret
   },
   OPERATION: {
     by: "operationSignedBy", // changeme
@@ -130,7 +149,7 @@ const dasriSignatureMapping: Record<DasriSignatureType, DasriSignatureInfos> = {
     eventType: DasriEventType.SignOperation,
     validator: okForProcessingSignatureSchema,
     signatoryField: "operationSignatory",
-    authorizedSiret: form => form.recipientCompanySiret
+    authorizedSiret: dasri => dasri.recipientCompanySiret
   }
 };
 

@@ -402,7 +402,8 @@ describe("Mutation.dasriSign transport", () => {
 describe("Mutation.dasriSign reception", () => {
   afterEach(resetDatabase);
 
-  it("should put reception signature on a dasri", async () => {
+  it("should put reception signature on a dasri and fill handedOverToRecipientAt", async () => {
+    // When a reception is signed, handedOverToRecipientAt is filled with receivedAt field
     const {
       user: emitter,
       company: emitterCompany
@@ -421,9 +422,12 @@ describe("Mutation.dasriSign reception", () => {
         ...draftData(emitterCompany),
         ...readyToTakeOverData(transporterCompany),
         ...readyToReceiveData(recipientCompany),
+        receivedAt: new Date("2020-12-15T11:00:00.000Z"),
         status: DasriStatus.SENT
       }
     });
+    expect(dasri.handedOverToRecipientAt).toBeNull(); // sanity check
+
     const { mutate } = makeClient(recipient); // recipient
 
     await mutate(DASRI_SIGN, {
@@ -439,6 +443,57 @@ describe("Mutation.dasriSign reception", () => {
     expect(receivedDasri.status).toEqual("RECEIVED");
     expect(receivedDasri.receptionSignedBy).toEqual("Monique");
     expect(receivedDasri.receptionSignatoryId).toEqual(recipient.id);
+    expect(receivedDasri.handedOverToRecipientAt).not.toBeNull();
+
+    expect(receivedDasri.handedOverToRecipientAt).toEqual(
+      new Date("2020-12-15T11:00:00.000Z")
+    ); // field was filled with receivedAt value
+  });
+
+  it("should put reception signature on a dasri and keep already filled handedOverToRecipientAt", async () => {
+    // When a reception is signed, handedOverToRecipientAt must be kept if already filled
+
+    const {
+      user: emitter,
+      company: emitterCompany
+    } = await userWithCompanyFactory("MEMBER");
+    const { company: transporterCompany } = await userWithCompanyFactory(
+      "MEMBER"
+    );
+    const {
+      user: recipient,
+      company: recipientCompany
+    } = await userWithCompanyFactory("MEMBER");
+
+    const dasri = await dasriFactory({
+      ownerId: emitter.id,
+      opt: {
+        ...draftData(emitterCompany),
+        ...readyToTakeOverData(transporterCompany),
+        ...readyToReceiveData(recipientCompany),
+        handedOverToRecipientAt: new Date("2020-12-20T11:00:00.000Z"),
+        status: DasriStatus.SENT
+      }
+    });
+
+    const { mutate } = makeClient(recipient); // recipient
+
+    await mutate(DASRI_SIGN, {
+      variables: {
+        id: dasri.id,
+        input: { type: "RECEPTION", signedBy: "Monique" }
+      }
+    });
+
+    const receivedDasri = await prisma.dasri.findUnique({
+      where: { id: dasri.id }
+    });
+    expect(receivedDasri.status).toEqual("RECEIVED");
+    expect(receivedDasri.receptionSignedBy).toEqual("Monique");
+    expect(receivedDasri.receptionSignatoryId).toEqual(recipient.id);
+    expect(receivedDasri.handedOverToRecipientAt).toEqual(
+      new Date("2020-12-20T11:00:00.000Z")
+    ); // field was not overwritten
   });
 
   it("should mark a dasri as refused when reception acceptation is refused", async () => {

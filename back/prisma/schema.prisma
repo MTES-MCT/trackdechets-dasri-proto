@@ -548,6 +548,8 @@ model Dasri {
   emitterWorkSitePostalCode          String?
   emitterWorkSiteInfos               String?
 
+  emitterCustomInfo                  String? // free field
+
   // emission
   wasteDetailsCode                   String?
   wasteDetailsOnuCode                String?
@@ -573,6 +575,9 @@ model Dasri {
   transporterReceipt                 String?
   transporterReceiptDepartment       String?
   transporterReceiptValidityLimit    DateTime?
+
+  transporterCustomInfo              String? // free field
+
   
   // transport
   transporterWasteAcceptationStatus  WasteAcceptationStatus?
@@ -600,6 +605,8 @@ model Dasri {
   recipientCompanyContact            String?
   recipientCompanyPhone              String?
   recipientCompanyMail               String?
+
+  recipientCustomInfo              String? // free field
 
   // reception
   recipientWastePackagingsInfo       Json?
