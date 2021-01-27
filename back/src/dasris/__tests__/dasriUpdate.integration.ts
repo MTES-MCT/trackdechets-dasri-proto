@@ -359,7 +359,7 @@ describe("Mutation.dasriUpdate", () => {
     ]);
   });
 
-  it("should allow reception handedOverAt field update after transport signature", async () => {
+  it("should allow transporter handedOverAt field update after transport signature", async () => {
     const { user, company } = await userWithCompanyFactory("MEMBER");
     const dasri = await dasriFactory({
       ownerId: user.id,
@@ -384,16 +384,52 @@ describe("Mutation.dasriUpdate", () => {
     await mutate(DASRI_UPDATE, {
       variables: { input }
     });
-
-    await mutate(DASRI_UPDATE, {
-      variables: { input }
-    });
     const updatedDasri = await prisma.dasri.findUnique({
       where: { id: dasri.id }
     });
     expect(updatedDasri.handedOverToRecipientAt).not.toBeNull();
   });
 
+  it("should disallow transporter handedOverAt field update after reception signature", async () => {
+    const { user, company } = await userWithCompanyFactory("MEMBER");
+    const dasri = await dasriFactory({
+      ownerId: user.id,
+      opt: {
+        status: DasriStatus.RECEIVED,
+        emitterCompanySiret: company.siret,
+        receptionSignedBy: user.name,
+        receptionSignatory: { connect: { id: user.id } },
+        receptionSignedAt: new Date()
+      }
+    });
+
+    const { mutate } = makeClient(user);
+    const input = {
+      id: dasri.id,
+      transport: {
+        handedOverAt: new Date()
+      }
+    };
+    // handedOverToRecipientAt can be updated even after dasri is sent, but not when it is received
+    const { errors } = await mutate(DASRI_UPDATE, {
+      variables: { input }
+    });
+
+    expect(errors).toEqual([
+      expect.objectContaining({
+        message:
+          "Des champs ont été verrouillés via signature et ne peuvent plus être modifiés: handedOverToRecipientAt",
+
+        extensions: expect.objectContaining({
+          code: ErrorCode.FORBIDDEN
+        })
+      })
+    ]);
+    const updatedDasri = await prisma.dasri.findUnique({
+      where: { id: dasri.id }
+    });
+    expect(updatedDasri.handedOverToRecipientAt).toBeNull();
+  });
   it("should allow recipient fields update after transport signature", async () => {
     const { user, company } = await userWithCompanyFactory("MEMBER");
     const dasri = await dasriFactory({
