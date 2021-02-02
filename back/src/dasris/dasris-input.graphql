@@ -32,6 +32,7 @@ input DasriWasteDetailInput {
   quantity: Int
   quantityType: QuantityType
   packagingInfos: [DasriPackagingInfoInput!]
+  onuCode: String
 }
 input DasriRecipientWasteDetailInput {
   quantity: Int

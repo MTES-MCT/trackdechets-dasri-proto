@@ -111,18 +111,18 @@ type DasriPackagingInfo {
 
   volume: Int!
 }
-"Détail sur le décehte proprement dit du Dasri"
+"Détail sur le déchet proprement dit du Dasri"
 type DasriWasteDetails {
   quantity: Int
   quantityType: QuantityType
   volume: Int
   packagingInfos: [DasriPackagingInfo!]
+  onuCode: String
 }
 
 "Informations relatives au déchet émis"
 type DasriEmission {
   wasteCode: String
-  wasteDetailsOnuCode: String
   wasteDetails: DasriWasteDetails
   handedOverAt: DateTime
   signedBy: String

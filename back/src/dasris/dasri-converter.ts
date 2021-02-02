@@ -50,7 +50,6 @@ export function expandDasriFromDb(dasri: Dasri): GqlDasri {
     }),
     emission: nullIfNoValues<DasriEmission>({
       wasteCode: dasri.wasteDetailsCode,
-      wasteDetailsOnuCode: dasri.wasteDetailsOnuCode,
       handedOverAt: dasri.handedOverToTransporterAt?.toISOString(),
       signedBy: dasri.emissionSignedBy,
       signedAt: dasri.emissionSignedAt?.toISOString(),
@@ -58,7 +57,8 @@ export function expandDasriFromDb(dasri: Dasri): GqlDasri {
         quantity: dasri.emitterWasteQuantity,
         quantityType: dasri.emitterWasteQuantityType as QuantityType,
         volume: dasri.emitterWasteVolume,
-        packagingInfos: dasri.emitterWastePackagingsInfo as DasriPackagingInfo[]
+        packagingInfos: dasri.emitterWastePackagingsInfo as DasriPackagingInfo[],
+        onuCode: dasri.wasteDetailsOnuCode
       })
     }),
 
@@ -196,7 +196,9 @@ function flattenEmissionInput(input: { emission?: DasriEmissionInput }) {
   );
   return {
     wasteDetailsCode: chain(input.emission, e => e.wasteCode),
-    wasteDetailsOnuCode: chain(input.emission, e => e.wasteDetailsOnuCode),
+    wasteDetailsOnuCode: chain(input.emission, e =>
+      chain(e.wasteDetails, w => w.onuCode)
+    ),
     handedOverToTransporterAt: chain(input.emission, e =>
       e.handedOverAt ? new Date(e.handedOverAt) : null
     ),

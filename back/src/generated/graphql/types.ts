@@ -356,7 +356,6 @@ export type DasriCreateInput = {
 export type DasriEmission = {
   __typename?: 'DasriEmission';
   wasteCode?: Maybe<Scalars['String']>;
-  wasteDetailsOnuCode?: Maybe<Scalars['String']>;
   wasteDetails?: Maybe<DasriWasteDetails>;
   handedOverAt?: Maybe<Scalars['DateTime']>;
   signedBy?: Maybe<Scalars['String']>;
@@ -610,15 +609,17 @@ export type DasriWasteDetailInput = {
   quantity?: Maybe<Scalars['Int']>;
   quantityType?: Maybe<QuantityType>;
   packagingInfos?: Maybe<Array<DasriPackagingInfoInput>>;
+  onuCode?: Maybe<Scalars['String']>;
 };
 
-/** Détail sur le décehte proprement dit du Dasri */
+/** Détail sur le déchet proprement dit du Dasri */
 export type DasriWasteDetails = {
   __typename?: 'DasriWasteDetails';
   quantity?: Maybe<Scalars['Int']>;
   quantityType?: Maybe<QuantityType>;
   volume?: Maybe<Scalars['Int']>;
   packagingInfos?: Maybe<Array<DasriPackagingInfo>>;
+  onuCode?: Maybe<Scalars['String']>;
 };
 
 
@@ -3128,7 +3129,6 @@ export type DasriResolvers<ContextType = GraphQLContext, ParentType extends Reso
 
 export type DasriEmissionResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['DasriEmission'] = ResolversParentTypes['DasriEmission']> = {
   wasteCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  wasteDetailsOnuCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   wasteDetails?: Resolver<Maybe<ResolversTypes['DasriWasteDetails']>, ParentType, ContextType>;
   handedOverAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   signedBy?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -3206,6 +3206,7 @@ export type DasriWasteDetailsResolvers<ContextType = GraphQLContext, ParentType 
   quantityType?: Resolver<Maybe<ResolversTypes['QuantityType']>, ParentType, ContextType>;
   volume?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   packagingInfos?: Resolver<Maybe<Array<ResolversTypes['DasriPackagingInfo']>>, ParentType, ContextType>;
+  onuCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3900,7 +3901,6 @@ export function createDasriEmissionMock(props: Partial<DasriEmission>): DasriEmi
   return {
     __typename: "DasriEmission",
     wasteCode: null,
-    wasteDetailsOnuCode: null,
     wasteDetails: null,
     handedOverAt: null,
     signedBy: null,
@@ -4132,6 +4132,7 @@ export function createDasriWasteDetailInputMock(props: Partial<DasriWasteDetailI
     quantity: null,
     quantityType: null,
     packagingInfos: null,
+    onuCode: null,
     ...props,
   };
 }
@@ -4143,6 +4144,7 @@ export function createDasriWasteDetailsMock(props: Partial<DasriWasteDetails>): 
     quantityType: null,
     volume: null,
     packagingInfos: null,
+    onuCode: null,
     ...props,
   };
 }
