@@ -10,7 +10,7 @@ export class AddEcoOrganismeType implements Updater {
   async run() {
     const ecoOrganismes = await prisma.ecoOrganisme.findMany();
     for (const ecoOrganisme of ecoOrganismes) {
-      const company = await prisma.company.findOne({where: {
+      const company = await prisma.company.findUnique({where: {
 
         siret: ecoOrganisme.siret
       }
