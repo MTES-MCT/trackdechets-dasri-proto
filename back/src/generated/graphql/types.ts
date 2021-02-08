@@ -594,7 +594,7 @@ export type DasriUpdateInput = {
 /** Informations relatives à l'acceptation ou au refus du déchet (Dasri) */
 export type DasriWasteAcceptation = {
   __typename?: 'DasriWasteAcceptation';
-  status?: Maybe<WasteAcceptationStatusInput>;
+  status?: Maybe<Scalars['String']>;
   refusalReason?: Maybe<Scalars['String']>;
   refusedQuantity?: Maybe<Scalars['Int']>;
 };
@@ -2810,7 +2810,6 @@ export type ResolversTypes = {
   DasriTransporter: ResolverTypeWrapper<DasriTransporter>;
   DasriTransport: ResolverTypeWrapper<DasriTransport>;
   DasriWasteAcceptation: ResolverTypeWrapper<DasriWasteAcceptation>;
-  WasteAcceptationStatusInput: WasteAcceptationStatusInput;
   DasriRecipient: ResolverTypeWrapper<DasriRecipient>;
   DasriReception: ResolverTypeWrapper<DasriReception>;
   DasriOperation: ResolverTypeWrapper<DasriOperation>;
@@ -2864,6 +2863,7 @@ export type ResolversTypes = {
   DasriTransporterInput: DasriTransporterInput;
   DasriTransportInput: DasriTransportInput;
   DasriWasteAcceptationInput: DasriWasteAcceptationInput;
+  WasteAcceptationStatusInput: WasteAcceptationStatusInput;
   DasriRecipientInput: DasriRecipientInput;
   DasriReceptionInput: DasriReceptionInput;
   DasriOperationInput: DasriOperationInput;
@@ -3195,7 +3195,7 @@ export type DasriTransporterResolvers<ContextType = GraphQLContext, ParentType e
 };
 
 export type DasriWasteAcceptationResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['DasriWasteAcceptation'] = ResolversParentTypes['DasriWasteAcceptation']> = {
-  status?: Resolver<Maybe<ResolversTypes['WasteAcceptationStatusInput']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   refusalReason?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   refusedQuantity?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

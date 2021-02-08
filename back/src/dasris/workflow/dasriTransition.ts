@@ -41,7 +41,5 @@ export default async function dasriTransition(
     data: dasriUpdateInput
   });
 
-  // TODO: handle status log and event emitters
-
   return updatedForm;
 }

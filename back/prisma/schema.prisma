@@ -606,7 +606,7 @@ model Dasri {
   recipientCompanyPhone              String?
   recipientCompanyMail               String?
 
-  recipientCustomInfo              String? // free field
+  recipientCustomInfo                String? // free field
 
   // reception
   recipientWastePackagingsInfo       Json?

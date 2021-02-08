@@ -131,7 +131,7 @@ type DasriEmission {
 
 "Informations relatives à l'acceptation ou au refus du déchet (Dasri)"
 type DasriWasteAcceptation {
-  status: WasteAcceptationStatusInput
+  status: String
   refusalReason: String
   refusedQuantity: Int
 }
