@@ -308,7 +308,7 @@ describe("Mutation.dasriUpdate", () => {
       variables: { input }
     });
 
-    dasri = await prisma.dasri.findUnique({
+    dasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(dasri.recipientCompanyMail).toEqual("recipient@test.test"); // status did not change
@@ -384,7 +384,7 @@ describe("Mutation.dasriUpdate", () => {
     await mutate(DASRI_UPDATE, {
       variables: { input }
     });
-    const updatedDasri = await prisma.dasri.findUnique({
+    const updatedDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(updatedDasri.handedOverToRecipientAt).not.toBeNull();
@@ -425,7 +425,7 @@ describe("Mutation.dasriUpdate", () => {
         })
       })
     ]);
-    const updatedDasri = await prisma.dasri.findUnique({
+    const updatedDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(updatedDasri.handedOverToRecipientAt).toBeNull();
@@ -526,7 +526,7 @@ describe("Mutation.dasriUpdate", () => {
       variables: { input }
     });
 
-    dasri = await prisma.dasri.findUnique({
+    dasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(dasri.processingOperation).toEqual("D10");

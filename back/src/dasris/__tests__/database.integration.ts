@@ -1,18 +1,16 @@
 import { userFactory } from "../../__tests__/factories";
 import { dasriFactory } from "./factories";
-import { getDasriOrDasriNotFound } from "../database";
+import { getBsdasriOrNotFound } from "../database";
 import { resetDatabase } from "../../../integration-tests/helper";
 import { ErrorCode } from "../../common/errors";
 
-describe("getDasriOrDasriNotFound", () => {
-  afterAll(resetDatabase);
-
+describe("getBsdasriOrNotFound", () => {
   afterEach(resetDatabase);
 
   it("should get a dasri by id", async () => {
     const user = await userFactory();
     const created = await dasriFactory({ ownerId: user.id });
-    const retrieved = await getDasriOrDasriNotFound({ id: created.id });
+    const retrieved = await getBsdasriOrNotFound({ id: created.id });
     expect(created.id).toEqual(retrieved.id);
   });
 
@@ -20,13 +18,13 @@ describe("getDasriOrDasriNotFound", () => {
     const user = await userFactory();
     const created = await dasriFactory({ ownerId: user.id });
 
-    const retrieved = await getDasriOrDasriNotFound({
+    const retrieved = await getBsdasriOrNotFound({
       readableId: created.readableId
     });
     expect(retrieved.id).toEqual(created.id);
   });
 
-  it("should throw DasriNotFound exception if dasri is deleted", async () => {
+  it("should throw BsdasriNotFound exception if dasri is deleted", async () => {
     expect.assertions(2);
     const user = await userFactory();
     const dasri = await dasriFactory({
@@ -34,7 +32,7 @@ describe("getDasriOrDasriNotFound", () => {
       opt: { isDeleted: true }
     });
     try {
-      await getDasriOrDasriNotFound({ id: dasri.id });
+      await getBsdasriOrNotFound({ id: dasri.id });
     } catch (err) {
       expect(err.extensions.code).toEqual(ErrorCode.BAD_USER_INPUT);
       expect(err.message).toEqual(
@@ -43,11 +41,11 @@ describe("getDasriOrDasriNotFound", () => {
     }
   });
 
-  it("should throw DasriNotFound exception if id is not found", async () => {
+  it("should throw BsdasriNotFound exception if id is not found", async () => {
     expect.assertions(2);
     const id = "inconnu";
     try {
-      await getDasriOrDasriNotFound({ id });
+      await getBsdasriOrNotFound({ id });
     } catch (err) {
       expect(err.extensions.code).toEqual(ErrorCode.BAD_USER_INPUT);
       expect(err.message).toEqual(
@@ -60,7 +58,7 @@ describe("getDasriOrDasriNotFound", () => {
     expect.assertions(2);
     const readableId = "inconnu";
     try {
-      await getDasriOrDasriNotFound({ readableId });
+      await getBsdasriOrNotFound({ readableId });
     } catch (err) {
       expect(err.extensions.code).toEqual(ErrorCode.BAD_USER_INPUT);
       expect(err.message).toEqual(

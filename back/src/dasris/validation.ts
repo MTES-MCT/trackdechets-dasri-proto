@@ -1,4 +1,4 @@
-import { WasteAcceptationStatus, Dasri, QuantityType } from "@prisma/client";
+import { WasteAcceptationStatus, Bsdasri, QuantityType } from "@prisma/client";
 
 import * as yup from "yup";
 import {
@@ -8,8 +8,8 @@ import {
 import configureYup from "../common/yup/configureYup";
 import validDatetime from "../common/yup/validDatetime";
 import {
-  DasriPackagings,
-  DasriPackagingInfo
+  BsdasriPackagings,
+  BsdasriPackagingInfo
 } from "../generated/graphql/types";
 
 const wasteCodes = DASRI_WASTE_CODES.map(el => el.code);
@@ -21,7 +21,7 @@ configureYup();
 // *************************************************
 
 type Emitter = Pick<
-  Dasri,
+  Bsdasri,
   | "emitterWorkSiteName"
   | "emitterWorkSiteAddress"
   | "emitterWorkSiteCity"
@@ -35,7 +35,7 @@ type Emitter = Pick<
   | "emitterCompanyMail"
 >;
 type Emission = Pick<
-  Dasri,
+  Bsdasri,
   | "wasteDetailsCode"
   | "wasteDetailsOnuCode"
   | "emitterWasteQuantity"
@@ -48,7 +48,7 @@ type Emission = Pick<
 >;
 
 type Transporter = Pick<
-  Dasri,
+  Bsdasri,
   | "transporterCompanyName"
   | "transporterCompanySiret"
   | "transporterCompanyAddress"
@@ -60,7 +60,7 @@ type Transporter = Pick<
   | "transporterReceiptValidityLimit"
 >;
 type Transport = Pick<
-  Dasri,
+  Bsdasri,
   | "transporterWasteAcceptationStatus"
   | "transporterWasteRefusalReason"
   | "transporterWasteRefusedQuantity"
@@ -74,7 +74,7 @@ type Transport = Pick<
   | "transportSignedAt"
 >;
 type Recipient = Pick<
-  Dasri,
+  Bsdasri,
   | "recipientCompanyName"
   | "recipientCompanySiret"
   | "recipientCompanyAddress"
@@ -83,7 +83,7 @@ type Recipient = Pick<
   | "recipientCompanyMail"
 >;
 type Reception = Pick<
-  Dasri,
+  Bsdasri,
   | "recipientWastePackagingsInfo"
   | "recipientWasteAcceptationStatus"
   | "recipientWasteRefusalReason"
@@ -95,7 +95,7 @@ type Reception = Pick<
   | "receptionSignedAt"
 >;
 type Operation = Pick<
-  Dasri,
+  Bsdasri,
   | "processingOperation"
   | "processedAt"
   | "operationSignedBy"
@@ -151,7 +151,7 @@ export const emitterSchema: yup.ObjectSchema<
     .required(`Émetteur: ${MISSING_COMPANY_EMAIL}`)
 });
 
-const packagingsTypes: DasriPackagings[] = [
+const packagingsTypes: BsdasriPackagings[] = [
   "BOITE_CARTON",
   "FUT",
   "BOITE_PERFORANTS",
@@ -159,7 +159,7 @@ const packagingsTypes: DasriPackagings[] = [
   "VRAC",
   "AUTRE"
 ];
-export const packagingInfo: yup.ObjectSchema<DasriPackagingInfo> = yup
+export const packagingInfo: yup.ObjectSchema<BsdasriPackagingInfo> = yup
   .object()
   .shape({
     type: yup
@@ -418,7 +418,7 @@ export const dasriDraftSchema = yup.object().shape({
   transporterCompanyMail: yup.string().notRequired().nullable().email()
 });
 
-// validation schema for Dasri before it can be sealed
+// validation schema for Bsdasri before it can be sealed
 export const okForSealedFormSchema = yup.object().shape({
   emitterCompanySiret: yup.string().matches(/^\d{14}$/, {
     message: `Émetteur: ${INVALID_SIRET_LENGTH}`

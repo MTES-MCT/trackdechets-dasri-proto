@@ -1,6 +1,6 @@
-input DasriPackagingInfoInput {
+input BsdasriPackagingInfoInput {
   "Type de conditionnement"
-  type: DasriPackagings!
+  type: BsdasriPackagings!
 
   "Description du conditionnement dans le cas où le type de conditionnement est `AUTRE`"
   other: String
@@ -20,7 +20,7 @@ input WorkSiteInput {
   infos: String
 }
 
-input DasriEmitterInput {
+input BsdasriEmitterInput {
   "Établissement émetteur"
   company: CompanyInput
   workSite: WorkSiteInput
@@ -28,35 +28,35 @@ input DasriEmitterInput {
   customInfo: String
 }
 
-input DasriWasteDetailInput {
+input BsdasriWasteDetailInput {
   quantity: Int
   quantityType: QuantityType
-  packagingInfos: [DasriPackagingInfoInput!]
+  packagingInfos: [BsdasriPackagingInfoInput!]
   onuCode: String
 }
-input DasriRecipientWasteDetailInput {
+input BsdasriRecipientWasteDetailInput {
   quantity: Int
   volume: Int
 }
-input DasriWasteAcceptationInput {
+input BsdasriWasteAcceptationInput {
   status: WasteAcceptationStatusInput
   refusalReason: String
   refusedQuantity: Int
 }
-input DasriEmissionInput {
+input BsdasriEmissionInput {
   wasteCode: String
   wasteDetailsOnuCode: String
-  wasteDetails: DasriWasteDetailInput
+  wasteDetails: BsdasriWasteDetailInput
   handedOverAt: DateTime
 }
-input DasriTransportInput {
-  wasteDetails: DasriWasteDetailInput
+input BsdasriTransportInput {
+  wasteDetails: BsdasriWasteDetailInput
   takenOverAt: DateTime
   handedOverAt: DateTime
-  wasteAcceptation: DasriWasteAcceptationInput
+  wasteAcceptation: BsdasriWasteAcceptationInput
 }
 
-input DasriTransporterInput {
+input BsdasriTransporterInput {
   "Établissement collecteur - transporteur"
   company: CompanyInput
 
@@ -73,7 +73,7 @@ input DasriTransporterInput {
   customInfo: String
 }
 
-input DasriRecipientInput {
+input BsdasriRecipientInput {
   "Établissement émetteur"
   company: CompanyInput
 
@@ -81,57 +81,57 @@ input DasriRecipientInput {
   customInfo: String
 }
 
-input DasriReceptionInput {
-  wasteDetails: DasriWasteDetailInput
+input BsdasriReceptionInput {
+  wasteDetails: BsdasriWasteDetailInput
   receivedAt: DateTime
 }
 
-input DasriOperationInput {
+input BsdasriOperationInput {
   processingOperation: String
   processedAt: DateTime
 }
 
-input DasriInput {
+input BsdasriInput {
   customId: String
-  emitter: DasriEmitterInput
-  emission: DasriEmissionInput
-  transporter: DasriTransporterInput
-  transport: DasriTransportInput
-  recipient: DasriRecipientInput
-  reception: DasriReceptionInput
-  operation: DasriOperationInput
+  emitter: BsdasriEmitterInput
+  emission: BsdasriEmissionInput
+  transporter: BsdasriTransporterInput
+  transport: BsdasriTransportInput
+  recipient: BsdasriRecipientInput
+  reception: BsdasriReceptionInput
+  operation: BsdasriOperationInput
 }
 
-input DasriCreateInput {
+input BsdasriCreateInput {
   "Identifiant custom"
   customId: String
 
-  emitter: DasriEmitterInput
-  emission: DasriEmissionInput
-  transporter: DasriTransporterInput
-  transport: DasriTransportInput
-  recipient: DasriRecipientInput
-  reception: DasriReceptionInput
-  operation: DasriOperationInput
+  emitter: BsdasriEmitterInput
+  emission: BsdasriEmissionInput
+  transporter: BsdasriTransporterInput
+  transport: BsdasriTransportInput
+  recipient: BsdasriRecipientInput
+  reception: BsdasriReceptionInput
+  operation: BsdasriOperationInput
 }
 
-input DasriUpdateInput {
+input BsdasriUpdateInput {
   "Identifiant opaque"
   id: ID!
 
   "Identifiant custom"
   customId: String
 
-  emitter: DasriEmitterInput
-  emission: DasriEmissionInput
-  transporter: DasriTransporterInput
-  transport: DasriTransportInput
-  recipient: DasriRecipientInput
-  reception: DasriReceptionInput
-  operation: DasriOperationInput
+  emitter: BsdasriEmitterInput
+  emission: BsdasriEmissionInput
+  transporter: BsdasriTransporterInput
+  transport: BsdasriTransportInput
+  recipient: BsdasriRecipientInput
+  reception: BsdasriReceptionInput
+  operation: BsdasriOperationInput
 }
 
-enum DasriSignatureType {
+enum BsdasriSignatureType {
   "Signature du cadre émetteur (PRED)"
   EMISSION
 
@@ -144,12 +144,12 @@ enum DasriSignatureType {
   "Signature de la réception du déchet"
   RECEPTION
 
-  "Siganture du traitement du déchet"
+  "Signature du traitement du déchet"
   OPERATION
 }
 
-input DasriSignatureInput {
-  type: DasriSignatureType!
+input BsdasriSignatureInput {
+  type: BsdasriSignatureType!
   signedBy: String!
   securityCode: Int
 }

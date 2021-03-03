@@ -1,21 +1,21 @@
-import { expandDasriFromDb } from "../../dasri-converter";
-import { Dasri, QueryResolvers } from "../../../generated/graphql/types";
+import { expandBsdasriFromDb } from "../../dasri-converter";
+import { Bsdasri, QueryResolvers } from "../../../generated/graphql/types";
 import prisma from "../../../prisma";
 import { checkIsAuthenticated } from "../../../common/permissions";
-import { Company, DasriStatus } from "@prisma/client";
+import { Company, BsdasriStatus } from "@prisma/client";
 import { MissingSiret } from "../../../common/errors";
 import { getCompanyOrCompanyNotFound } from "../../../companies/database";
 import { checkIsCompanyMember } from "../../../users/permissions";
 import { getUserCompanies } from "../../../users/database";
 import { getCursorConnectionsArgs } from "../../cursorPagination";
-import { getDasrisRightFilter } from "../../../dasris/database";
+import { getBsdasrisRightFilter } from "../../../dasris/database";
 
-export async function getDasris(): Promise<Dasri[]> {
-  const queried = await prisma.dasri.findMany();
-  return queried.map(f => expandDasriFromDb(f));
+export async function getBsdasris(): Promise<Bsdasri[]> {
+  const queried = await prisma.bsdasri.findMany();
+  return queried.map(f => expandBsdasriFromDb(f));
 }
 
-const dasrisResolver: QueryResolvers["dasris"] = async (_, args, context) => {
+const dasrisResolver: QueryResolvers["bsdasris"] = async (_, args, context) => {
   const user = checkIsAuthenticated(context);
 
   const { siret, status, roles, hasNextStep, ...rest } = args;
@@ -47,7 +47,7 @@ const dasrisResolver: QueryResolvers["dasris"] = async (_, args, context) => {
     maxPaginateBy: 500
   });
 
-  const queried = await prisma.dasri.findMany({
+  const queried = await prisma.bsdasri.findMany({
     ...connectionsArgs,
     orderBy: { createdAt: "desc" },
     where: {
@@ -57,18 +57,18 @@ const dasrisResolver: QueryResolvers["dasris"] = async (_, args, context) => {
       wasteDetailsCode: rest.wasteCode,
       ...(status?.length && { status: { in: status } }),
       AND: [
-        getDasrisRightFilter(company.siret, roles),
+        getBsdasrisRightFilter(company.siret, roles),
         getHasNextStepFilter(company.siret, hasNextStep),
 
         ...(rest.siretPresentOnForm
-          ? [getDasrisRightFilter(rest.siretPresentOnForm, [])]
+          ? [getBsdasrisRightFilter(rest.siretPresentOnForm, [])]
           : [])
       ],
 
       isDeleted: false
     }
   });
-  return queried.map(f => expandDasriFromDb(f));
+  return queried.map(f => expandBsdasriFromDb(f));
 };
 
 export default dasrisResolver;
@@ -81,17 +81,20 @@ function getHasNextStepFilter(siret: string, hasNextStep?: boolean | null) {
   const filter = {
     OR: [
       // DRAFT
-      { status: DasriStatus.DRAFT },
+      { status: BsdasriStatus.DRAFT },
       // isEmitter && SEALED
       {
-        AND: [{ emitterCompanySiret: siret }, { status: DasriStatus.SEALED }]
+        AND: [{ emitterCompanySiret: siret }, { status: BsdasriStatus.SEALED }]
       },
       // isRecipient && (RECEIVED || ACCEPTED )
       {
         AND: [
           { recipientCompanySiret: siret },
           {
-            OR: [{ status: DasriStatus.SENT }, { status: DasriStatus.RECEIVED }]
+            OR: [
+              { status: BsdasriStatus.SENT },
+              { status: BsdasriStatus.RECEIVED }
+            ]
           }
         ]
       }

@@ -90,7 +90,6 @@ mutation DasriCreate($input: DasriCreateInput!) {
 }
 `;
 describe("Mutation.createDasri", () => {
-
   afterEach(resetDatabase);
 
   it("should disallow unauthenticated user", async () => {

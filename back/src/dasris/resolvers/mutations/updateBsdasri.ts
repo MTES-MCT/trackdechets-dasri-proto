@@ -1,16 +1,19 @@
-import { expandDasriFromDb, flattenDasriInput } from "../../dasri-converter";
-import { Dasri, DasriStatus } from "@prisma/client";
+import {
+  expandBsdasriFromDb,
+  flattenBsdasriInput
+} from "../../dasri-converter";
+import { Bsdasri, BsdasriStatus } from "@prisma/client";
 import prisma from "../../../prisma";
 import {
   ResolversParentTypes,
-  MutationDasriUpdateArgs
+  MutationUpdateBsdasriArgs
 } from "../../../generated/graphql/types";
 
 import { checkIsAuthenticated } from "../../../common/permissions";
-import { checkIsDasriContributor } from "../../permissions";
+import { checkIsBsdasriContributor } from "../../permissions";
 
 import { GraphQLContext } from "../../../types";
-import { getDasriOrDasriNotFound } from "../../database";
+import { getBsdasriOrNotFound } from "../../database";
 import { dasriDraftSchema } from "../../validation";
 import { ForbiddenError } from "apollo-server-express";
 
@@ -63,30 +66,30 @@ const fieldsAllowedForUpdateOnceSignedByEmitter = fieldsAllowedForUpdateOnceSent
   ]
 );
 
-const getFieldsAllorwedForUpdate = (dasri: Dasri) => {
+const getFieldsAllorwedForUpdate = (bsdasri: Bsdasri) => {
   const allowedFields = {
-    [DasriStatus.READY_FOR_TAKEOVER]: fieldsAllowedForUpdateOnceSignedByEmitter,
-    [DasriStatus.SENT]: fieldsAllowedForUpdateOnceSent,
-    [DasriStatus.RECEIVED]: fieldsAllowedForUpdateOnceReceived,
-    [DasriStatus.PROCESSED]: []
+    [BsdasriStatus.READY_FOR_TAKEOVER]: fieldsAllowedForUpdateOnceSignedByEmitter,
+    [BsdasriStatus.SENT]: fieldsAllowedForUpdateOnceSent,
+    [BsdasriStatus.RECEIVED]: fieldsAllowedForUpdateOnceReceived,
+    [BsdasriStatus.PROCESSED]: []
   };
-  return allowedFields[dasri.status];
+  return allowedFields[bsdasri.status];
 };
 
 const dasriUpdateResolver = async (
   parent: ResolversParentTypes["Mutation"],
-  args: MutationDasriUpdateArgs,
+  args: MutationUpdateBsdasriArgs,
   context: GraphQLContext
 ) => {
   const user = checkIsAuthenticated(context);
 
-  const { dasriUpdateInput } = { ...args };
+  const { bsdasriUpdateInput } = { ...args };
 
-  const { id, ...dasriContent } = dasriUpdateInput;
+  const { id, ...dasriContent } = bsdasriUpdateInput;
 
-  const existingDasri = await getDasriOrDasriNotFound({ id });
+  const existingDasri = await getBsdasriOrNotFound({ id });
 
-  await checkIsDasriContributor(
+  await checkIsBsdasriContributor(
     user,
     existingDasri,
     "Vous ne pouvez pas modifier un bordereau sur lequel votre entreprise n'apparait pas"
@@ -96,10 +99,10 @@ const dasriUpdateResolver = async (
     throw new ForbiddenError("Ce bordereau n'est plus modifiable");
   }
 
-  const flattened = flattenDasriInput(dasriContent);
+  const flattened = flattenBsdasriInput(dasriContent);
 
   // Validate form input
-  await dasriDraftSchema.validate(dasriUpdateInput);
+  await dasriDraftSchema.validate(bsdasriUpdateInput);
 
   const flattenedFields = Object.keys(flattened);
 
@@ -115,11 +118,11 @@ const dasriUpdateResolver = async (
     }
   }
 
-  const updatedDasri = await prisma.dasri.update({
+  const updatedDasri = await prisma.bsdasri.update({
     where: { id },
     data: flattened
   });
-  return expandDasriFromDb(updatedDasri);
+  return expandBsdasriFromDb(updatedDasri);
 };
 
 export default dasriUpdateResolver;

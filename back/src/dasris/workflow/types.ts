@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 
 // Xstate possible states
-export enum DasriState {
+export enum BsdasriState {
   Draft = "DRAFT",
   Sealed = "SEALED", // we keep this terminology for now, although it is a bit confusing
   ReadyForTakeover = "READY_FOR_TAKEOVER",
@@ -12,7 +12,7 @@ export enum DasriState {
 }
 
 // Xstate event type
-export enum DasriEventType {
+export enum BsdasriEventType {
   MarkAsReady = "MARK_AS_READY", // not very happy with the SENT naming
   SignEmission = "SIGN_EMISSION",
   SignEmissionWithSecretCode = "SIGN_EMISSION_WITH_SECRET_CODE",
@@ -22,7 +22,7 @@ export enum DasriEventType {
 }
 
 // Xstate event
-export type DasriEvent = {
-  type: DasriEventType;
-  dasriUpdateInput?: Prisma.DasriUpdateInput;
+export type BsdasriEvent = {
+  type: BsdasriEventType;
+  dasriUpdateInput?: Prisma.BsdasriUpdateInput;
 };

@@ -1,138 +1,138 @@
 import {
-  Dasri as GqlDasri,
-  DasriEmitter,
-  DasriTransporter,
-  DasriRecipient,
-  DasriWasteDetails,
+  Bsdasri as GqlBsdasri,
+  BsdasriEmitter,
+  BsdasriTransporter,
+  BsdasriRecipient,
+  BsdasriWasteDetails,
   FormCompany,
-  DasriInput,
-  DasriEmitterInput,
-  DasriTransporterInput,
-  DasriRecipientInput,
-  DasriOperationInput,
+  BsdasriInput,
+  BsdasriEmitterInput,
+  BsdasriTransporterInput,
+  BsdasriRecipientInput,
+  BsdasriOperationInput,
   WorkSite,
-  DasriEmission,
-  DasriTransport,
-  DasriReception,
-  DasriOperation,
-  DasriWasteAcceptation,
-  DasriEmissionInput,
-  DasriTransportInput,
-  DasriReceptionInput,
-  DasriPackagingInfo,
-  DasriPackagingInfoInput
+  BsdasriEmission,
+  BsdasriTransport,
+  BsdasriReception,
+  BsdasriOperation,
+  BsdasriWasteAcceptation,
+  BsdasriEmissionInput,
+  BsdasriTransportInput,
+  BsdasriReceptionInput,
+  BsdasriPackagingInfo,
+  BsdasriPackagingInfoInput
 } from "../generated/graphql/types";
 import { chain, nullIfNoValues, safeInput } from "../forms/form-converter";
-import { Prisma, Dasri, DasriStatus, QuantityType } from "@prisma/client";
+import { Prisma, Bsdasri, BsdasriStatus, QuantityType } from "@prisma/client";
 
-export function expandDasriFromDb(dasri: Dasri): GqlDasri {
+export function expandBsdasriFromDb(bsdasri: Bsdasri): GqlBsdasri {
   return {
-    id: dasri.id,
-    readableId: dasri.readableId,
-    customId: dasri.customId,
+    id: bsdasri.id,
+    readableId: bsdasri.readableId,
+    customId: bsdasri.customId,
 
-    emitter: nullIfNoValues<DasriEmitter>({
+    emitter: nullIfNoValues<BsdasriEmitter>({
       company: nullIfNoValues<FormCompany>({
-        name: dasri.emitterCompanyName,
-        siret: dasri.emitterCompanySiret,
-        address: dasri.emitterCompanyAddress,
-        phone: dasri.emitterCompanyPhone,
-        mail: dasri.emitterCompanyMail
+        name: bsdasri.emitterCompanyName,
+        siret: bsdasri.emitterCompanySiret,
+        address: bsdasri.emitterCompanyAddress,
+        phone: bsdasri.emitterCompanyPhone,
+        mail: bsdasri.emitterCompanyMail
       }),
-      customInfo: dasri.emitterCustomInfo,
+      customInfo: bsdasri.emitterCustomInfo,
       workSite: nullIfNoValues<WorkSite>({
-        name: dasri.emitterWorkSiteName,
-        address: dasri.emitterWorkSiteAddress,
-        city: dasri.emitterWorkSiteCity,
-        postalCode: dasri.emitterWorkSitePostalCode,
-        infos: dasri.emitterWorkSiteInfos
+        name: bsdasri.emitterWorkSiteName,
+        address: bsdasri.emitterWorkSiteAddress,
+        city: bsdasri.emitterWorkSiteCity,
+        postalCode: bsdasri.emitterWorkSitePostalCode,
+        infos: bsdasri.emitterWorkSiteInfos
       })
     }),
-    emission: nullIfNoValues<DasriEmission>({
-      wasteCode: dasri.wasteDetailsCode,
-      handedOverAt: dasri.handedOverToTransporterAt?.toISOString(),
-      signedBy: dasri.emissionSignedBy,
-      signedAt: dasri.emissionSignedAt?.toISOString(),
-      wasteDetails: nullIfNoValues<DasriWasteDetails>({
-        quantity: dasri.emitterWasteQuantity,
-        quantityType: dasri.emitterWasteQuantityType as QuantityType,
-        volume: dasri.emitterWasteVolume,
-        packagingInfos: dasri.emitterWastePackagingsInfo as DasriPackagingInfo[],
-        onuCode: dasri.wasteDetailsOnuCode
+    emission: nullIfNoValues<BsdasriEmission>({
+      wasteCode: bsdasri.wasteDetailsCode,
+      handedOverAt: bsdasri.handedOverToTransporterAt?.toISOString(),
+      signedBy: bsdasri.emissionSignedBy,
+      signedAt: bsdasri.emissionSignedAt?.toISOString(),
+      wasteDetails: nullIfNoValues<BsdasriWasteDetails>({
+        quantity: bsdasri.emitterWasteQuantity,
+        quantityType: bsdasri.emitterWasteQuantityType as QuantityType,
+        volume: bsdasri.emitterWasteVolume,
+        packagingInfos: bsdasri.emitterWastePackagingsInfo as BsdasriPackagingInfo[],
+        onuCode: bsdasri.wasteDetailsOnuCode
       })
     }),
 
-    transporter: nullIfNoValues<DasriTransporter>({
+    transporter: nullIfNoValues<BsdasriTransporter>({
       company: nullIfNoValues<FormCompany>({
-        name: dasri.transporterCompanyName,
-        siret: dasri.transporterCompanySiret,
-        address: dasri.transporterCompanyAddress,
-        phone: dasri.transporterCompanyPhone,
-        mail: dasri.transporterCompanyMail
+        name: bsdasri.transporterCompanyName,
+        siret: bsdasri.transporterCompanySiret,
+        address: bsdasri.transporterCompanyAddress,
+        phone: bsdasri.transporterCompanyPhone,
+        mail: bsdasri.transporterCompanyMail
       }),
-      customInfo: dasri.transporterCustomInfo,
-      receipt: dasri.transporterReceipt,
-      receiptDepartment: dasri.transporterReceiptDepartment,
-      receiptValidityLimit: dasri.transporterReceiptValidityLimit?.toISOString()
+      customInfo: bsdasri.transporterCustomInfo,
+      receipt: bsdasri.transporterReceipt,
+      receiptDepartment: bsdasri.transporterReceiptDepartment,
+      receiptValidityLimit: bsdasri.transporterReceiptValidityLimit?.toISOString()
     }),
-    transport: nullIfNoValues<DasriTransport>({
-      wasteDetails: nullIfNoValues<DasriWasteDetails>({
-        quantity: dasri.transporterWasteQuantity,
-        quantityType: dasri.transporterWasteQuantityType as QuantityType,
-        volume: dasri.transporterWasteVolume,
-        packagingInfos: dasri.transporterWastePackagingsInfo as DasriPackagingInfo[]
+    transport: nullIfNoValues<BsdasriTransport>({
+      wasteDetails: nullIfNoValues<BsdasriWasteDetails>({
+        quantity: bsdasri.transporterWasteQuantity,
+        quantityType: bsdasri.transporterWasteQuantityType as QuantityType,
+        volume: bsdasri.transporterWasteVolume,
+        packagingInfos: bsdasri.transporterWastePackagingsInfo as BsdasriPackagingInfo[]
       }),
 
-      wasteAcceptation: nullIfNoValues<DasriWasteAcceptation>({
-        status: dasri.transporterWasteAcceptationStatus,
-        refusalReason: dasri.transporterWasteRefusalReason,
-        refusedQuantity: dasri.transporterWasteRefusedQuantity
+      wasteAcceptation: nullIfNoValues<BsdasriWasteAcceptation>({
+        status: bsdasri.transporterWasteAcceptationStatus,
+        refusalReason: bsdasri.transporterWasteRefusalReason,
+        refusedQuantity: bsdasri.transporterWasteRefusedQuantity
       }),
-      takenOverAt: dasri.transporterTakenOverAt?.toISOString(),
-      handedOverAt: dasri.handedOverToRecipientAt?.toISOString(),
-      signedBy: dasri.transportSignedBy,
-      signedAt: dasri.transportSignedAt?.toISOString()
+      takenOverAt: bsdasri.transporterTakenOverAt?.toISOString(),
+      handedOverAt: bsdasri.handedOverToRecipientAt?.toISOString(),
+      signedBy: bsdasri.transportSignedBy,
+      signedAt: bsdasri.transportSignedAt?.toISOString()
     }),
-    recipient: nullIfNoValues<DasriRecipient>({
+    recipient: nullIfNoValues<BsdasriRecipient>({
       company: nullIfNoValues<FormCompany>({
-        name: dasri.recipientCompanyName,
-        siret: dasri.recipientCompanySiret,
-        address: dasri.recipientCompanyAddress,
-        phone: dasri.recipientCompanyPhone,
-        mail: dasri.recipientCompanyMail
+        name: bsdasri.recipientCompanyName,
+        siret: bsdasri.recipientCompanySiret,
+        address: bsdasri.recipientCompanyAddress,
+        phone: bsdasri.recipientCompanyPhone,
+        mail: bsdasri.recipientCompanyMail
       }),
-      customInfo: dasri.recipientCustomInfo
+      customInfo: bsdasri.recipientCustomInfo
     }),
 
-    reception: nullIfNoValues<DasriReception>({
-      wasteDetails: nullIfNoValues<DasriWasteDetails>({
-        quantity: dasri.recipientWasteQuantity,
-        volume: dasri.recipientWasteVolume,
-        packagingInfos: dasri.recipientWastePackagingsInfo as DasriPackagingInfo[]
+    reception: nullIfNoValues<BsdasriReception>({
+      wasteDetails: nullIfNoValues<BsdasriWasteDetails>({
+        quantity: bsdasri.recipientWasteQuantity,
+        volume: bsdasri.recipientWasteVolume,
+        packagingInfos: bsdasri.recipientWastePackagingsInfo as BsdasriPackagingInfo[]
       }),
-      wasteAcceptation: nullIfNoValues<DasriWasteAcceptation>({
-        status: dasri.recipientWasteAcceptationStatus,
-        refusalReason: dasri.recipientWasteRefusalReason,
-        refusedQuantity: dasri.recipientWasteRefusedQuantity
+      wasteAcceptation: nullIfNoValues<BsdasriWasteAcceptation>({
+        status: bsdasri.recipientWasteAcceptationStatus,
+        refusalReason: bsdasri.recipientWasteRefusalReason,
+        refusedQuantity: bsdasri.recipientWasteRefusedQuantity
       }),
-      receivedAt: dasri.receivedAt?.toISOString(),
-      signedBy: dasri.receptionSignedBy,
-      signedAt: dasri.receptionSignedAt?.toISOString()
+      receivedAt: bsdasri.receivedAt?.toISOString(),
+      signedBy: bsdasri.receptionSignedBy,
+      signedAt: bsdasri.receptionSignedAt?.toISOString()
     }),
-    operation: nullIfNoValues<DasriOperation>({
-      processingOperation: dasri.processingOperation,
-      processedAt: dasri.processedAt?.toISOString(),
-      signedBy: dasri.operationSignedBy,
-      signedAt: dasri.operationSignedAt?.toISOString()
+    operation: nullIfNoValues<BsdasriOperation>({
+      processingOperation: bsdasri.processingOperation,
+      processedAt: bsdasri.processedAt?.toISOString(),
+      signedBy: bsdasri.operationSignedBy,
+      signedAt: bsdasri.operationSignedAt?.toISOString()
     }),
-    createdAt: dasri.createdAt?.toISOString(),
-    updatedAt: dasri.updatedAt?.toISOString(),
-    status: dasri.status as DasriStatus
+    createdAt: bsdasri.createdAt?.toISOString(),
+    updatedAt: bsdasri.updatedAt?.toISOString(),
+    status: bsdasri.status as BsdasriStatus
   };
 }
 
 type computeTotalVolumeFn = (
-  packagingInfos: DasriPackagingInfoInput[]
+  packagingInfos: BsdasriPackagingInfoInput[]
 ) => number;
 /**
  * Compute total volume according to packaging infos details
@@ -148,7 +148,7 @@ const computeTotalVolume: computeTotalVolumeFn = packagingInfos => {
   );
 };
 
-function flattenEmitterInput(input: { emitter?: DasriEmitterInput }) {
+function flattenEmitterInput(input: { emitter?: BsdasriEmitterInput }) {
   return {
     emitterCompanyName: chain(input.emitter, e =>
       chain(e.company, c => c.name)
@@ -187,7 +187,7 @@ function flattenEmitterInput(input: { emitter?: DasriEmitterInput }) {
   };
 }
 
-function flattenEmissionInput(input: { emission?: DasriEmissionInput }) {
+function flattenEmissionInput(input: { emission?: BsdasriEmissionInput }) {
   if (!input?.emission) {
     return null;
   }
@@ -213,7 +213,7 @@ function flattenEmissionInput(input: { emission?: DasriEmissionInput }) {
   };
 }
 function flattenTransporterInput(input: {
-  transporter?: DasriTransporterInput;
+  transporter?: BsdasriTransporterInput;
 }) {
   return safeInput({
     transporterCompanyName: chain(input.transporter, t =>
@@ -248,7 +248,7 @@ function flattenTransporterInput(input: {
     transporterCustomInfo: chain(input.transporter, e => e.customInfo)
   });
 }
-function flattenTransportInput(input: { transport?: DasriTransportInput }) {
+function flattenTransportInput(input: { transport?: BsdasriTransportInput }) {
   const transporterWastePackagingsInfo = chain(input.transport, t =>
     chain(t.wasteDetails, w => w.packagingInfos)
   );
@@ -279,7 +279,7 @@ function flattenTransportInput(input: { transport?: DasriTransportInput }) {
   };
 }
 
-function flattenRecipientInput(input: { recipient?: DasriRecipientInput }) {
+function flattenRecipientInput(input: { recipient?: BsdasriRecipientInput }) {
   return {
     recipientCompanyName: chain(input.recipient, r =>
       chain(r.company, c => c.name)
@@ -303,7 +303,7 @@ function flattenRecipientInput(input: { recipient?: DasriRecipientInput }) {
   };
 }
 
-function flattenReceptiontInput(input: { reception?: DasriReceptionInput }) {
+function flattenReceptiontInput(input: { reception?: BsdasriReceptionInput }) {
   const recipientWastePackagingsInfo = chain(input.reception, r =>
     chain(r.wasteDetails, w => w.packagingInfos)
   );
@@ -320,7 +320,7 @@ function flattenReceptiontInput(input: { reception?: DasriReceptionInput }) {
   };
 }
 
-function flattenOperationInput(input: { operation?: DasriOperationInput }) {
+function flattenOperationInput(input: { operation?: BsdasriOperationInput }) {
   return {
     processingOperation: chain(input.operation, r => r.processingOperation),
     processedAt: chain(input.operation, r =>
@@ -328,9 +328,9 @@ function flattenOperationInput(input: { operation?: DasriOperationInput }) {
     )
   };
 }
-export function flattenDasriInput(
+export function flattenBsdasriInput(
   formInput: Pick<
-    DasriInput,
+    BsdasriInput,
     | "customId"
     | "emitter"
     | "emission"
@@ -340,7 +340,7 @@ export function flattenDasriInput(
     | "reception"
     | "operation"
   >
-): Partial<Prisma.DasriCreateInput> {
+): Partial<Prisma.BsdasriCreateInput> {
   return safeInput({
     customId: formInput.customId,
     ...flattenEmitterInput(formInput),

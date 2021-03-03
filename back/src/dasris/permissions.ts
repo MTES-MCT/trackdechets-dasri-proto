@@ -1,12 +1,13 @@
-import { Company, User } from "@prisma/client";
+import { Company, User, Bsdasri } from "@prisma/client";
 
 import { getFullUser } from "../users/database";
 
-import { DasriSirets } from "./types";
+import { BsdasriSirets } from "./types";
 
 import { NotFormContributor } from "../forms/errors";
+import { getFullBsdasri } from "./database";
 
-function isDasriEmitter(user: { companies: Company[] }, dasri: DasriSirets) {
+function isDasriEmitter(user: { companies: Company[] }, dasri: BsdasriSirets) {
   if (!dasri.emitterCompanySiret) {
     return false;
   }
@@ -14,7 +15,10 @@ function isDasriEmitter(user: { companies: Company[] }, dasri: DasriSirets) {
   return sirets.includes(dasri.emitterCompanySiret);
 }
 
-function isDasriRecipient(user: { companies: Company[] }, dasri: DasriSirets) {
+function isDasriRecipient(
+  user: { companies: Company[] },
+  dasri: BsdasriSirets
+) {
   if (!dasri.recipientCompanySiret) {
     return false;
   }
@@ -24,7 +28,7 @@ function isDasriRecipient(user: { companies: Company[] }, dasri: DasriSirets) {
 
 function isDasriTransporter(
   user: { companies: Company[] },
-  dasri: DasriSirets
+  dasri: BsdasriSirets
 ) {
   if (!dasri.transporterCompanySiret) {
     return false;
@@ -33,7 +37,7 @@ function isDasriTransporter(
   return sirets.includes(dasri.transporterCompanySiret);
 }
 
-export async function isDasriContributor(user: User, dasri: DasriSirets) {
+export async function isDasriContributor(user: User, dasri: BsdasriSirets) {
   const fullUser = await getFullUser(user);
 
   return [
@@ -43,9 +47,9 @@ export async function isDasriContributor(user: User, dasri: DasriSirets) {
   ].some(isFormRole => isFormRole(fullUser, dasri));
 }
 
-export async function checkIsDasriContributor(
+export async function checkIsBsdasriContributor(
   user: User,
-  dasri: DasriSirets,
+  dasri: BsdasriSirets,
   errorMsg: string
 ) {
   const isContributor = await isDasriContributor(user, dasri);
@@ -55,4 +59,13 @@ export async function checkIsDasriContributor(
   }
 
   return true;
+}
+
+export async function checkCanReadBsdasri(user: User, bsdasri: Bsdasri) {
+  return checkIsBsdasriContributor(
+    user,
+
+    await getFullBsdasri(bsdasri),
+    "Vous n'êtes pas autorisé à accéder à ce bordereau"
+  );
 }

@@ -146,7 +146,7 @@ describe("Mutation.dasriMarkAsReady", () => {
 
     expect(data.dasriMarkAsReady.status).toBe("SEALED");
 
-    const sealedDasri = await prisma.dasri.findUnique({
+    const sealedDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
 
@@ -179,7 +179,7 @@ describe("Mutation.dasriMarkAsReady", () => {
       })
     ]);
 
-    const sealedDasri = await prisma.dasri.findUnique({
+    const sealedDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
 

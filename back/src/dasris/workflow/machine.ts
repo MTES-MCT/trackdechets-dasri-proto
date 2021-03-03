@@ -1,60 +1,60 @@
 import { Machine } from "xstate";
-import { DasriState, DasriEventType, DasriEvent } from "./types";
+import { BsdasriState, BsdasriEventType, BsdasriEvent } from "./types";
 import { WasteAcceptationStatus } from "@prisma/client";
 /**
  * Workflow state machine for dasris
  */
-const machine = Machine<any, DasriEvent>(
+const machine = Machine<any, BsdasriEvent>(
   {
     id: "dasri-workflow-machine",
-    initial: DasriState.Draft,
+    initial: BsdasriState.Draft,
     states: {
-      [DasriState.Draft]: {
+      [BsdasriState.Draft]: {
         on: {
-          [DasriEventType.MarkAsReady]: [{ target: DasriState.Sealed }]
+          [BsdasriEventType.MarkAsReady]: [{ target: BsdasriState.Sealed }]
         }
       },
-      [DasriState.Sealed]: {
+      [BsdasriState.Sealed]: {
         on: {
-          [DasriEventType.SignEmission]: [
-            { target: DasriState.ReadyForTakeover, cond: "emissionNotSigned" }
+          [BsdasriEventType.SignEmission]: [
+            { target: BsdasriState.ReadyForTakeover, cond: "emissionNotSigned" }
           ],
-          [DasriEventType.SignTransport]: [
-            { target: DasriState.Sent, cond: "acceptedByTransporter" },
-            { target: DasriState.Refused, cond: "refusedByTransporter" }
+          [BsdasriEventType.SignTransport]: [
+            { target: BsdasriState.Sent, cond: "acceptedByTransporter" },
+            { target: BsdasriState.Refused, cond: "refusedByTransporter" }
           ],
-          [DasriEventType.SignEmissionWithSecretCode]: [
-            { target: DasriState.ReadyForTakeover, cond: "emissionNotSigned" }
+          [BsdasriEventType.SignEmissionWithSecretCode]: [
+            { target: BsdasriState.ReadyForTakeover, cond: "emissionNotSigned" }
           ]
         }
       },
-      [DasriState.ReadyForTakeover]: {
+      [BsdasriState.ReadyForTakeover]: {
         on: {
-          [DasriEventType.SignTransport]: [
-            { target: DasriState.Sent, cond: "acceptedByTransporter" },
-            { target: DasriState.Refused, cond: "refusedByTransporter" }
+          [BsdasriEventType.SignTransport]: [
+            { target: BsdasriState.Sent, cond: "acceptedByTransporter" },
+            { target: BsdasriState.Refused, cond: "refusedByTransporter" }
           ]
         }
       },
-      [DasriState.Sent]: {
+      [BsdasriState.Sent]: {
         on: {
-          [DasriEventType.SignReception]: [
-            { target: DasriState.Received, cond: "acceptedByRecipient" },
-            { target: DasriState.Refused, cond: "refusedByRecipient" }
+          [BsdasriEventType.SignReception]: [
+            { target: BsdasriState.Received, cond: "acceptedByRecipient" },
+            { target: BsdasriState.Refused, cond: "refusedByRecipient" }
           ]
         }
       },
-      [DasriState.Received]: {
+      [BsdasriState.Received]: {
         on: {
-          [DasriEventType.SignOperation]: [
-            { target: DasriState.Processed, cond: "processNotSigned" }
+          [BsdasriEventType.SignOperation]: [
+            { target: BsdasriState.Processed, cond: "processNotSigned" }
           ]
         }
       },
-      [DasriState.Processed]: {
+      [BsdasriState.Processed]: {
         type: "final"
       },
-      [DasriState.Refused]: {
+      [BsdasriState.Refused]: {
         type: "final"
       },
       error: {

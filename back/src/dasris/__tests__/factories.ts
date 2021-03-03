@@ -20,10 +20,7 @@ export function getReadableId() {
 
   return `TD-${year}-${uid}`;
 }
-const dasriData_ = [
-  { type: "FUT", other: "", volume: 22, quantity: 13 },
-  { type: "GRAND_EMBALLAGE", other: "", volume: 100, quantity: 2 }
-];
+
 const dasriData = {
   status: "DRAFT" as DasriStatus,
 
@@ -91,7 +88,7 @@ export const dasriFactory = async ({
   opt?: Partial<Prisma.DasriCreateInput>;
 }) => {
   const dasriParams = { ...dasriData, ...opt };
-  return prisma.dasri.create({
+  return prisma.bsdasri.create({
     data: {
       readableId: getDasriReadableId(),
       ...dasriParams,

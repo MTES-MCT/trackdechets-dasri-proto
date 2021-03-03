@@ -202,9 +202,9 @@ const EXTRANEOUS_NEXT_DESTINATION = `L'opération de traitement renseignée ne p
 // *************************************************************
 
 // 1 - Émetteur du bordereau
-export const emitterSchema: yup.ObjectSchema<Partial<
-  Emitter
->> = yup.object().shape({
+export const emitterSchema: yup.ObjectSchema<
+  Partial<Emitter>
+> = yup.object().shape({
   emitterType: yup.mixed<EmitterType>().when("ecoOrganismeSiret", {
     is: ecoOrganismeSiret => !ecoOrganismeSiret,
     then: yup.mixed().required(`Émetteur: Le type d'émetteur est obligatoire`),
@@ -265,9 +265,9 @@ export const ecoOrganismeSchema = yup.object().shape({
 });
 
 // 2 - Installation de destination ou d’entreposage ou de reconditionnement prévue
-export const recipientSchema: yup.ObjectSchema<Partial<
-  Recipient
->> = yup.object().shape({
+export const recipientSchema: yup.ObjectSchema<
+  Partial<Recipient>
+> = yup.object().shape({
   recipientProcessingOperation: yup
     .string()
     .label("Opération d’élimination / valorisation")
@@ -340,9 +340,9 @@ const packagingInfo: yup.ObjectSchema<PackagingInfo> = yup.object().shape({
 // 4 - Mentions au titre des règlements ADR, RID, ADNR, IMDG
 // 5 - Conditionnement
 // 6 - Quantité
-export const wasteDetailsSchema: yup.ObjectSchema<Partial<
-  WasteDetails
->> = yup.object().shape({
+export const wasteDetailsSchema: yup.ObjectSchema<
+  Partial<WasteDetails>
+> = yup.object().shape({
   wasteDetailsCode: yup
     .string()
     .ensure()
@@ -400,9 +400,9 @@ export const wasteDetailsSchema: yup.ObjectSchema<Partial<
 });
 
 // 8 - Collecteur-transporteur
-export const transporterSchema: yup.ObjectSchema<Partial<
-  Transporter
->> = yup.object().shape({
+export const transporterSchema: yup.ObjectSchema<
+  Partial<Transporter>
+> = yup.object().shape({
   transporterCompanyName: yup
     .string()
     .ensure()
@@ -457,9 +457,9 @@ export const transporterSchema: yup.ObjectSchema<Partial<
 
 // 8 - Collecteur-transporteur
 // 9 - Déclaration générale de l’émetteur du bordereau :
-export const signingInfoSchema: yup.ObjectSchema<Partial<
-  SigningInfo
->> = yup.object().shape({
+export const signingInfoSchema: yup.ObjectSchema<
+  Partial<SigningInfo>
+> = yup.object().shape({
   sentAt: validDatetime({
     verboseFieldName: "date d'envoi",
     required: true
@@ -812,9 +812,9 @@ export const tempStorerAcceptedInfoSchema: yup.ObjectSchema<TempStorageInfo> = y
   });
 
 // 14 - Installation de destination prévue
-export const destinationAfterTempStorageSchema: yup.ObjectSchema<Partial<
-  DestinationAfterTempStorage
->> = yup.object().shape({
+export const destinationAfterTempStorageSchema: yup.ObjectSchema<
+  Partial<DestinationAfterTempStorage>
+> = yup.object().shape({
   destinationCompanyName: yup
     .string()
     .ensure()
@@ -848,9 +848,9 @@ export const destinationAfterTempStorageSchema: yup.ObjectSchema<Partial<
 // 15 - Mentions au titre des règlements ADR, RID, ADNR, IMDG
 // 16 - Conditionnement
 // 17 - Quantité
-export const wasteRepackagingSchema: yup.ObjectSchema<Partial<
-  WasteRepackaging
->> = yup.object().shape({
+export const wasteRepackagingSchema: yup.ObjectSchema<
+  Partial<WasteRepackaging>
+> = yup.object().shape({
   wasteDetailsNumberOfPackages: yup
     .number()
     .nullable()
@@ -865,9 +865,9 @@ export const wasteRepackagingSchema: yup.ObjectSchema<Partial<
 });
 
 // 18 - Collecteur-transporteur reconditionnement
-export const transporterAfterTempStorageSchema: yup.ObjectSchema<Partial<
-  TransporterAfterTempStorage
->> = transporterSchema;
+export const transporterAfterTempStorageSchema: yup.ObjectSchema<
+  Partial<TransporterAfterTempStorage>
+> = transporterSchema;
 
 // *******************************************************************
 // COMPOSE VALIDATION SCHEMAS TO VALIDATE A FORM FOR A SPECIFIC STATUS

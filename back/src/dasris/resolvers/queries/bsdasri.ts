@@ -1,9 +1,10 @@
-import { expandDasriFromDb } from "../../dasri-converter";
+import { expandBsdasriFromDb } from "../../dasri-converter";
 import { UserInputError } from "apollo-server-express";
 import { MissingIdOrReadableId } from "../../errors";
 import { QueryResolvers } from "../../../generated/graphql/types";
-
-import { getDasriOrDasriNotFound } from "../../database";
+import { checkIsAuthenticated } from "../../../common/permissions";
+import { getBsdasriOrNotFound } from "../../database";
+import { checkCanReadBsdasri } from "../../permissions";
 
 function validateArgs(args: any) {
   if (args.id == null && args.readableId == null) {
@@ -17,14 +18,16 @@ function validateArgs(args: any) {
   return args;
 }
 
-const dasriResolver: QueryResolvers["dasri"] = async (_, args, context) => {
+const bsdasriResolver: QueryResolvers["bsdasri"] = async (_, args, context) => {
   // check query level permissions
+  const user = checkIsAuthenticated(context);
 
   const validArgs = validateArgs(args);
 
-  const form = await getDasriOrDasriNotFound(validArgs);
+  const bsdasri = await getBsdasriOrNotFound(validArgs);
 
-  return expandDasriFromDb(form);
+  await checkCanReadBsdasri(user, bsdasri);
+  return expandBsdasriFromDb(bsdasri);
 };
 
-export default dasriResolver;
+export default bsdasriResolver;

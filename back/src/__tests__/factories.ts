@@ -26,7 +26,7 @@ export const userFactory = async (
     isActive: true,
     ...opt
   };
-  
+
   return prisma.user.create({ data });
 };
 

@@ -485,11 +485,11 @@ model User {
   StatusLog           StatusLog[]
   UserActivationHash  UserActivationHash[]
   
-  Dasri Dasri[] @relation("DasriOwnedBy")
-  dasriEmissionSignatures Dasri[] @relation("DasriEmissionSignature")
-  dasriTransportSignatures Dasri[] @relation("DasriTransportSignature")
-  dasriReceptionSignatures Dasri[] @relation("DasriReceptionSignature")
-  dasriOperationignatures Dasri[] @relation("DasriOperationSignature")
+  Bsdasri Bsdasri[] @relation("BsdasriOwnedBy")
+  bsdasriEmissionSignatures Bsdasri[] @relation("BsdasriEmissionSignature")
+  bsdasriTransportSignatures Bsdasri[] @relation("BsdasriTransportSignature")
+  bsdasriReceptionSignatures Bsdasri[] @relation("BsdasriReceptionSignature")
+  bsdasriOperationignatures Bsdasri[] @relation("BsdasriOperationSignature")
 }
 
 model UserAccountHash {
@@ -512,9 +512,9 @@ model UserActivationHash {
   user      User     @relation(fields: [userId], references: [id])
 }
 
-// Dasri models
+// Bsdasri models
 
-enum DasriStatus {
+enum BsdasriStatus {
   DRAFT 
   SEALED
   READY_FOR_TAKEOVER
@@ -523,15 +523,15 @@ enum DasriStatus {
   PROCESSED
   REFUSED
 }
-model Dasri {
+model Bsdasri {
   id                                 String                  @id @default(cuid())
   readableId                         String                  @unique
   customId                           String? 
-  status                             DasriStatus             @default(DRAFT)
+  status                             BsdasriStatus           @default(DRAFT)
   createdAt                          DateTime                @default(now())
   updatedAt                          DateTime                @updatedAt
   ownerId                            String
-  owner                              User                    @relation("DasriOwnedBy", fields: [ownerId], references: [id])
+  owner                              User                    @relation("BsdasriOwnedBy", fields: [ownerId], references: [id])
   isDeleted                          Boolean?                @default(false)
   
   // emitter
@@ -561,7 +561,7 @@ model Dasri {
   handedOverToTransporterAt          DateTime?
 
   emissionSignedBy                   String?
-  emissionSignatory                  User? @relation("DasriEmissionSignature",fields: [emissionSignatoryId], references: [id])
+  emissionSignatory                  User? @relation("BsdasriEmissionSignature",fields: [emissionSignatoryId], references: [id])
   emissionSignatoryId                String?
   emissionSignedAt                   DateTime?
   
@@ -594,7 +594,7 @@ model Dasri {
   handedOverToRecipientAt            DateTime?
 
   transportSignedBy                  String?
-  transportSignatory                 User? @relation("DasriTransportSignature", fields: [transportSignatoryId], references: [id])
+  transportSignatory                 User? @relation("BsdasriTransportSignature", fields: [transportSignatoryId], references: [id])
   transportSignatoryId               String?
   transportSignedAt                  DateTime?
 
@@ -621,12 +621,12 @@ model Dasri {
   processedAt                        DateTime?
 
   receptionSignedBy                 String?
-  receptionSignatory                User? @relation("DasriReceptionSignature", fields: [receptionSignatoryId], references: [id])
+  receptionSignatory                User? @relation("BsdasriReceptionSignature", fields: [receptionSignatoryId], references: [id])
   receptionSignatoryId              String?
   receptionSignedAt                 DateTime?
 
   operationSignedBy                  String?
-  operationSignatory                 User? @relation("DasriOperationSignature", fields: [operationSignatoryId], references: [id])
+  operationSignatory                 User? @relation("BsdasriOperationSignature", fields: [operationSignatoryId], references: [id])
   operationSignatoryId               String?
   operationSignedAt                  DateTime?
 }

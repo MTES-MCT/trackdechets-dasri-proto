@@ -1,48 +1,51 @@
 import prisma from "../../../prisma";
 import {
-  MutationDasriCreateArgs,
+  MutationCreateBsdasriArgs,
   ResolversParentTypes
 } from "../../../generated/graphql/types";
 import { GraphQLContext } from "../../../types";
-import { expandDasriFromDb, flattenDasriInput } from "../../dasri-converter";
+import {
+  expandBsdasriFromDb,
+  flattenBsdasriInput
+} from "../../dasri-converter";
 import getReadableId, { ReadableIdPrefix } from "../../../common/readableId";
 import { checkIsAuthenticated } from "../../../common/permissions";
 import { dasriDraftSchema } from "../../validation";
-import { checkIsDasriContributor } from "../../permissions";
+import { checkIsBsdasriContributor } from "../../permissions";
 
-const dasriCreateResolver = async (
+const createBsdasriResolver = async (
   parent: ResolversParentTypes["Mutation"],
-  { dasriCreateInput }: MutationDasriCreateArgs,
+  { bsdasriCreateInput }: MutationCreateBsdasriArgs,
   context: GraphQLContext
 ) => {
   const user = checkIsAuthenticated(context);
 
   const formSirets = {
-    emitterCompanySiret: dasriCreateInput.emitter?.company?.siret,
-    recipientCompanySiret: dasriCreateInput.recipient?.company?.siret,
-    transporterCompanySiret: dasriCreateInput.transporter?.company?.siret
+    emitterCompanySiret: bsdasriCreateInput.emitter?.company?.siret,
+    recipientCompanySiret: bsdasriCreateInput.recipient?.company?.siret,
+    transporterCompanySiret: bsdasriCreateInput.transporter?.company?.siret
   };
 
-  await checkIsDasriContributor(
+  await checkIsBsdasriContributor(
     user,
     formSirets,
     "Vous ne pouvez pas créer un bordereau sur lequel votre entreprise n'apparaît pas"
   );
 
-  const flattenedInput = flattenDasriInput(dasriCreateInput);
+  const flattenedInput = flattenBsdasriInput(bsdasriCreateInput);
   await dasriDraftSchema.validate(flattenedInput);
   try {
-    const newDasri = await prisma.dasri.create({
+    const newDasri = await prisma.bsdasri.create({
       data: {
         ...flattenedInput,
         readableId: await getReadableId(ReadableIdPrefix.DASRI),
         owner: { connect: { id: user.id } }
       }
     });
-    return expandDasriFromDb(newDasri);
+    return expandBsdasriFromDb(newDasri);
   } catch (e) {
     console.log(e);
   }
 };
 
-export default dasriCreateResolver;
+export default createBsdasriResolver;

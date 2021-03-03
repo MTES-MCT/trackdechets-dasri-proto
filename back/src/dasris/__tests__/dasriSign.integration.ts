@@ -148,7 +148,7 @@ describe("Mutation.dasriSign emission", () => {
       }
     });
 
-    const readyTotakeOverDasri = await prisma.dasri.findUnique({
+    const readyTotakeOverDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(readyTotakeOverDasri.status).toEqual("READY_FOR_TAKEOVER");
@@ -196,7 +196,7 @@ describe("Mutation.dasriSign emission with secret code", () => {
         })
       })
     ]);
-    dasri = await prisma.dasri.findUnique({
+    dasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(dasri.status).toEqual("SEALED");
@@ -230,7 +230,7 @@ describe("Mutation.dasriSign emission with secret code", () => {
       }
     });
 
-    const readyTotakeOverDasri = await prisma.dasri.findUnique({
+    const readyTotakeOverDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(readyTotakeOverDasri.status).toEqual("READY_FOR_TAKEOVER");
@@ -269,7 +269,7 @@ describe("Mutation.dasriSign transport", () => {
       }
     });
 
-    const readyTotakeOverDasri = await prisma.dasri.findUnique({
+    const readyTotakeOverDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(readyTotakeOverDasri.status).toEqual("SENT");
@@ -307,7 +307,7 @@ describe("Mutation.dasriSign transport", () => {
       }
     });
 
-    const readyTotakeOverDasri = await prisma.dasri.findUnique({
+    const readyTotakeOverDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(readyTotakeOverDasri.status).toEqual("SENT");
@@ -354,7 +354,7 @@ describe("Mutation.dasriSign transport", () => {
       })
     ]);
 
-    dasri = await prisma.dasri.findUnique({
+    dasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(dasri.status).toEqual("SEALED"); // status did not change
@@ -390,7 +390,7 @@ describe("Mutation.dasriSign transport", () => {
       }
     });
 
-    const readyTotakeOverDasri = await prisma.dasri.findUnique({
+    const readyTotakeOverDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(readyTotakeOverDasri.status).toEqual("REFUSED");
@@ -437,7 +437,7 @@ describe("Mutation.dasriSign reception", () => {
       }
     });
 
-    const receivedDasri = await prisma.dasri.findUnique({
+    const receivedDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(receivedDasri.status).toEqual("RECEIVED");
@@ -485,7 +485,7 @@ describe("Mutation.dasriSign reception", () => {
       }
     });
 
-    const receivedDasri = await prisma.dasri.findUnique({
+    const receivedDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(receivedDasri.status).toEqual("RECEIVED");
@@ -531,7 +531,7 @@ describe("Mutation.dasriSign reception", () => {
       }
     });
 
-    const readyTotakeOverDasri = await prisma.dasri.findUnique({
+    const readyTotakeOverDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(readyTotakeOverDasri.status).toEqual("REFUSED");
@@ -584,7 +584,7 @@ describe("Mutation.dasriSign operation", () => {
       })
     ]);
 
-    const receivedDasri = await prisma.dasri.findUnique({
+    const receivedDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(receivedDasri.status).toEqual("RECEIVED");
@@ -624,7 +624,7 @@ describe("Mutation.dasriSign operation", () => {
       }
     });
 
-    const receivedDasri = await prisma.dasri.findUnique({
+    const receivedDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
     expect(receivedDasri.status).toEqual("PROCESSED");

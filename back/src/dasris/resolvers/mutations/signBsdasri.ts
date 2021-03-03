@@ -1,19 +1,19 @@
 import { checkIsAuthenticated } from "../../../common/permissions";
 
-import { getDasriOrDasriNotFound } from "../../database";
-import { expandDasriFromDb } from "../../dasri-converter";
+import { getBsdasriOrNotFound } from "../../database";
+import { expandBsdasriFromDb } from "../../dasri-converter";
 
 import {
-  MutationDasriSignArgs,
-  DasriSignatureType,
+  MutationSignBsdasriArgs,
+  BsdasriSignatureType,
   MutationResolvers
 } from "../../../generated/graphql/types";
 import { ObjectSchema } from "yup";
 import { UserInputError } from "apollo-server-express";
 
-import { Dasri, DasriStatus } from "@prisma/client";
+import { Bsdasri, BsdasriStatus } from "@prisma/client";
 import dasriTransition from "../../workflow/dasriTransition";
-import { DasriEventType } from "../../workflow/types";
+import { BsdasriEventType } from "../../workflow/types";
 import { checkIsCompanyMember } from "../../../users/permissions";
 import {
   okForEmissionSignatureSchema,
@@ -23,27 +23,27 @@ import {
 } from "../../validation";
 import { getCompanyOrCompanyNotFound } from "../../../companies/database";
 
-const dasriSign: MutationResolvers["dasriSign"] = async (
+const dasriSign: MutationResolvers["signBsdasri"] = async (
   _,
-  { id, signatureInput }: MutationDasriSignArgs,
+  { id, signatureInput }: MutationSignBsdasriArgs,
   context
 ) => {
   const user = checkIsAuthenticated(context);
-  const dasri = await getDasriOrDasriNotFound({ id });
+  const bsdasri = await getBsdasriOrNotFound({ id });
   const signatureParams = dasriSignatureMapping[signatureInput.type];
 
   // Which siret is involved in curent signature process ?
-  const siretWhoSigns = signatureParams.authorizedSiret(dasri);
+  const siretWhoSigns = signatureParams.authorizedSiret(bsdasri);
   // Is this siret belonging to concrete user ?
   await checkIsCompanyMember({ id: user.id }, { siret: siretWhoSigns });
 
   await checkEmitterAllowsDirectTakeOver({
     signatureParams,
-    dasri
+    bsdasri
   });
   await checkEmitterAllowsSignatureWithSecretCode({
     signatureParams,
-    dasri,
+    bsdasri,
     securityCode: signatureInput?.securityCode
   });
 
@@ -51,13 +51,13 @@ const dasriSign: MutationResolvers["dasriSign"] = async (
     [signatureParams.by]: signatureInput.signedBy,
     [signatureParams.at]: new Date(),
     [signatureParams.signatoryField]: { connect: { id: user.id } },
-    ...getFieldsUpdate({ dasri, signatureInput })
+    ...getFieldsUpdate({ bsdasri, signatureInput })
   };
 
   // Validate required fields are filled
 
   const updatedDasri = await dasriTransition(
-    dasri,
+    bsdasri,
     {
       type: signatureParams.eventType,
       dasriUpdateInput: data
@@ -65,30 +65,30 @@ const dasriSign: MutationResolvers["dasriSign"] = async (
     signatureParams.validator
   );
 
-  return expandDasriFromDb(updatedDasri);
+  return expandBsdasriFromDb(updatedDasri);
 };
 
 export default dasriSign;
 
 type getFieldsUpdateFn = ({
-  dasri: Dasri,
+  bsdasri: Dasri,
   signatureInput: DasriSignatureInput
-}) => Partial<Dasri>;
+}) => Partial<Bsdasri>;
 /**
  
  * A few fields obey to a custom logic
  */
-const getFieldsUpdate: getFieldsUpdateFn = ({ dasri, signatureInput }) => {
+const getFieldsUpdate: getFieldsUpdateFn = ({ bsdasri, signatureInput }) => {
   // on reception signature, fill handedOverToRecipientAt if not already completed
-  if (signatureInput.type === "RECEPTION" && !dasri.handedOverToRecipientAt) {
+  if (signatureInput.type === "RECEPTION" && !bsdasri.handedOverToRecipientAt) {
     return {
-      handedOverToRecipientAt: dasri.receivedAt
+      handedOverToRecipientAt: bsdasri.receivedAt
     };
   }
   return {};
 };
 
-type DasriSignatureInfos = {
+type BsdasriSignatureInfos = {
   by:
     | "emissionSignedBy"
     | "transportSignedBy"
@@ -99,8 +99,8 @@ type DasriSignatureInfos = {
     | "transportSignedAt"
     | "receptionSignedAt"
     | "operationSignedAt";
-  eventType: DasriEventType;
-  authorizedSiret: (dasri: Dasri) => string;
+  eventType: BsdasriEventType;
+  authorizedSiret: (bsdasri: Bsdasri) => string;
   signatoryField:
     | "emissionSignatory"
     | "transportSignatory"
@@ -109,53 +109,56 @@ type DasriSignatureInfos = {
   validator: ObjectSchema;
 };
 
-const dasriSignatureMapping: Record<DasriSignatureType, DasriSignatureInfos> = {
+const dasriSignatureMapping: Record<
+  BsdasriSignatureType,
+  BsdasriSignatureInfos
+> = {
   EMISSION: {
     by: "emissionSignedBy",
     at: "emissionSignedAt",
-    eventType: DasriEventType.SignEmission,
+    eventType: BsdasriEventType.SignEmission,
     validator: okForEmissionSignatureSchema,
     signatoryField: "emissionSignatory",
-    authorizedSiret: dasri => dasri.emitterCompanySiret
+    authorizedSiret: bsdasri => bsdasri.emitterCompanySiret
   },
   EMISSION_WITH_SECRET_CODE: {
     by: "emissionSignedBy",
     at: "emissionSignedAt",
-    eventType: DasriEventType.SignEmissionWithSecretCode,
+    eventType: BsdasriEventType.SignEmissionWithSecretCode,
     validator: okForEmissionSignatureSchema,
     signatoryField: "emissionSignatory",
-    authorizedSiret: dasri => dasri.transporterCompanySiret // transporter can sign with emitter secret code (trs device)
+    authorizedSiret: bsdasri => bsdasri.transporterCompanySiret // transporter can sign with emitter secret code (trs device)
   },
   TRANSPORT: {
     by: "transportSignedBy",
     at: "transportSignedAt",
-    eventType: DasriEventType.SignTransport,
+    eventType: BsdasriEventType.SignTransport,
     validator: okForTransportSignatureSchema,
     signatoryField: "transportSignatory",
-    authorizedSiret: dasri => dasri.transporterCompanySiret
+    authorizedSiret: bsdasri => bsdasri.transporterCompanySiret
   },
 
   RECEPTION: {
     by: "receptionSignedBy",
     at: "receptionSignedAt",
-    eventType: DasriEventType.SignReception,
+    eventType: BsdasriEventType.SignReception,
     validator: okForReceptionSignatureSchema,
     signatoryField: "receptionSignatory",
-    authorizedSiret: dasri => dasri.recipientCompanySiret
+    authorizedSiret: bsdasri => bsdasri.recipientCompanySiret
   },
   OPERATION: {
     by: "operationSignedBy", // changeme
     at: "operationSignedAt",
-    eventType: DasriEventType.SignOperation,
+    eventType: BsdasriEventType.SignOperation,
     validator: okForProcessingSignatureSchema,
     signatoryField: "operationSignatory",
-    authorizedSiret: dasri => dasri.recipientCompanySiret
+    authorizedSiret: bsdasri => bsdasri.recipientCompanySiret
   }
 };
 
 type checkEmitterAllowsDirectTakeOverFn = ({
-  signatureParams: DasriSignatureInfos,
-  dasri: Dasri
+  signatureParams: BsdasriSignatureInfos,
+  bsdasri: Bsdasri
 }) => Promise<void>;
 /**
  * Dasri can be taken over by transporter without signature if emitter explicitly allows this in company preferences
@@ -163,14 +166,14 @@ type checkEmitterAllowsDirectTakeOverFn = ({
  */
 const checkEmitterAllowsDirectTakeOver: checkEmitterAllowsDirectTakeOverFn = async ({
   signatureParams,
-  dasri
+  bsdasri
 }) => {
   if (
-    signatureParams.eventType === DasriEventType.SignTransport &&
-    dasri.status === DasriStatus.SEALED
+    signatureParams.eventType === BsdasriEventType.SignTransport &&
+    bsdasri.status === BsdasriStatus.SEALED
   ) {
     const emitterCompany = await getCompanyOrCompanyNotFound({
-      siret: dasri.emitterCompanySiret
+      siret: bsdasri.emitterCompanySiret
     });
     if (!emitterCompany.allowDasriTakeOverWithoutSignature) {
       throw new UserInputError(
@@ -181,8 +184,8 @@ const checkEmitterAllowsDirectTakeOver: checkEmitterAllowsDirectTakeOverFn = asy
 };
 
 type checkEmitterAllowsSignatureWithCodeFn = ({
-  signatureParams: DasriSignatureInfos,
-  dasri: Dasri,
+  signatureParams: BsdasriSignatureInfos,
+  bsdasri: Dasri,
   securityCode: number
 }) => Promise<void>;
 /**
@@ -193,17 +196,17 @@ type checkEmitterAllowsSignatureWithCodeFn = ({
  */
 const checkEmitterAllowsSignatureWithSecretCode: checkEmitterAllowsSignatureWithCodeFn = async ({
   signatureParams,
-  dasri,
+  bsdasri,
   securityCode
 }) => {
   if (
-    signatureParams.eventType !== DasriEventType.SignEmissionWithSecretCode ||
-    dasri.status !== DasriStatus.SEALED
+    signatureParams.eventType !== BsdasriEventType.SignEmissionWithSecretCode ||
+    bsdasri.status !== BsdasriStatus.SEALED
   ) {
     return;
   }
   const emitterCompany = await getCompanyOrCompanyNotFound({
-    siret: dasri.emitterCompanySiret
+    siret: bsdasri.emitterCompanySiret
   });
 
   if (!securityCode || securityCode !== emitterCompany.securityCode) {

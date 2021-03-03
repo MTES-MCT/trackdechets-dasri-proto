@@ -1,31 +1,31 @@
 scalar DateTime
 
-enum DasriRole {
-  "Les Dasri dont je suis transporteur"
+enum BsdasriRole {
+  "Les Bsdasri dont je suis transporteur"
   TRANSPORTER
-  "Les Dasri dont je suis la destination de traitement"
+  "Les Bsdasri dont je suis la destination de traitement"
   RECIPIENT
-  "Les Dasri dont je suis l'émetteur"
+  "Les Bsdasri dont je suis l'émetteur"
   EMITTER
 }
 
-enum DasriStatus {
-  "Dasri à l'état de brouillon"
+enum BsdasriStatus {
+  "Bsdasri à l'état de brouillon"
   DRAFT
 
-  "Dasri scellé (publié)"
+  "Bsdasri scellé (publié)"
   SEALED
 
-  "Optionnel, Dasri signé par la PRED (émetteur)"
+  "Optionnel, Bsdasri signé par la PRED (émetteur)"
   READY_FOR_TAKEOVER
 
-  "Dasri envoyé vers l'établissement de destination"
+  "Bsdasri envoyé vers l'établissement de destination"
   SENT
 
-  "Dasri reçu par l'établissement de destination"
+  "Bsdasri reçu par l'établissement de destination"
   RECEIVED
 
-  "Dasri dont les déchets ont été traités"
+  "Bsdasri dont les déchets ont été traités"
   PROCESSED
 
   "Déchet refusé"
@@ -35,7 +35,7 @@ enum DasriStatus {
  
 
 "Type de packaging du déchet"
-enum DasriPackagings {
+enum BsdasriPackagings {
   "Caisse en carton avec sac en plastique"
   BOITE_CARTON
 
@@ -55,8 +55,8 @@ enum DasriPackagings {
   AUTRE
 }
 
-"Émetteur du Dasri, Personne responsable de l'émimination des déchets (PRED)"
-type DasriEmitter {
+"Émetteur du Bsdasri, Personne responsable de l'émimination des déchets (PRED)"
+type BsdasriEmitter {
   "Établissement émetteur"
   company: FormCompany
   "Site d'emport du déceht, si différent de celle de l'émetteur"
@@ -67,8 +67,8 @@ type DasriEmitter {
   customInfo: String
 }
 
-"Destinataire du Dasri"
-type DasriRecipient {
+"Destinataire du Bsdasri"
+type BsdasriRecipient {
   """
   Installation destinataire
   """
@@ -81,7 +81,7 @@ type DasriRecipient {
 """
 Collecteur transporteur
 """
-type DasriTransporter {
+type BsdasriTransporter {
   "Établissement de destination"
   company: FormCompany
 
@@ -98,10 +98,10 @@ type DasriTransporter {
   customInfo: String
 }
 
-"Informations sur le conditionnement Dasri"
-type DasriPackagingInfo {
+"Informations sur le conditionnement Bsdasri"
+type BsdasriPackagingInfo {
   "Type de conditionnement"
-  type: DasriPackagings!
+  type: BsdasriPackagings!
 
   "Description du conditionnement dans le cas où le type de conditionnement est `AUTRE`"
   other: String
@@ -111,92 +111,92 @@ type DasriPackagingInfo {
 
   volume: Int!
 }
-"Détail sur le déchet proprement dit du Dasri"
-type DasriWasteDetails {
+"Détail sur le déchet proprement dit du Bsdasri"
+type BsdasriWasteDetails {
   quantity: Int
   quantityType: QuantityType
   volume: Int
-  packagingInfos: [DasriPackagingInfo!]
+  packagingInfos: [BsdasriPackagingInfo!]
   onuCode: String
 }
 
 "Informations relatives au déchet émis"
-type DasriEmission {
+type BsdasriEmission {
   wasteCode: String
-  wasteDetails: DasriWasteDetails
+  wasteDetails: BsdasriWasteDetails
   handedOverAt: DateTime
   signedBy: String
   signedAt: DateTime
 }
 
-"Informations relatives à l'acceptation ou au refus du déchet (Dasri)"
-type DasriWasteAcceptation {
+"Informations relatives à l'acceptation ou au refus du déchet (Bsdasri)"
+type BsdasriWasteAcceptation {
   status: String
   refusalReason: String
   refusedQuantity: Int
 }
 
-"Informations relatives au transport du Dasri"
-type DasriTransport {
-  wasteDetails: DasriWasteDetails
-  wasteAcceptation: DasriWasteAcceptation
+"Informations relatives au transport du Bsdasri"
+type BsdasriTransport {
+  wasteDetails: BsdasriWasteDetails
+  wasteAcceptation: BsdasriWasteAcceptation
   handedOverAt: DateTime
   takenOverAt: DateTime
   signedBy: String
   signedAt: DateTime
 }
 
-"Informations relatives à la réception du Dasri"
-type DasriReception {
-  wasteDetails: DasriWasteDetails
-  wasteAcceptation: DasriWasteAcceptation
+"Informations relatives à la réception du Bsdasri"
+type BsdasriReception {
+  wasteDetails: BsdasriWasteDetails
+  wasteAcceptation: BsdasriWasteAcceptation
   receivedAt: DateTime
   signedBy: String
   signedAt: DateTime
 }
 
-"Informations relatives au traitement du Dasri"
-type DasriOperation {
+"Informations relatives au traitement du Bsdasri"
+type BsdasriOperation {
   signedBy: String
   signedAt: DateTime
   processingOperation: String
   processedAt: DateTime
 }
 
-"Bordereau Dasri"
-type Dasri {
+"Bordereau Bsdasri"
+type Bsdasri {
   id: ID!
   readableId: String!
   customId: String
-  status: DasriStatus!
+  status: BsdasriStatus!
   createdAt: DateTime
   updatedAt: DateTime
 
-  emitter: DasriEmitter
-  emission: DasriEmission
+  emitter: BsdasriEmitter
+  emission: BsdasriEmission
 
-  transporter: DasriTransporter
-  transport: DasriTransport
+  transporter: BsdasriTransporter
+  transport: BsdasriTransport
 
-  recipient: DasriRecipient
-  reception: DasriReception
-  operation: DasriOperation
+  recipient: BsdasriRecipient
+  reception: BsdasriReception
+  operation: BsdasriOperation
 }
 
 type Query {
   """
-  Renvoie les Dasri de l'établissement sélectionné.
+  Renvoie les Bsdasri de l'établissement sélectionné.
   Si aucun SIRET n'est précisé et que l'utilisateur est membre d'une seule entreprise
-  alors les Dasri de cette entreprise sont retournés.
+  alors les Bsdasri de cette entreprise sont retournés.
   Si l'utilisateur est membre de 2 entreprises ou plus, vous devez obligatoirement
   préciser un SIRET
   Si l'utilisateur n'est membre d'aucune entreprise, un tableau vide sera renvoyé
 
   Vous pouvez filtrer:
-  - par rôle que joue votre entreprise sur le Dasri via `role`
+  - par rôle que joue votre entreprise sur le Bsdasri via `role`
   - par date de dernière modification via `updatedAfter`
   - par date d'envoi via `sentAfter`
-  - par statut du Dasri via `status`
+  - par statut du Bsdasri via `status`
   - par code déchet via `wasteCode`
   - par SIRET d'une entreprise présente n'importe où sur le bordereau via `siretPresentOnForm`
 
@@ -206,25 +206,25 @@ type Query {
   - les résultats sont paginés par 50. Il est possible de modifier cette valeur via `first` ou `last` en fonction du curseur utilisé
   - pour afficher la suite des résultats, utiliser `cursorAfter` ou `cursorBefore`
   """
-  dasris(
+  bsdasris(
     "SIRET d'un établissement dont je suis membre"
     siret: String
 
     """
     (Optionnel) PAGINATION
     Permet en conjonction avec `first` de paginer "en avant"
-    (des Dasri les plus récents aux Dasri les plus anciens)
-    Curseur après lequel les Dasri doivent être retournés
+    (des Bsdasri les plus récents aux Bsdasri les plus anciens)
+    Curseur après lequel les Bsdasri doivent être retournés
     Attend un identifiant (propriété `id`) de BSD
-    Défaut à vide, pour retourner les Dasri les plus récents
+    Défaut à vide, pour retourner les Bsdasri les plus récents
     Le BSD précisé dans le curseur ne fait pas partie du résultat
     """
     after: ID
     """
     (Optionnel) PAGINATION
     Permet en conjonction avec `after` de paginer "en avant"
-    (des Dasri les plus récents aux Dasri les plus anciens)
-    Nombre de Dasri retournés après le `cursorAfter`
+    (des Bsdasri les plus récents aux Bsdasri les plus anciens)
+    Nombre de Bsdasri retournés après le `cursorAfter`
     Défaut à 50, maximum à 500
     """
     first: Int
@@ -232,23 +232,23 @@ type Query {
     """
     (Optionnel) PAGINATION
     Permet en conjonction avec `last` de paginer "en arrière"
-    (des Dasri les plus anciens aux Dasri les plus récents)
-    Curseur avant lequel les Dasri doivent être retournés
+    (des Bsdasri les plus anciens aux Bsdasris les plus récents)
+    Curseur avant lequel les Bsdasri doivent être retournés
     Attend un identifiant (propriété `id`) de BSD
-    Défaut à vide, pour retourner les Dasri les plus anciens
+    Défaut à vide, pour retourner les Bsdasri les plus anciens
     Le BSD précisé dans le curseur ne fait pas partie du résultat
     """
     before: ID
 
     """
     (Optionnel) PAGINATION
-    Nombre de Dasri retournés avant le `before`
+    Nombre de Bsdasri retournés avant le `before`
     Défaut à 50, maximum à 500
     """
     last: Int
 
     """
-    (Optionnel) Retourne les Dasri modifiés après la date
+    (Optionnel) Retourne les Bsdasri modifiés après la date
     Filtre sur la date de dernière modification
     Au format (YYYY-MM-DD)
     Par défaut vide, aucun filtre n'est appliqué
@@ -256,16 +256,16 @@ type Query {
     updatedAfter: String
 
     """
-    (Optionnel) Filtre sur les statuts des Dasri
-    Si aucun filtre n'est passé, les Dasri seront retournés quel que soit leur statut
+    (Optionnel) Filtre sur les statuts des Bsdasri
+    Si aucun filtre n'est passé, les Bsdasri seront retournés quel que soit leur statut
     Défaut à vide.
     """
-    status: [DasriStatus!]
+    status: [BsdasriStatus!]
 
     """
-    (Optionnel) Siret d'une autre entreprise présente sur le Dasri
+    (Optionnel) Siret d'une autre entreprise présente sur le Bsdasri
     Vous n'avez pas besoin d'être membre de cette entreprise.
-    Seuls les Dasri où cette entreprise apparait (dans n'importe quel cadre) seront retournés.
+    Seuls les Bsdasri où cette entreprise apparait (dans n'importe quel cadre) seront retournés.
     Défaut à vide.
     """
     siretPresentOnForm: String
@@ -280,13 +280,13 @@ type Query {
     """
     (Optionnel) Filtre sur le role de demandeur dans le dasri
     Par exemple:
-     - `roles: [TRANSPORTER]` renverra les Dasri pour lesquels je suis transporteur
-     - `roles: [EMITTER, RECIPIENT]` renverra les Dasri dont je suis l'émetteur ou le destinataire final
+     - `roles: [TRANSPORTER]` renverra les Bsdasri pour lesquels je suis transporteur
+     - `roles: [EMITTER, RECIPIENT]` renverra les Bsdasri dont je suis l'émetteur ou le destinataire final
     Voir `DasriRole` pour la liste des roles sur lesquels il est possible de filtrer.
-    Si aucune filtre n'est passé, les Dasri seront retournés quel que soit votre role dessus.
+    Si aucune filtre n'est passé, les Bsdasri seront retournés quel que soit votre role dessus.
     Défaut à vide.
     """
-    roles: [DasriRole!]
+    roles: [BsdasriRole!]
 
     """
     (Optionnel) Permet de filtrer sur les dasris en attente d'une action de votre part
@@ -296,45 +296,45 @@ type Query {
     Défaut à vide.
     """
     hasNextStep: Boolean
-  ): [Dasri!]!
-  dasri(
+  ): [Bsdasri!]!
+
+  bsdasri(
     "Identifiant opaque du BSD"
     id: ID
     "Identifiant lisible du BSD"
     readableId: String
-  ): Dasri
+  ): Bsdasri
 }
 
 type Mutation {
   "Crée un nouveau dasri"
-  dasriCreate(
+  createBsdasri(
     "Payload de création d'un dasri"
-    dasriCreateInput: DasriCreateInput!
-  ): Dasri!
+    bsdasriCreateInput: BsdasriCreateInput!
+  ): Bsdasri!
 
   """
   Met à jour un dasri existant
   Par défaut, tous les champs sont modifiables.
   """
-  dasriUpdate(
+  updateBsdasri(
     "Payload de mise à jour d'un dasri"
-    dasriUpdateInput: DasriUpdateInput!
-  ): Dasri!
+    bsdasriUpdateInput: BsdasriUpdateInput!
+  ): Bsdasri!
 
   "Marque un dasri brouillon comme prêt (SEALED)"
-  dasriMarkAsReady("ID d'un Dasri" id: ID!): Dasri
+  markAsReadyBsdasri("ID d'un Bsdasri" id: ID!): Bsdasri
 
-  """Appose une signature sur un Dasri, verrouille les cadres correspondant
+  """
+  Appose une signature sur un Bsdasri, verrouille les cadres correspondant
   
   Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
   Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport
 
   Toutefois il existe un exception: le cadre emetteur peut être signé par le transporteur grâce au code de 
-  sécurité de l'émetteur (DasriSignatureType: EMISSION_WITH_SECRET_CODE)
-
-
+  sécurité de l'émetteur (BsdasriSignatureType: EMISSION_WITH_SECRET_CODE)
   """ 
 
   
-  dasriSign(id: ID!, signatureInput: DasriSignatureInput! ): Dasri
+  signBsdasri(id: ID!, signatureInput: BsdasriSignatureInput! ): Bsdasri
 }
