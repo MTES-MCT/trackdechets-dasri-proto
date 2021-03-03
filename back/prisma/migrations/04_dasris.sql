@@ -1,0 +1,87 @@
+-- CreateEnum
+CREATE TYPE "BsdasriStatus" AS ENUM ('DRAFT', 'SEALED', 'READY_FOR_TAKEOVER', 'SENT', 'RECEIVED', 'REFUSED_BY_RECIPIENT','PROCESSED', 'REFUSED');
+
+
+
+-- CreateTable
+CREATE TABLE "default$default"."Bsdasri" (
+    "id" TEXT NOT NULL,
+    "readableId" TEXT NOT NULL,
+    "customId" TEXT,
+    "status" "BsdasriStatus" NOT NULL DEFAULT E'DRAFT',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "ownerId" TEXT NOT NULL,
+    "isDeleted" BOOLEAN DEFAULT false,
+    "emitterCompanyName" TEXT,
+    "emitterCompanySiret" TEXT,
+    "emitterCompanyAddress" TEXT,
+    "emitterCompanyContact" TEXT,
+    "emitterCompanyPhone" TEXT,
+    "emitterCompanyMail" TEXT,
+    "emitterWorkSiteName" TEXT,
+    "emitterWorkSiteAddress" TEXT,
+    "emitterWorkSiteCity" TEXT,
+    "emitterWorkSitePostalCode" TEXT,
+    "emitterWorkSiteInfos" TEXT,
+    "wasteDetailsCode" TEXT,
+    "wasteDetailsOnuCode" TEXT,
+    "emitterWasteQuantity" INTEGER,
+    "emitterWasteQuantityType" "default$default"."QuantityType",
+    "emitterWasteVolume" INTEGER,
+    "emitterWastePackagingsInfo" JSONB,
+    "emitterCustomInfo" TEXT,
+    "handedOverToTransporterAt" TIMESTAMP(3),
+    "emissionSignedBy" TEXT,
+    "emissionSignedAt" TIMESTAMP(3),
+    "transporterCompanyName" TEXT,
+    "transporterCompanySiret" TEXT,
+    "transporterCompanyAddress" TEXT,
+    "transporterCompanyPhone" TEXT,
+    "transporterCompanyContact" TEXT,
+    "transporterCompanyMail" TEXT,
+    "transporterReceipt" TEXT,
+    "transporterReceiptDepartment" TEXT,
+    "transporterReceiptValidityLimit" TIMESTAMP(3),
+    "transporterWasteAcceptationStatus" "default$default"."WasteAcceptationStatus",
+    "transporterWasteRefusalReason" TEXT,
+    "transporterWasteRefusedQuantity" INTEGER,
+    "transporterTakenOverAt" TIMESTAMP(3),
+    "transporterWastePackagingsInfo" JSONB,
+    "transporterWasteQuantity" INTEGER,
+    "transporterWasteQuantityType" "default$default"."QuantityType",
+    "transporterWasteVolume" INTEGER,
+    "transporterCustomInfo" TEXT,
+    "handedOverToRecipientAt" TIMESTAMP(3),
+    "transportSignedBy" TEXT,
+    "transportSignedAt" TIMESTAMP(3),
+    "recipientCompanyName" TEXT,
+    "recipientCompanySiret" TEXT,
+    "recipientCompanyAddress" TEXT,
+    "recipientCompanyContact" TEXT,
+    "recipientCompanyPhone" TEXT,
+    "recipientCompanyMail" TEXT,
+    "recipientWastePackagingsInfo" JSONB,
+    "recipientWasteAcceptationStatus" "default$default"."WasteAcceptationStatus",
+    "recipientWasteRefusalReason" TEXT,
+    "recipientWasteRefusedQuantity" INTEGER,
+    "recipientWasteQuantity" INTEGER,
+    "recipientWasteVolume" INTEGER,
+    "recipientCustomInfo" TEXT,
+    "receivedAt" TIMESTAMP(3),
+    "processingOperation" TEXT,
+    "processedAt" TIMESTAMP(3),
+    "receptionSignedBy" TEXT,
+    "receptionSignedAt" TIMESTAMP(3),
+    "operationSignedAt" TIMESTAMP(3),
+    "operationSignedBy" TEXT,
+    "processSignedAt" TIMESTAMP(3),
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX IF NOT EXISTS  "Bsdasri.readableId_unique" ON "default$default"."Bsdasri"("readableId");
+
+-- AddForeignKey
+ALTER TABLE "default$default"."Bsdasri" ADD FOREIGN KEY("ownerId")REFERENCES "default$default"."User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
