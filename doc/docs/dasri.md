@@ -58,7 +58,7 @@ C-->|"dasriUpdate (sauf champs signés)"| C
 D-->|"dasriUpdate (sauf champs signés)"| D
 E-->|"dasriUpdate (sauf champs signés)"| E
 A[DRAFT] -->|dasriMarkAsReady| B(SEALED)
-B -->|"dasriSign (EMISSION)"| C(READY_FOR_TAKEOVER)
+B -->|"dasriSign (EMISSION / EMISSION_WITH_SECRET_CODE)"| C(READY_FOR_TAKEOVER)
 B -->|"dasriSign (TRANSPORT) - si autorisé par émetteur" | D(SENT)
 C -->|"dasriSign (TRANSPORT)"| D(SENT)
 D -->|"dasriSign (RECEPTION)"| E(RECEIVED)
