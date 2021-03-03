@@ -1,6 +1,6 @@
 import cogoToast from "cogo-toast";
 import React from "react";
-import { BsdActionProps } from "./BsdActions";
+import { BsdActionProps } from "./DasriActions";
 
 export default function Sealed(props: BsdActionProps) {
   function onSubmit() {
@@ -8,7 +8,7 @@ export default function Sealed(props: BsdActionProps) {
       .onSubmit({})
       .then(() =>
         cogoToast.success(
-          `Le numéro #${props.form.readableId} a été affecté au bordereau`
+          `Le numéro #${props.dasri.readableId} a été affecté au bordereau`
         )
       );
   }

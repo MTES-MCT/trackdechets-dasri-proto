@@ -2,7 +2,7 @@ import { useQuery, NetworkStatus } from "@apollo/client";
 import React from "react";
 import { InlineError } from "common/components/Error";
 import Loader from "common/components/Loaders";
-import { FormStatus, Query, QueryFormsArgs } from "generated/graphql/types";
+import {  Query, QueryFormsArgs } from "generated/graphql/types";
 import { DASRI_ARCHIVE_TAB } from "./queries";
 import EmptyTab from "../../slips/tabs/EmptyTab";
 
@@ -16,7 +16,7 @@ import { useParams } from "react-router-dom";
 export default function HistoryTab() {
   const { siret } = useParams<{ siret: string }>();
   const { error, data, fetchMore, refetch, networkStatus } = useQuery<
-    Pick<Query, "dasris">,
+    Pick<Query, "bsdasris">,
     Partial<QueryFormsArgs>
   >(DASRI_ARCHIVE_TAB, {
     variables: {
@@ -28,7 +28,7 @@ export default function HistoryTab() {
 
   if (networkStatus === NetworkStatus.loading) return <Loader />;
   if (error) return <InlineError apolloError={error} />;
-  if (!data?.dasris?.length)
+  if (!data?.bsdasris?.length)
     return (
       <EmptyTab bsdType={BsdTypes.DASRI}>
         <img src="/illu/illu_hello.svg" alt="" />
@@ -45,10 +45,10 @@ export default function HistoryTab() {
     <TabContent
       networkStatus={networkStatus}
       refetch={refetch}
-      forms={data.dasris}
+      forms={data.bsdasris}
       fetchMore={fetchMore}
     >
-      <Dasris siret={siret} dasris={data.dasris} />
+      <Dasris siret={siret} dasris={data.bsdasris} />
     </TabContent>
   );
 }

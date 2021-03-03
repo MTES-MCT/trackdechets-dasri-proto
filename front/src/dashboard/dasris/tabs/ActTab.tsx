@@ -3,7 +3,7 @@ import React from "react";
 import { InlineError } from "common/components/Error";
 import Loader from "common/components/Loaders";
 
-import { DasriStatus, Query, QueryDasrisArgs } from "generated/graphql/types";
+import { Query, QueryBsdasrisArgs } from "generated/graphql/types";
 
 import { DASRI_ACT_TAB } from "./queries";
 
@@ -18,18 +18,16 @@ import Dasris from "../Dasris";
 export default function ActTab() {
   const { siret } = useParams<{ siret: string }>();
 
- 
   const { error, data, fetchMore, refetch, networkStatus } = useQuery<
-    Pick<Query, "dasris">,
-    Partial<QueryDasrisArgs>
+    Pick<Query, "bsdasris">,
+    Partial<QueryBsdasrisArgs>
   >(DASRI_ACT_TAB, {
-    variables: { siret  },
-    
+    variables: { siret },
   });
 
   if (networkStatus === NetworkStatus.loading) return <Loader />;
   if (error) return <InlineError apolloError={error} />;
-  if (!data?.dasris?.length)
+  if (!data?.bsdasris?.length)
     return (
       <EmptyTab bsdType={BsdTypes.DASRI}>
         <img src="/illu/illu_sent.svg" alt="" />
@@ -47,12 +45,12 @@ export default function ActTab() {
     <TabContent
       networkStatus={networkStatus}
       refetch={refetch}
-      forms={data.dasris}
+      forms={data.bsdasris}
       fetchMore={fetchMore}
     >
       <Dasris
         siret={siret}
-        dasris={data.dasris}
+        dasris={data.bsdasris}
         dynamicActions={true}
         refetch={refetch}
       />

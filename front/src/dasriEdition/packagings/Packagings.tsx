@@ -2,7 +2,7 @@ import { Close } from "common/components/Icons";
 import RedErrorMessage from "common/components/RedErrorMessage";
 import NumberInput from "form/custom-inputs/NumberInput";
 import { Field, FieldArray, FieldProps } from "formik";
-import { DasriPackagings as PackagingsEnum } from "generated/graphql/types";
+import { BsdasriPackagings as PackagingsEnum } from "generated/graphql/types";
 import React, { InputHTMLAttributes, useMemo } from "react";
 import "./Packagings.scss";
 
@@ -26,25 +26,13 @@ export default function Packagings({
   id,
   ...props
 }: FieldProps & InputHTMLAttributes<HTMLInputElement>) {
-  // const isAddButtonDisabled = useMemo(() => {
-  //   if (value?.length === 0) {
-  //     return false;
-  //   }
-
-  //   return value.some(p =>
-  //     [PackagingsEnum.Citerne, PackagingsEnum.Benne].includes(p.type)
-  //   );
-  // }, [value]);
-
   if (!value) {
     return null;
   }
-
+  console.log(value)
   return (
     <div>
-      {!value.length && (
-        <span>Aucun conditionnement n'est encore défini sur ce bordereau.</span>
-      )}
+      {!value.length && <span>Le conditionnement doit être défini</span>}
       <FieldArray
         name={name}
         render={arrayHelpers => (

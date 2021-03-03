@@ -1,4 +1,4 @@
-import { DasriStatus } from "generated/graphql/types";
+import { BsdasriStatus } from "generated/graphql/types";
 export const statusLabels: { [key: string]: string } = {
   DRAFT: "Brouillon",
   SEALED: "Scellé",
@@ -9,6 +9,6 @@ export const statusLabels: { [key: string]: string } = {
 };
 
 export const statusesWithDynamicActions = [
-  DasriStatus.Sent,
-  DasriStatus.Received,
+  BsdasriStatus.Sent,
+  BsdasriStatus.Received,
 ];

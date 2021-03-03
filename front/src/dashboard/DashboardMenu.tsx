@@ -72,6 +72,38 @@ export default function DashboardMenu({ me, handleCompanyChange }: IProps) {
                 </NavLink>
               </li>
             </ul>
+
+            {company.companyTypes.includes(CompanyType.Transporter) && (
+              <>
+                <p className="sidebar__chapter ">Transport Dasri</p>
+                <ul>
+                  <li>
+                    <NavLink
+                      to={generatePath(routes.dashboard.dasriTransport.toCollect, {
+                        siret,
+                      })}
+                      className="sidebar__link sidebar__link--indented"
+                      activeClassName="sidebar__link--active"
+                    >
+                      Dasris à collecter
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to={generatePath(routes.dashboard.dasriTransport.collected, {
+                        siret,
+                      })}
+                      className="sidebar__link sidebar__link--indented"
+                      activeClassName="sidebar__link--active"
+                    >
+                      Dasris collectés
+                    </NavLink>
+                  </li>
+                </ul>
+              </>
+            )}
+  
+            <p className="tw-ml-2">------</p>
             <p className="sidebar__chapter">Mes bordereaux</p>
             <ul>
               <li>

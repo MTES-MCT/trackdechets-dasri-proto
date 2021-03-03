@@ -13,17 +13,15 @@ export default function DasriEditionContainer() {
     <main className="main">
       <div className="container">
         <StepList bsdId={id}>
-          <StepContainer component={Emitter} title="Émetteur du dasri" />
+          <StepContainer component={Emitter} title="Producteur" />
           <StepContainer
             component={DasriWasteDetail}
             title="Détail du déchet"
           />
 
-          <StepContainer
-            component={Transporter}
-            title="Transporteur du déchet"
-          />
-          <StepContainer component={Recipient} title="Destination du dasri" />
+          <StepContainer component={Transporter} title="Transporteur" />
+
+          <StepContainer component={Recipient} title="Destinataire" />
         </StepList>
       </div>
     </main>

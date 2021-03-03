@@ -18,11 +18,11 @@ import { updateApolloCache } from "common/helper";
 import initialState from "../dasri-initial-state";
 import {
   Query,
-  QueryDasriArgs,
+  QueryBsdasriArgs,
   Mutation,
-  MutationDasriCreateArgs,
-  MutationDasriUpdateArgs,
-  DasriCreateInput,
+  MutationCreateBsdasriArgs,
+  MutationUpdateBsdasriArgs,
+  BsdasriCreateInput,
 } from "generated/graphql/types";
 import { dasriSchema } from "../schema";
 import { DASRI_GET, DASRI_CREATE, DASRI_UPDATE } from "./queries";
@@ -42,8 +42,8 @@ export default function StepList(props: IProps) {
   const history = useHistory();
 
   const { loading, error, data } = useQuery<
-    Pick<Query, "dasri">,
-    QueryDasriArgs
+    Pick<Query, "bsdasri">,
+    QueryBsdasriArgs
   >(DASRI_GET, {
     variables: {
       id: props.bsdId!,
@@ -53,24 +53,25 @@ export default function StepList(props: IProps) {
     fetchPolicy: "network-only",
   });
 
-  const formState = useMemo(() => getComputedState(initialState, data?.dasri), [
-    data,
-  ]);
+  const formState = useMemo(
+    () => getComputedState(initialState, data?.bsdasri),
+    [data]
+  );
 
   const [dasriCreate] = useMutation<
-    Pick<Mutation, "dasriCreate">,
-    MutationDasriCreateArgs
+    Pick<Mutation, "createBsdasri">,
+    MutationCreateBsdasriArgs
   >(DASRI_CREATE, {
     update: (store, { data }) => {
-      if (!data?.dasriCreate) {
+      if (!data?.createBsdasri) {
         return;
       }
     },
   });
 
   const [dasriUpdate] = useMutation<
-    Pick<Mutation, "dasriUpdate">,
-    MutationDasriUpdateArgs
+    Pick<Mutation, "updateBsdasri">,
+    MutationUpdateBsdasriArgs
   >(DASRI_UPDATE, {
     update: (store, { data }) => {},
   });
@@ -132,10 +133,9 @@ export default function StepList(props: IProps) {
         ))}
       </ul>
       <div className="step-content">
-        <Formik<DasriCreateInput>
+        <Formik<BsdasriCreateInput>
           innerRef={formikForm}
           initialValues={formState}
-          // validationSchema={formSchema}
           onSubmit={() => Promise.resolve()}
         >
           {({ values }) => {
@@ -165,7 +165,7 @@ export default function StepList(props: IProps) {
                   !!props?.bsdId
                     ? dasriUpdate({
                         variables: {
-                          dasriUpdateInput: { id: props.bsdId, ...formInput },
+                          bsdasriUpdateInput: { id: props.bsdId, ...formInput },
                         },
                       })
                         .then(_ => historyCallback(siret))
@@ -173,7 +173,7 @@ export default function StepList(props: IProps) {
                           errCallback(err);
                         })
                     : dasriCreate({
-                        variables: { dasriCreateInput: formInput },
+                        variables: { bsdasriCreateInput: formInput },
                       })
                         .then(_ => historyCallback(siret))
 

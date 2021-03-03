@@ -7,15 +7,6 @@ const initialCompany = {
   phone: "",
 };
 
-const initialTransporter = {
-
-  receipt: "",
-  receiptDepartment: "",
-  receiptValidityLimit: null,
-
-  company: initialCompany,
-};
-
 export default {
   emitter: {
     company: {
@@ -36,11 +27,12 @@ export default {
   },
   emission: {
     wasteCode: "",
-    wasteDetailsOnuCode: "",
+  
     wasteDetails: {
       quantity: null,
       quantityType: null,
       packagingInfos: [],
+      onuCode: "",
     },
   },
   transporter: {
@@ -52,13 +44,21 @@ export default {
       mail: "",
       phone: "",
     },
+    receipt: "",
+    receiptDepartment: "",
+    receiptValidityLimit: "",
   },
   transport: {
     wasteDetails: {
-      quantity: 99,
-      quantityType: "REAL",
+      quantity: null,
+      quantityType: null,
       packagingInfos: [],
     },
+    wasteAcceptation: {
+      status : "",
+      refusalReason : "",
+      refusedQuantity: null
+    }
   },
   recipient: {
     company: {
@@ -76,5 +76,14 @@ export default {
       quantityType: null,
       packagingInfos: [],
     },
+    wasteAcceptation: {
+      status : "",
+      refusalReason : "",
+      refusedQuantity: null
+    }
   },
+  operation: {
+    processingOperation: "",
+    processedAt: null
+  }
 };

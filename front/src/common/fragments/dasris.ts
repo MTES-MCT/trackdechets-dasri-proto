@@ -27,7 +27,7 @@ export const wasteDetailsFragment = gql`
 `;
 
 export const transporterFragment = gql`
-  fragment TransporterFragment on DasriTransporter {
+  fragment TransporterFragment on BsdasriTransporter {
     receipt
     receiptDepartment
     receiptValidityLimit
@@ -40,14 +40,34 @@ export const transporterFragment = gql`
 `;
 
 export const transportFragment = gql`
-  fragment TransportFragment on DasriTransport {
+  fragment TransportFragment on BsdasriTransport {
     handedOverAt
     takenOverAt
+    wasteDetails {
+      quantity
+      quantityType
+      volume
+      onuCode
+      packagingInfos {
+        type
+        other
+        quantity
+        volume
+      }
+    }
+    wasteAcceptation {
+      status
+      refusalReason
+      refusedQuantity
+    }
+    
+    signedBy
+    signedAt
   }
 `;
 
 const emitterFragment = gql`
-  fragment EmitterFragment on DasriEmitter {
+  fragment EmitterFragment on BsdasriEmitter {
     company {
       ...CompanyFragment
     }
@@ -55,9 +75,36 @@ const emitterFragment = gql`
   ${companyFragment}
 `;
 const emissionFragment = gql`
-  fragment EmissionFragment on DasriEmission {
+  fragment EmissionFragment on BsdasriEmission {
     wasteCode
-    wasteDetailsOnuCode
+
+    wasteDetails {
+      quantity
+      quantityType
+      volume
+      onuCode
+      packagingInfos {
+        type
+        other
+        quantity
+        volume
+      }
+    }
+    signedBy
+    signedAt
+  }
+`;
+const recipientFragment = gql`
+  fragment RecipientFragment on BsdasriRecipient {
+    company {
+      ...CompanyFragment
+      
+    }
+  }
+  ${companyFragment}
+`;
+const receptionFragment = gql`
+  fragment ReceptionFragment on BsdasriReception {
     wasteDetails {
       quantity
       quantityType
@@ -69,19 +116,26 @@ const emissionFragment = gql`
         volume
       }
     }
-  }
-`;
-const recipientFragment = gql`
-  fragment RecipientFragment on DasriRecipient {
-    company {
-      ...CompanyFragment
+    wasteAcceptation {
+      status
+      refusalReason
+      refusedQuantity
     }
+    receivedAt
+    signedBy
+    signedAt
   }
-  ${companyFragment}
 `;
-
+const operationFragment = gql`
+  fragment OperationFragment on BsdasriOperation {
+    processingOperation
+    processedAt
+    signedBy
+    signedAt
+  }
+`;
 const mutableDasriFieldsFragment = gql`
-  fragment MutableDasriFieldsFragment on Dasri {
+  fragment MutableDasriFieldsFragment on Bsdasri {
     id
     readableId
     status
@@ -95,10 +149,16 @@ const mutableDasriFieldsFragment = gql`
       ...TransporterFragment
     }
     transport {
-      ... TransportFragment
+      ...TransportFragment
     }
     recipient {
       ...RecipientFragment
+    }
+    reception {
+      ...ReceptionFragment
+    }
+    operation {
+      ...OperationFragment
     }
   }
   ${emitterFragment}
@@ -106,17 +166,19 @@ const mutableDasriFieldsFragment = gql`
   ${transporterFragment}
   ${transportFragment}
   ${recipientFragment}
+  ${receptionFragment}
+  ${operationFragment}
 `;
 
 export const fullDasriFragment = gql`
-  fragment FullDasri on Dasri {
+  fragment FullDasri on Bsdasri {
     ...MutableDasriFieldsFragment
   }
   ${mutableDasriFieldsFragment}
 `;
 
 export const dasriStatusChangeFragment = gql`
-  fragment StatusChange on Dasri {
+  fragment StatusChange on Bsdasri {
     id
     status
   }

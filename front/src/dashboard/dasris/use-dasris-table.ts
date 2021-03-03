@@ -1,4 +1,4 @@
-import { Dasri } from "generated/graphql/types";
+import { Bsdasri } from "generated/graphql/types";
 import { useState, useEffect } from "react";
 
 function getKey(object: any, key: string) {
@@ -19,9 +19,9 @@ const DSC = "DSC";
 const nextOrder = { ASC: DSC, DSC: ASC };
 
 export function useDasrisTable(
-  inputForms: Dasri[]
+  inputForms: Bsdasri[]
 ): [
-  Dasri[],
+  Bsdasri[],
   { key: string; order: string },
   (k: string) => void,
   (k: string, v: string) => void

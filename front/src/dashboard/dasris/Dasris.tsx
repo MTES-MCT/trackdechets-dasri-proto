@@ -1,14 +1,18 @@
 import React from "react";
 
-import { BsdActions, DynamicActions } from "common/bsd-actions/BsdActions";
+import {
+  BsdActions,
+  DasriDynamicActions,
+} from "dashboard/dasris/dasri-actions/DasriActions";
 import { DateTime } from "luxon";
 import { statusLabels } from "./constants";
 import Shorten from "common/components/Shorten";
-import { Dasri } from "generated/graphql/types";
+
+import { Bsdasri } from "generated/graphql/types";
 import "./Dasris.scss";
 
 type Props = {
-  dasris: Dasri[];
+  dasris: Bsdasri[];
   siret: string;
   hiddenFields?: string[];
   dynamicActions?: boolean;
@@ -40,7 +44,7 @@ export default function Dasris({
               <span>Déchet</span>
             </th>
 
-            <th>Quantité</th>
+            <th>Volume</th>
 
             {hiddenFields.indexOf("status") === -1 && <th>Statut</th>}
 
@@ -49,7 +53,7 @@ export default function Dasris({
           </tr>
         </thead>
         <tbody>
-          {dasris.map((s: Dasri) => (
+          {dasris.map((s: Bsdasri) => (
             <tr key={s.id} className="td-table__tr">
               {hiddenFields.indexOf("readableId") === -1 && (
                 <td>
@@ -90,17 +94,17 @@ export default function Dasris({
 
               {dynamicActions && (
                 <td>
-                  <DynamicActions bsd={s} siret={siret} />{" "}
+                  {/* <DasriDynamicActions dasri={s} siret={siret} />{" "} */}
                 </td>
               )}
               <td>
                 {" "}
-                <BsdActions
+                {/* <BsdActions
                   bsdType="dasri"
                   bsdId={s.id}
                   bsdStatus={s.status}
                   siret={siret}
-                />{" "}
+                />  */}
               </td>
             </tr>
           ))}

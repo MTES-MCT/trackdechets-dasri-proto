@@ -18,6 +18,7 @@ import Exports from "./exports/Exports";
 import SlipsContainer from "./slips/SlipsContainer";
 import DasrisContainer from "./dasris/DasrisContainer";
 import Transport from "./transport/Transport";
+import DasriTransport from "./dasriTransport/Transport";
 
 import { Query } from "generated/graphql/types";
 import Stats from "./stats/Stats";
@@ -85,6 +86,9 @@ export default function Dashboard() {
             </Route>
             <Route path={routes.dashboard.transport.index}>
               <Transport />
+            </Route>
+            <Route path={routes.dashboard.dasriTransport.index}>
+              <DasriTransport />
             </Route>
             <Route path={routes.dashboard.exports}>
               <Exports

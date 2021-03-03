@@ -1,27 +1,27 @@
 import { useMutation } from "@apollo/client";
 import React, { useState, useEffect, useCallback } from "react";
-import { Form, Dasri } from "generated/graphql/types";
+import { Bsdasri } from "generated/graphql/types";
 
 import {
   WaterDamIcon,
-  CogApprovedIcon,
   PaperWriteIcon,
-  WarehouseStorageIcon,
   ChevronDown,
   ChevronUp,
 } from "common/components/Icons";
 
-import "./BsdActions.scss";
-import { isDasri, isForm } from "common/typeGuards";
+import "./DasriActions.scss";
+
 import Edit from "./Edit";
+import DasriSignature from "./Signature";
 // import Duplicate from "./Duplicate";
-// import Quicklook from "./Quicklook";
+import DasriQuicklook from "dashboard/dasris/dasri-actions/DasriQuicklook";
+
 import { getDasriNextStep } from "./next-step";
 // import Processed from "./Processed";
 // import Received from "./Received";
 import Sealed from "./Sealed";
 // import Resealed from "./Resealed";
-  import mutations from "./bsd-actions.mutations";
+import mutations from "./dasri-actions.mutations";
 import { NotificationError } from "common/components/Error";
 import OutsideClickHandler from "react-outside-click-handler";
 import { COLORS } from "common/config";
@@ -32,7 +32,7 @@ import { bsdTypes } from "common/types";
 export type BsdActionProps = {
   onSubmit: (vars: any) => any;
   onCancel: () => void;
-  form: Form;
+  dasri: Bsdasri;
 };
 interface BsdActionsProps {
   bsdType: bsdTypes;
@@ -88,14 +88,16 @@ export const BsdActions = ({
           <div className="slips-actions__content">
             <ul className="slips-actions__items">
               <li className="slips-actions__item">
-                {/* <Quicklook
-                  formId={form.id}
+                <DasriQuicklook
+                  formId={bsdId}
                   buttonClass="btn--no-style slips-actions__button"
                   onOpen={disableOutsideClick}
                   onClose={onClose}
-                /> */}
+                />
               </li>
-
+              <li className="slips-actions__item">
+                <Edit bsdId={bsdId} bsdType={bsdType} />
+              </li>
               {bsdStatus === "DRAFT" ? (
                 <>
                   <li className="slips-actions__item">
@@ -105,14 +107,16 @@ export const BsdActions = ({
                       onClose={onClose}
                     /> */}
                   </li>
+                </>
+              ) : (
+                <>
                   <li className="slips-actions__item">
                     <Edit bsdId={bsdId} bsdType={bsdType} />
                   </li>
+                  <li className="slips-actions__item">
+                    {/* <DownloadPdf formId={form.id} onSuccess={onClose} /> */}
+                  </li>
                 </>
-              ) : (
-                <li className="slips-actions__item">
-                  {/* <DownloadPdf formId={form.id} onSuccess={onClose} /> */}
-                </li>
               )}
               <li className="slips-actions__item">
                 {/* <Duplicate formId={form.id} onClose={onClose} /> */}
@@ -125,30 +129,25 @@ export const BsdActions = ({
   );
 };
 
-interface DynamicBsdActionsProps {
-  bsd: Dasri | Form;
+interface DynamicDasriActionsProps {
+  dasri: Bsdasri;
   siret: string;
   refetch?: () => void;
 }
 
-const retrieveNextStep = (bsd, siret) => {
-  if (isDasri(bsd)) {
-    return getDasriNextStep(bsd, siret);
-  }
-};
-
-export function DynamicActions({
-  bsd,
+export function DasriDynamicActions({
+  dasri,
   siret,
   refetch,
-}: DynamicBsdActionsProps) {
-  const nextStep = retrieveNextStep(bsd, siret);
+}: DynamicDasriActionsProps) {
+  const nextStep = getDasriNextStep(dasri, siret);
+
   // This dynamic mutation must have a value, otherwise the `useMutation` hook throws.
   // And hooks should not be conditionally called (cf rules of hooks)
   // Therefore, when there is no `nextStep`, we assign it **any** mutation: it does not matter as it will never get called
   // Indeed nothing is rendered when there is no `nextStep`
   const dynamicMutation = nextStep
-    ? mutations.dasri[nextStep]
+    ? mutations.dasri.SEALED
     : mutations.dasri.DELETE_FORM;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -185,8 +184,8 @@ export function DynamicActions({
         {ButtonComponent && (
           <ButtonComponent
             onCancel={() => setIsOpen(false)}
-            onSubmit={vars => mark({ variables: { id: bsd.id, ...vars } })}
-            form={bsd}
+            onSubmit={vars => mark({ variables: { id: dasri.id, ...vars } })}
+            dasri={dasri}
           />
         )}
         {error && (
@@ -203,11 +202,16 @@ const buttons = {
     icon: PaperWriteIcon,
     component: Sealed,
   },
-  // RECEIVED: {
-  //   title: "Valider la réception",
-  //   icon: WaterDamIcon,
-  //   component: Received,
-  // },
+  READY_FOR_TAKEOVER: {
+    title: "Signature producteur",
+    icon: PaperWriteIcon,
+    component: DasriSignature,
+  },
+  RECEIVED: {
+    title: "Signature réception",
+    icon: WaterDamIcon,
+    component: Sealed,
+  },
   // PROCESSED: {
   //   title: "Valider le traitement",
   //   icon: CogApprovedIcon,

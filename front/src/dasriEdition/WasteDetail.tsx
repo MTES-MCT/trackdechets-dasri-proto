@@ -7,9 +7,9 @@ import NumberInput from "../form/custom-inputs/NumberInput";
 import Packagings from "./packagings/Packagings";
 import RedErrorMessage from "../common/components/RedErrorMessage";
 
-import Tooltip from "../common/components/Tooltip";
+ 
 import "../form/WasteInfo.scss";
-import { isDangerous } from "../generated/constants";
+ 
 
 type Values = {
   wasteDetails: { code: string; packagings: string[] };
@@ -18,9 +18,9 @@ type Values = {
 export default connect<{}, Values>(function DasriWasteDetail(props) {
   const values = props.formik.values;
 
-  //   if (!values.wasteDetails.packagings) {
-  //     values.wasteDetails.packagings = [];
-  //   }
+    // if (!values.wasteDetails.packagings) {
+    //   values.wasteDetails.packagings = [];
+    // }
 
   return (
     <>

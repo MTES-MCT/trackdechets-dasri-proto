@@ -1,10 +1,9 @@
 import { gql } from "@apollo/client";
 import { fullDasriFragment } from "common/fragments/dasris";
 
- 
 export const DASRI_DRAFT_TAB = gql`
   query DasrisGetDraft($siret: String) {
-    dasris(siret: $siret, status: [DRAFT]) {
+    bsdasris(siret: $siret, status: [DRAFT]) {
       ...FullDasri
     }
   }
@@ -13,7 +12,7 @@ export const DASRI_DRAFT_TAB = gql`
 
 export const DASRI_ACT_TAB = gql`
   query DasrisGetAct($siret: String) {
-    dasris(siret: $siret, status: [SEALED, RECEIVED]) {
+    bsdasris(siret: $siret, status: [SEALED, SENT, RECEIVED], hasNextStep: true) {
       ...FullDasri
     }
   }
@@ -22,7 +21,11 @@ export const DASRI_ACT_TAB = gql`
 
 export const DASRI_FOLLOW_TAB = gql`
   query DasrisGetFollow($siret: String) {
-    dasris(siret: $siret, status: [SENT, RECEIVED, READY_FOR_TAKEOVER]) {
+    bsdasris(
+      siret: $siret
+      status: [SENT, RECEIVED, READY_FOR_TAKEOVER]
+      hasNextStep: false
+    ) {
       ...FullDasri
     }
   }
@@ -31,7 +34,7 @@ export const DASRI_FOLLOW_TAB = gql`
 
 export const DASRI_ARCHIVE_TAB = gql`
   query DasrisGetFollow($siret: String) {
-    dasris(siret: $siret, status: [PROCESSED, REFUSED]) {
+    bsdasris(siret: $siret, status: [PROCESSED, REFUSED]) {
       ...FullDasri
     }
   }

@@ -28,7 +28,11 @@ export default {
       index: "/dashboard/:siret/transport",
       toCollect: "/dashboard/:siret/transport/to-collect",
       collected: "/dashboard/:siret/transport/collected",
-      dasriToCollect: "/dashboard/:siret/transport/dasri-to-collect",
+    },
+    dasriTransport: {
+      index: "/dashboard/:siret/dasri-transport",
+      toCollect: "/dashboard/:siret/dasri-transport/to-collect",
+      collected: "/dashboard/:siret/dasri-transport/collected",
     },
     dasris: {
       index: "/dashboard/:siret/dasris",

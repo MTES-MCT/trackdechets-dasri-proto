@@ -2,7 +2,7 @@ import { useQuery, NetworkStatus } from "@apollo/client";
 import React from "react";
 import { InlineError } from "common/components/Error";
 import Loader from "common/components/Loaders";
-import {  Query, QueryDasrisArgs } from "generated/graphql/types";
+import {  Query, QueryBsdasrisArgs } from "generated/graphql/types";
 import { DASRI_FOLLOW_TAB } from "./queries";
 
 import Dasris from "../Dasris";
@@ -15,8 +15,8 @@ import { BsdTypes } from "common/bsdConstants";
 export default function FollowTab() {
   const { siret } = useParams<{ siret: string }>();
   const { error, data, fetchMore, refetch, networkStatus } = useQuery<
-    Pick<Query, "dasris">,
-    Partial<QueryDasrisArgs>
+    Pick<Query, "bsdasris">,
+    Partial<QueryBsdasrisArgs>
   >(DASRI_FOLLOW_TAB, {
     variables: {
       siret
@@ -27,7 +27,7 @@ export default function FollowTab() {
 
   if (networkStatus === NetworkStatus.loading) return <Loader />;
   if (error) return <InlineError apolloError={error} />;
-  if (!data?.dasris?.length)
+  if (!data?.bsdasris?.length)
     return (
       <EmptyTab bsdType={BsdTypes.DASRI}>
         <img src="/illu/illu_transfer.svg" alt="" />
@@ -46,12 +46,12 @@ export default function FollowTab() {
     <TabContent
       networkStatus={networkStatus}
       refetch={refetch}
-      forms={data.dasris}
+      forms={data.bsdasris}
       fetchMore={fetchMore}
     >
       <Dasris
         siret={siret}
-        dasris={data.dasris}
+        dasris={data.bsdasris}
         dynamicActions={true}
         refetch={refetch}
       />

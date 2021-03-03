@@ -5,7 +5,7 @@ import { DuplicateFile } from "common/components/Icons";
 import { generatePath, Link, useParams } from "react-router-dom";
 import { InlineError } from "common/components/Error";
 import Loader from "common/components/Loaders";
-import { Query, QueryDasrisArgs } from "generated/graphql/types";
+import { Query, QueryBsdasrisArgs } from "generated/graphql/types";
 import { DASRI_DRAFT_TAB } from "./queries";
 
 import TabContent from "./TabContent";
@@ -18,8 +18,8 @@ export default function DraftsTab() {
   const { siret } = useParams<{ siret: string }>();
 
   const { error, data, fetchMore, refetch, networkStatus } = useQuery<
-    Pick<Query, "dasris">,
-    Partial<QueryDasrisArgs>
+    Pick<Query, "bsdasris">,
+    Partial<QueryBsdasrisArgs>
   >(DASRI_DRAFT_TAB, {
     variables: { siret  },
     notifyOnNetworkStatusChange: true,
@@ -28,7 +28,7 @@ export default function DraftsTab() {
   if (networkStatus === NetworkStatus.loading) return <Loader />;
   if (error) return <InlineError apolloError={error} />;
 
-  if (!data?.dasris?.length)
+  if (!data?.bsdasris?.length)
     return (
       <EmptyTab bsdType={BsdTypes.DASRI}>
         <img src="/illu/illu_empty.svg" alt="" />
@@ -53,12 +53,12 @@ export default function DraftsTab() {
     <TabContent
       networkStatus={networkStatus}
       refetch={refetch}
-      forms={data.dasris}
+      forms={data.bsdasris}
       fetchMore={fetchMore}
     >
       <Dasris
         siret={siret}
-        dasris={data.dasris}
+        dasris={data.bsdasris}
         hiddenFields={["status", "readableId", "sentAt"]}
         dynamicActions={true}
         refetch={refetch}

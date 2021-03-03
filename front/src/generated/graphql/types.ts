@@ -62,6 +62,310 @@ export type AuthPayload = {
   user: User;
 };
 
+/** Bordereau Bsdasri */
+export type Bsdasri = {
+  __typename?: 'Bsdasri';
+  id: Scalars['ID'];
+  readableId: Scalars['String'];
+  customId: Maybe<Scalars['String']>;
+  status: BsdasriStatus;
+  createdAt: Maybe<Scalars['DateTime']>;
+  updatedAt: Maybe<Scalars['DateTime']>;
+  emitter: Maybe<BsdasriEmitter>;
+  emission: Maybe<BsdasriEmission>;
+  transporter: Maybe<BsdasriTransporter>;
+  transport: Maybe<BsdasriTransport>;
+  recipient: Maybe<BsdasriRecipient>;
+  reception: Maybe<BsdasriReception>;
+  operation: Maybe<BsdasriOperation>;
+};
+
+export type BsdasriCreateInput = {
+  /** Identifiant custom */
+  customId: Maybe<Scalars['String']>;
+  emitter: Maybe<BsdasriEmitterInput>;
+  emission: Maybe<BsdasriEmissionInput>;
+  transporter: Maybe<BsdasriTransporterInput>;
+  transport: Maybe<BsdasriTransportInput>;
+  recipient: Maybe<BsdasriRecipientInput>;
+  reception: Maybe<BsdasriReceptionInput>;
+  operation: Maybe<BsdasriOperationInput>;
+};
+
+/** Informations relatives au déchet émis */
+export type BsdasriEmission = {
+  __typename?: 'BsdasriEmission';
+  wasteCode: Maybe<Scalars['String']>;
+  wasteDetails: Maybe<BsdasriWasteDetails>;
+  handedOverAt: Maybe<Scalars['DateTime']>;
+  signedBy: Maybe<Scalars['String']>;
+  signedAt: Maybe<Scalars['DateTime']>;
+};
+
+export type BsdasriEmissionInput = {
+  wasteCode: Maybe<Scalars['String']>;
+  wasteDetailsOnuCode: Maybe<Scalars['String']>;
+  wasteDetails: Maybe<BsdasriWasteDetailInput>;
+  handedOverAt: Maybe<Scalars['DateTime']>;
+};
+
+/** Émetteur du Bsdasri, Personne responsable de l'émimination des déchets (PRED) */
+export type BsdasriEmitter = {
+  __typename?: 'BsdasriEmitter';
+  /** Établissement émetteur */
+  company: Maybe<FormCompany>;
+  /** Site d'emport du déceht, si différent de celle de l'émetteur */
+  workSite: Maybe<WorkSite>;
+  /** Date de remise au tranporteur */
+  handOverToTransporterAt: Maybe<Scalars['DateTime']>;
+  /** Champ libre */
+  customInfo: Maybe<Scalars['String']>;
+};
+
+export type BsdasriEmitterInput = {
+  /** Établissement émetteur */
+  company: Maybe<CompanyInput>;
+  workSite: Maybe<WorkSiteInput>;
+  /** Champ libre émetteur */
+  customInfo: Maybe<Scalars['String']>;
+};
+
+export type BsdasriInput = {
+  customId: Maybe<Scalars['String']>;
+  emitter: Maybe<BsdasriEmitterInput>;
+  emission: Maybe<BsdasriEmissionInput>;
+  transporter: Maybe<BsdasriTransporterInput>;
+  transport: Maybe<BsdasriTransportInput>;
+  recipient: Maybe<BsdasriRecipientInput>;
+  reception: Maybe<BsdasriReceptionInput>;
+  operation: Maybe<BsdasriOperationInput>;
+};
+
+/** Informations relatives au traitement du Bsdasri */
+export type BsdasriOperation = {
+  __typename?: 'BsdasriOperation';
+  signedBy: Maybe<Scalars['String']>;
+  signedAt: Maybe<Scalars['DateTime']>;
+  processingOperation: Maybe<Scalars['String']>;
+  processedAt: Maybe<Scalars['DateTime']>;
+};
+
+export type BsdasriOperationInput = {
+  processingOperation: Maybe<Scalars['String']>;
+  processedAt: Maybe<Scalars['DateTime']>;
+};
+
+/** Informations sur le conditionnement Bsdasri */
+export type BsdasriPackagingInfo = {
+  __typename?: 'BsdasriPackagingInfo';
+  /** Type de conditionnement */
+  type: BsdasriPackagings;
+  /** Description du conditionnement dans le cas où le type de conditionnement est `AUTRE` */
+  other: Maybe<Scalars['String']>;
+  /** Nombre de colis associés à ce conditionnement */
+  quantity: Scalars['Int'];
+  volume: Scalars['Int'];
+};
+
+export type BsdasriPackagingInfoInput = {
+  /** Type de conditionnement */
+  type: BsdasriPackagings;
+  /** Description du conditionnement dans le cas où le type de conditionnement est `AUTRE` */
+  other: Maybe<Scalars['String']>;
+  /** Nombre de colis associés à ce conditionnement */
+  volume: Scalars['Int'];
+  /** Nombre de colis associés à ce conditionnement */
+  quantity: Scalars['Int'];
+};
+
+/** Type de packaging du déchet */
+export enum BsdasriPackagings {
+  /** Caisse en carton avec sac en plastique */
+  BoiteCarton = 'BOITE_CARTON',
+  /** Fûts ou jerrican à usage unique */
+  Fut = 'FUT',
+  /** Boîtes et Mini-collecteurs pour déchets perforants */
+  BoitePerforants = 'BOITE_PERFORANTS',
+  /** Grand emballage */
+  GrandEmballage = 'GRAND_EMBALLAGE',
+  /** Grand récipient pour vrac */
+  Vrac = 'VRAC',
+  /** Autre */
+  Autre = 'AUTRE'
+}
+
+/** Informations relatives à la réception du Bsdasri */
+export type BsdasriReception = {
+  __typename?: 'BsdasriReception';
+  wasteDetails: Maybe<BsdasriWasteDetails>;
+  wasteAcceptation: Maybe<BsdasriWasteAcceptation>;
+  receivedAt: Maybe<Scalars['DateTime']>;
+  signedBy: Maybe<Scalars['String']>;
+  signedAt: Maybe<Scalars['DateTime']>;
+};
+
+export type BsdasriReceptionInput = {
+  wasteDetails: Maybe<BsdasriWasteDetailInput>;
+  receivedAt: Maybe<Scalars['DateTime']>;
+};
+
+/** Destinataire du Bsdasri */
+export type BsdasriRecipient = {
+  __typename?: 'BsdasriRecipient';
+  /** Installation destinataire */
+  company: Maybe<FormCompany>;
+  /** Champ libre */
+  customInfo: Maybe<Scalars['String']>;
+};
+
+export type BsdasriRecipientInput = {
+  /** Établissement émetteur */
+  company: Maybe<CompanyInput>;
+  /** Champ libre transporteur */
+  customInfo: Maybe<Scalars['String']>;
+};
+
+export type BsdasriRecipientWasteDetailInput = {
+  quantity: Maybe<Scalars['Int']>;
+  volume: Maybe<Scalars['Int']>;
+};
+
+export enum BsdasriRole {
+  /** Les Bsdasri dont je suis transporteur */
+  Transporter = 'TRANSPORTER',
+  /** Les Bsdasri dont je suis la destination de traitement */
+  Recipient = 'RECIPIENT',
+  /** Les Bsdasri dont je suis l'émetteur */
+  Emitter = 'EMITTER'
+}
+
+export type BsdasriSignatureInput = {
+  type: BsdasriSignatureType;
+  signedBy: Scalars['String'];
+  securityCode: Maybe<Scalars['Int']>;
+};
+
+export enum BsdasriSignatureType {
+  /** Signature du cadre émetteur (PRED) */
+  Emission = 'EMISSION',
+  /** Signature du cadre émetteur (PRED) par le transporteur, grâce au code de sécurité de l'émetteur */
+  EmissionWithSecretCode = 'EMISSION_WITH_SECRET_CODE',
+  /** Signature du cadre collecteur transporteur */
+  Transport = 'TRANSPORT',
+  /** Signature de la réception du déchet */
+  Reception = 'RECEPTION',
+  /** Signature du traitement du déchet */
+  Operation = 'OPERATION'
+}
+
+export enum BsdasriStatus {
+  /** Bsdasri à l'état de brouillon */
+  Draft = 'DRAFT',
+  /** Bsdasri scellé (publié) */
+  Sealed = 'SEALED',
+  /** Optionnel, Bsdasri signé par la PRED (émetteur) */
+  ReadyForTakeover = 'READY_FOR_TAKEOVER',
+  /** Bsdasri envoyé vers l'établissement de destination */
+  Sent = 'SENT',
+  /** Bsdasri reçu par l'établissement de destination */
+  Received = 'RECEIVED',
+  /** Bsdasri dont les déchets ont été traités */
+  Processed = 'PROCESSED',
+  /** Déchet refusé */
+  Refused = 'REFUSED'
+}
+
+/** Informations relatives au transport du Bsdasri */
+export type BsdasriTransport = {
+  __typename?: 'BsdasriTransport';
+  wasteDetails: Maybe<BsdasriWasteDetails>;
+  wasteAcceptation: Maybe<BsdasriWasteAcceptation>;
+  handedOverAt: Maybe<Scalars['DateTime']>;
+  takenOverAt: Maybe<Scalars['DateTime']>;
+  signedBy: Maybe<Scalars['String']>;
+  signedAt: Maybe<Scalars['DateTime']>;
+};
+
+/** Collecteur transporteur */
+export type BsdasriTransporter = {
+  __typename?: 'BsdasriTransporter';
+  /** Établissement de destination */
+  company: Maybe<FormCompany>;
+  /** N° de récipissé */
+  receipt: Maybe<Scalars['String']>;
+  /** Département */
+  receiptDepartment: Maybe<Scalars['String']>;
+  /** Limite de validité du récipissé */
+  receiptValidityLimit: Maybe<Scalars['DateTime']>;
+  /** Champ libre */
+  customInfo: Maybe<Scalars['String']>;
+};
+
+export type BsdasriTransporterInput = {
+  /** Établissement collecteur - transporteur */
+  company: Maybe<CompanyInput>;
+  /** N° de récipissé */
+  receipt: Maybe<Scalars['String']>;
+  /** Département */
+  receiptDepartment: Maybe<Scalars['String']>;
+  /** Limite de validité du récipissé */
+  receiptValidityLimit: Maybe<Scalars['DateTime']>;
+  /** Champ libre transporteur */
+  customInfo: Maybe<Scalars['String']>;
+};
+
+export type BsdasriTransportInput = {
+  wasteDetails: Maybe<BsdasriWasteDetailInput>;
+  takenOverAt: Maybe<Scalars['DateTime']>;
+  handedOverAt: Maybe<Scalars['DateTime']>;
+  wasteAcceptation: Maybe<BsdasriWasteAcceptationInput>;
+};
+
+export type BsdasriUpdateInput = {
+  /** Identifiant opaque */
+  id: Scalars['ID'];
+  /** Identifiant custom */
+  customId: Maybe<Scalars['String']>;
+  emitter: Maybe<BsdasriEmitterInput>;
+  emission: Maybe<BsdasriEmissionInput>;
+  transporter: Maybe<BsdasriTransporterInput>;
+  transport: Maybe<BsdasriTransportInput>;
+  recipient: Maybe<BsdasriRecipientInput>;
+  reception: Maybe<BsdasriReceptionInput>;
+  operation: Maybe<BsdasriOperationInput>;
+};
+
+/** Informations relatives à l'acceptation ou au refus du déchet (Bsdasri) */
+export type BsdasriWasteAcceptation = {
+  __typename?: 'BsdasriWasteAcceptation';
+  status: Maybe<Scalars['String']>;
+  refusalReason: Maybe<Scalars['String']>;
+  refusedQuantity: Maybe<Scalars['Int']>;
+};
+
+export type BsdasriWasteAcceptationInput = {
+  status: Maybe<WasteAcceptationStatusInput>;
+  refusalReason: Maybe<Scalars['String']>;
+  refusedQuantity: Maybe<Scalars['Int']>;
+};
+
+export type BsdasriWasteDetailInput = {
+  quantity: Maybe<Scalars['Int']>;
+  quantityType: Maybe<QuantityType>;
+  packagingInfos: Maybe<Array<BsdasriPackagingInfoInput>>;
+  onuCode: Maybe<Scalars['String']>;
+};
+
+/** Détail sur le déchet proprement dit du Bsdasri */
+export type BsdasriWasteDetails = {
+  __typename?: 'BsdasriWasteDetails';
+  quantity: Maybe<Scalars['Int']>;
+  quantityType: Maybe<QuantityType>;
+  volume: Maybe<Scalars['Int']>;
+  packagingInfos: Maybe<Array<BsdasriPackagingInfo>>;
+  onuCode: Maybe<Scalars['String']>;
+};
+
 /**
  * Information sur établissement accessible dans la liste des favoris
  * La liste des favoris est constituée à partir de l'historique des
@@ -319,297 +623,6 @@ export type CreateTransporterReceiptInput = {
   validityLimit: Scalars['DateTime'];
   /** Département ayant enregistré la déclaration */
   department: Scalars['String'];
-};
-
-/** Bordereau Dasri */
-export type Dasri = {
-  __typename?: 'Dasri';
-  id: Scalars['ID'];
-  readableId: Scalars['String'];
-  customId: Maybe<Scalars['String']>;
-  status: DasriStatus;
-  createdAt: Maybe<Scalars['DateTime']>;
-  updatedAt: Maybe<Scalars['DateTime']>;
-  emitter: Maybe<DasriEmitter>;
-  emission: Maybe<DasriEmission>;
-  transporter: Maybe<DasriTransporter>;
-  transport: Maybe<DasriTransport>;
-  recipient: Maybe<DasriRecipient>;
-  reception: Maybe<DasriReception>;
-  operation: Maybe<DasriOperation>;
-};
-
-export type DasriCreateInput = {
-  /** Identifiant custom */
-  customId: Maybe<Scalars['String']>;
-  emitter: Maybe<DasriEmitterInput>;
-  emission: Maybe<DasriEmissionInput>;
-  transporter: Maybe<DasriTransporterInput>;
-  transport: Maybe<DasriTransportInput>;
-  recipient: Maybe<DasriRecipientInput>;
-  reception: Maybe<DasriReceptionInput>;
-  operation: Maybe<DasriOperationInput>;
-};
-
-/** Informations relatives au déchet émis */
-export type DasriEmission = {
-  __typename?: 'DasriEmission';
-  wasteCode: Maybe<Scalars['String']>;
-  wasteDetailsOnuCode: Maybe<Scalars['String']>;
-  wasteDetails: Maybe<DasriWasteDetails>;
-  handedOverAt: Maybe<Scalars['DateTime']>;
-  signedBy: Maybe<Scalars['String']>;
-  signedAt: Maybe<Scalars['DateTime']>;
-};
-
-export type DasriEmissionInput = {
-  wasteCode: Maybe<Scalars['String']>;
-  wasteDetailsOnuCode: Maybe<Scalars['String']>;
-  wasteDetails: Maybe<DasriWasteDetailInput>;
-  handedOverAt: Maybe<Scalars['DateTime']>;
-};
-
-/** Émetteur du Dasri, Personne responsable de l'émimination des déchets (PRED) */
-export type DasriEmitter = {
-  __typename?: 'DasriEmitter';
-  /** Établissement émetteur */
-  company: Maybe<FormCompany>;
-  /** Site d'emport du déceht, si différent de celle de l'émetteur */
-  workSite: Maybe<WorkSite>;
-  /** Date de remise au tranporteur */
-  handOverToTransporterAt: Maybe<Scalars['DateTime']>;
-};
-
-export type DasriEmitterInput = {
-  /** Établissement émetteur */
-  company: Maybe<CompanyInput>;
-  workSite: Maybe<WorkSiteInput>;
-};
-
-export type DasriInput = {
-  customId: Maybe<Scalars['String']>;
-  emitter: Maybe<DasriEmitterInput>;
-  emission: Maybe<DasriEmissionInput>;
-  transporter: Maybe<DasriTransporterInput>;
-  transport: Maybe<DasriTransportInput>;
-  recipient: Maybe<DasriRecipientInput>;
-  reception: Maybe<DasriReceptionInput>;
-  operation: Maybe<DasriOperationInput>;
-};
-
-/** Informations relatives au traitement du Dasri */
-export type DasriOperation = {
-  __typename?: 'DasriOperation';
-  signedBy: Maybe<Scalars['String']>;
-  signedAt: Maybe<Scalars['DateTime']>;
-  processingOperation: Maybe<Scalars['String']>;
-  processedAt: Maybe<Scalars['DateTime']>;
-};
-
-export type DasriOperationInput = {
-  processingOperation: Maybe<Scalars['String']>;
-  processedAt: Maybe<Scalars['DateTime']>;
-};
-
-/** Informations sur le conditionnement Dasri */
-export type DasriPackagingInfo = {
-  __typename?: 'DasriPackagingInfo';
-  /** Type de conditionnement */
-  type: DasriPackagings;
-  /** Description du conditionnement dans le cas où le type de conditionnement est `AUTRE` */
-  other: Maybe<Scalars['String']>;
-  /** Nombre de colis associés à ce conditionnement */
-  quantity: Scalars['Int'];
-  volume: Scalars['Int'];
-};
-
-export type DasriPackagingInfoInput = {
-  /** Type de conditionnement */
-  type: DasriPackagings;
-  /** Description du conditionnement dans le cas où le type de conditionnement est `AUTRE` */
-  other: Maybe<Scalars['String']>;
-  /** Nombre de colis associés à ce conditionnement */
-  volume: Scalars['Int'];
-  /** Nombre de colis associés à ce conditionnement */
-  quantity: Scalars['Int'];
-};
-
-/** Type de packaging du déchet */
-export enum DasriPackagings {
-  /** Caisse en carton avec sac en plastique */
-  BoiteCarton = 'BOITE_CARTON',
-  /** Fûts ou jerrican à usage unique */
-  Fut = 'FUT',
-  /** Boîtes et Mini-collecteurs pour déchets perforants */
-  BoitePerforants = 'BOITE_PERFORANTS',
-  /** Grand emballage */
-  GrandEmballage = 'GRAND_EMBALLAGE',
-  /** Grand récipient pour vrac */
-  Vrac = 'VRAC',
-  /** Autre */
-  Autre = 'AUTRE'
-}
-
-/** Informations relatives à la réception du Dasri */
-export type DasriReception = {
-  __typename?: 'DasriReception';
-  wasteDetails: Maybe<DasriWasteDetails>;
-  wasteAcceptation: Maybe<DasriWasteAcceptation>;
-  receivedAt: Maybe<Scalars['DateTime']>;
-  signedBy: Maybe<Scalars['String']>;
-  signedAt: Maybe<Scalars['DateTime']>;
-};
-
-export type DasriReceptionInput = {
-  wasteDetails: Maybe<DasriWasteDetailInput>;
-  receivedAt: Maybe<Scalars['DateTime']>;
-};
-
-/** Destinataire du Dasri */
-export type DasriRecipient = {
-  __typename?: 'DasriRecipient';
-  /** Installation destinataire */
-  company: Maybe<FormCompany>;
-};
-
-export type DasriRecipientInput = {
-  /** Établissement émetteur */
-  company: Maybe<CompanyInput>;
-};
-
-export type DasriRecipientWasteDetailInput = {
-  quantity: Maybe<Scalars['Int']>;
-  volume: Maybe<Scalars['Int']>;
-};
-
-export enum DasriRole {
-  /** Les Dasri dont je suis transporteur */
-  Transporter = 'TRANSPORTER',
-  /** Les Dasri dont je suis la destination de traitement */
-  Recipient = 'RECIPIENT',
-  /** Les Dasri dont je suis l'émetteur */
-  Emitter = 'EMITTER'
-}
-
-export type DasriSignatureInput = {
-  type: DasriSignatureType;
-  signedBy: Scalars['String'];
-  securityCode: Maybe<Scalars['Int']>;
-};
-
-export enum DasriSignatureType {
-  /** Signature du cadre émetteur (PRED) */
-  Emission = 'EMISSION',
-  /** Signature du cadre émetteur (PRED) par le transporteur, grâce au code de sécurité de l'émetteur */
-  EmissionWithSecretCode = 'EMISSION_WITH_SECRET_CODE',
-  /** Signature du cadre collecteur transporteur */
-  Transport = 'TRANSPORT',
-  /** Signature de la réception du déchet */
-  Reception = 'RECEPTION',
-  /** Siganture du traitement du déchet */
-  Operation = 'OPERATION'
-}
-
-export enum DasriStatus {
-  /** Dasri à l'état de brouillon */
-  Draft = 'DRAFT',
-  /** Dasri scellé (publié) */
-  Sealed = 'SEALED',
-  /** Optionnel, Dasri signé par la PRED (émetteur) */
-  ReadyForTakeover = 'READY_FOR_TAKEOVER',
-  /** Dasri envoyé vers l'établissement de destination */
-  Sent = 'SENT',
-  /** Dasri reçu par l'établissement de destination */
-  Received = 'RECEIVED',
-  /** Dasri dont les déchets ont été traités */
-  Processed = 'PROCESSED',
-  /** Déchet refusé */
-  Refused = 'REFUSED'
-}
-
-/** Informations relatives au transport du Dasri */
-export type DasriTransport = {
-  __typename?: 'DasriTransport';
-  wasteDetails: Maybe<DasriWasteDetails>;
-  wasteAcceptation: Maybe<DasriWasteAcceptation>;
-  handedOverAt: Maybe<Scalars['DateTime']>;
-  takenOverAt: Maybe<Scalars['DateTime']>;
-  signedBy: Maybe<Scalars['String']>;
-  signedAt: Maybe<Scalars['DateTime']>;
-};
-
-/** Collecteur transporteur */
-export type DasriTransporter = {
-  __typename?: 'DasriTransporter';
-  /** Établissement de destination */
-  company: Maybe<FormCompany>;
-  /** N° de récipissé */
-  receipt: Maybe<Scalars['String']>;
-  /** Département */
-  receiptDepartment: Maybe<Scalars['String']>;
-  /** Limite de validité du récipissé */
-  receiptValidityLimit: Maybe<Scalars['DateTime']>;
-};
-
-export type DasriTransporterInput = {
-  /** Établissement collecteur - transporteur */
-  company: Maybe<CompanyInput>;
-  /** N° de récipissé */
-  receipt: Maybe<Scalars['String']>;
-  /** Département */
-  receiptDepartment: Maybe<Scalars['String']>;
-  /** Limite de validité du récipissé */
-  receiptValidityLimit: Maybe<Scalars['DateTime']>;
-};
-
-export type DasriTransportInput = {
-  wasteDetails: Maybe<DasriWasteDetailInput>;
-  takenOverAt: Maybe<Scalars['DateTime']>;
-  handedOverAt: Maybe<Scalars['DateTime']>;
-  wasteAcceptation: Maybe<DasriWasteAcceptationInput>;
-};
-
-export type DasriUpdateInput = {
-  /** Identifiant opaque */
-  id: Scalars['ID'];
-  /** Identifiant custom */
-  customId: Maybe<Scalars['String']>;
-  emitter: Maybe<DasriEmitterInput>;
-  emission: Maybe<DasriEmissionInput>;
-  transporter: Maybe<DasriTransporterInput>;
-  transport: Maybe<DasriTransportInput>;
-  recipient: Maybe<DasriRecipientInput>;
-  reception: Maybe<DasriReceptionInput>;
-  operation: Maybe<DasriOperationInput>;
-};
-
-/** Informations relatives à l'acceptation ou au refus du déchet (Dasri) */
-export type DasriWasteAcceptation = {
-  __typename?: 'DasriWasteAcceptation';
-  status: Maybe<WasteAcceptationStatusInput>;
-  refusalReason: Maybe<Scalars['String']>;
-  refusedQuantity: Maybe<Scalars['Int']>;
-};
-
-export type DasriWasteAcceptationInput = {
-  status: Maybe<WasteAcceptationStatusInput>;
-  refusalReason: Maybe<Scalars['String']>;
-  refusedQuantity: Maybe<Scalars['Int']>;
-};
-
-export type DasriWasteDetailInput = {
-  quantity: Maybe<Scalars['Int']>;
-  quantityType: Maybe<QuantityType>;
-  packagingInfos: Maybe<Array<DasriPackagingInfoInput>>;
-};
-
-/** Détail sur le décehte proprement dit du Dasri */
-export type DasriWasteDetails = {
-  __typename?: 'DasriWasteDetails';
-  quantity: Maybe<Scalars['Int']>;
-  quantityType: Maybe<QuantityType>;
-  volume: Maybe<Scalars['Int']>;
-  packagingInfos: Maybe<Array<DasriPackagingInfo>>;
 };
 
 
@@ -1164,6 +1177,8 @@ export type Mutation = {
    * Modifie le mot de passe d'un utilisateur
    */
   changePassword: User;
+  /** Crée un nouveau dasri */
+  createBsdasri: Bsdasri;
   /**
    * USAGE INTERNE
    * Rattache un établissement à l'utilisateur authentifié
@@ -1186,25 +1201,6 @@ export type Mutation = {
    * Récupère une URL signé pour l'upload d'un fichier
    */
   createUploadLink: UploadLink;
-  /** Crée un nouveau dasri */
-  dasriCreate: Dasri;
-  /** Marque un dasri brouillon comme prêt (SEALED) */
-  dasriMarkAsReady: Maybe<Dasri>;
-  /**
-   * Appose une signature sur un Dasri, verrouille les cadres correspondant
-   * 
-   * Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
-   * Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport
-   * 
-   * Toutefois il existe un exception: le cadre emetteur peut être signé par le transporteur grâce au code de 
-   * sécurité de l'émetteur (DasriSignatureType: EMISSION_WITH_SECRET_CODE)
-   */
-  dasriSign: Maybe<Dasri>;
-  /**
-   * Met à jour un dasri existant
-   * Par défaut, tous les champs sont modifiables.
-   */
-  dasriUpdate: Dasri;
   /** Supprime un BSD */
   deleteForm: Maybe<Form>;
   /**
@@ -1260,6 +1256,8 @@ export type Mutation = {
   markAsAccepted: Maybe<Form>;
   /** Valide le traitement d'un BSD */
   markAsProcessed: Maybe<Form>;
+  /** Marque un dasri brouillon comme prêt (SEALED) */
+  markAsReadyBsdasri: Maybe<Bsdasri>;
   /** Valide la réception d'un BSD */
   markAsReceived: Maybe<Form>;
   /** Valide la complétion des cadres 14 à 19 lors d'un entreposage provisoire ou reconditionnement */
@@ -1376,6 +1374,16 @@ export type Mutation = {
    */
   sendMembershipRequest: Maybe<MembershipRequest>;
   /**
+   * Appose une signature sur un Bsdasri, verrouille les cadres correspondant
+   * 
+   * Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
+   * Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport
+   * 
+   * Toutefois il existe un exception: le cadre emetteur peut être signé par le transporteur grâce au code de 
+   * sécurité de l'émetteur (BsdasriSignatureType: EMISSION_WITH_SECRET_CODE)
+   */
+  signBsdasri: Maybe<Bsdasri>;
+  /**
    * Permet de transférer le déchet à un transporteur lors de la collecte initiale (signatures en case 8 et 9)
    * ou après une étape d'entreposage provisoire ou de reconditionnement (signatures en case 18 et 19).
    * Cette mutation doit être appelée avec le token du collecteur-transporteur.
@@ -1398,6 +1406,11 @@ export type Mutation = {
   signup: User;
   /** Marque un segment comme pris en charge par le nouveau transporteur */
   takeOverSegment: Maybe<TransportSegment>;
+  /**
+   * Met à jour un dasri existant
+   * Par défaut, tous les champs sont modifiables.
+   */
+  updateBsdasri: Bsdasri;
   /**
    * USAGE INTERNE
    * Édite les informations d'un établissement
@@ -1432,6 +1445,11 @@ export type MutationChangePasswordArgs = {
 };
 
 
+export type MutationCreateBsdasriArgs = {
+  bsdasriCreateInput: BsdasriCreateInput;
+};
+
+
 export type MutationCreateCompanyArgs = {
   companyInput: PrivateCompanyInput;
 };
@@ -1455,27 +1473,6 @@ export type MutationCreateTransporterReceiptArgs = {
 export type MutationCreateUploadLinkArgs = {
   fileName: Scalars['String'];
   fileType: Scalars['String'];
-};
-
-
-export type MutationDasriCreateArgs = {
-  dasriCreateInput: DasriCreateInput;
-};
-
-
-export type MutationDasriMarkAsReadyArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationDasriSignArgs = {
-  id: Scalars['ID'];
-  signatureInput: DasriSignatureInput;
-};
-
-
-export type MutationDasriUpdateArgs = {
-  dasriUpdateInput: DasriUpdateInput;
 };
 
 
@@ -1553,6 +1550,11 @@ export type MutationMarkAsAcceptedArgs = {
 export type MutationMarkAsProcessedArgs = {
   id: Scalars['ID'];
   processedInfo: ProcessedFormInput;
+};
+
+
+export type MutationMarkAsReadyBsdasriArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -1646,6 +1648,12 @@ export type MutationSendMembershipRequestArgs = {
 };
 
 
+export type MutationSignBsdasriArgs = {
+  id: Scalars['ID'];
+  signatureInput: BsdasriSignatureInput;
+};
+
+
 export type MutationSignedByTransporterArgs = {
   id: Scalars['ID'];
   signingInfo: TransporterSignatureFormInput;
@@ -1660,6 +1668,11 @@ export type MutationSignupArgs = {
 export type MutationTakeOverSegmentArgs = {
   id: Scalars['ID'];
   takeOverInfo: TakeOverInput;
+};
+
+
+export type MutationUpdateBsdasriArgs = {
+  bsdasriUpdateInput: BsdasriUpdateInput;
 };
 
 
@@ -1816,26 +1829,20 @@ export type Query = {
   apiKey: Scalars['String'];
   /** Renvoie des BSD candidats à un regroupement dans une annexe 2 */
   appendixForms: Array<Form>;
+  bsdasri: Maybe<Bsdasri>;
   /**
-   * Renvoie des informations publiques sur un établissement
-   * extrait de la base SIRENE et de la base des installations
-   * classées pour la protection de l'environnement (ICPE)
-   */
-  companyInfos: CompanyPublic;
-  dasri: Maybe<Dasri>;
-  /**
-   * Renvoie les Dasri de l'établissement sélectionné.
+   * Renvoie les Bsdasri de l'établissement sélectionné.
    * Si aucun SIRET n'est précisé et que l'utilisateur est membre d'une seule entreprise
-   * alors les Dasri de cette entreprise sont retournés.
+   * alors les Bsdasri de cette entreprise sont retournés.
    * Si l'utilisateur est membre de 2 entreprises ou plus, vous devez obligatoirement
    * préciser un SIRET
    * Si l'utilisateur n'est membre d'aucune entreprise, un tableau vide sera renvoyé
    * 
    * Vous pouvez filtrer:
-   * - par rôle que joue votre entreprise sur le Dasri via `role`
+   * - par rôle que joue votre entreprise sur le Bsdasri via `role`
    * - par date de dernière modification via `updatedAfter`
    * - par date d'envoi via `sentAfter`
-   * - par statut du Dasri via `status`
+   * - par statut du Bsdasri via `status`
    * - par code déchet via `wasteCode`
    * - par SIRET d'une entreprise présente n'importe où sur le bordereau via `siretPresentOnForm`
    * 
@@ -1846,7 +1853,13 @@ export type Query = {
    * via `first` ou `last` en fonction du curseur utilisé
    * - pour afficher la suite des résultats, utiliser `cursorAfter` ou `cursorBefore`
    */
-  dasris: Array<Dasri>;
+  bsdasris: Array<Bsdasri>;
+  /**
+   * Renvoie des informations publiques sur un établissement
+   * extrait de la base SIRENE et de la base des installations
+   * classées pour la protection de l'environnement (ICPE)
+   */
+  companyInfos: CompanyPublic;
   /** Renvoie la liste des éco-organismes */
   ecoOrganismes: Array<EcoOrganisme>;
   /**
@@ -1932,28 +1945,29 @@ export type QueryAppendixFormsArgs = {
 };
 
 
-export type QueryCompanyInfosArgs = {
-  siret: Scalars['String'];
-};
-
-
-export type QueryDasriArgs = {
+export type QueryBsdasriArgs = {
   id: Maybe<Scalars['ID']>;
   readableId: Maybe<Scalars['String']>;
 };
 
 
-export type QueryDasrisArgs = {
+export type QueryBsdasrisArgs = {
   siret: Maybe<Scalars['String']>;
   after: Maybe<Scalars['ID']>;
   first: Maybe<Scalars['Int']>;
   before: Maybe<Scalars['ID']>;
   last: Maybe<Scalars['Int']>;
   updatedAfter: Maybe<Scalars['String']>;
-  status: Maybe<Array<DasriStatus>>;
+  status: Maybe<Array<BsdasriStatus>>;
   siretPresentOnForm: Maybe<Scalars['String']>;
   wasteCode: Maybe<Scalars['String']>;
-  roles: Maybe<Array<DasriRole>>;
+  roles: Maybe<Array<BsdasriRole>>;
+  hasNextStep: Maybe<Scalars['Boolean']>;
+};
+
+
+export type QueryCompanyInfosArgs = {
+  siret: Scalars['String'];
 };
 
 
@@ -2716,6 +2730,292 @@ export function createAuthPayloadMock(props: Partial<AuthPayload>): AuthPayload 
   };
 }
 
+export function createBsdasriMock(props: Partial<Bsdasri>): Bsdasri {
+  return {
+    __typename: "Bsdasri",
+    id: "",
+    readableId: "",
+    customId: null,
+    status: BsdasriStatus.Draft,
+    createdAt: null,
+    updatedAt: null,
+    emitter: null,
+    emission: null,
+    transporter: null,
+    transport: null,
+    recipient: null,
+    reception: null,
+    operation: null,
+    ...props,
+  };
+}
+
+export function createBsdasriCreateInputMock(props: Partial<BsdasriCreateInput>): BsdasriCreateInput {
+  return {
+    customId: null,
+    emitter: null,
+    emission: null,
+    transporter: null,
+    transport: null,
+    recipient: null,
+    reception: null,
+    operation: null,
+    ...props,
+  };
+}
+
+export function createBsdasriEmissionMock(props: Partial<BsdasriEmission>): BsdasriEmission {
+  return {
+    __typename: "BsdasriEmission",
+    wasteCode: null,
+    wasteDetails: null,
+    handedOverAt: null,
+    signedBy: null,
+    signedAt: null,
+    ...props,
+  };
+}
+
+export function createBsdasriEmissionInputMock(props: Partial<BsdasriEmissionInput>): BsdasriEmissionInput {
+  return {
+    wasteCode: null,
+    wasteDetailsOnuCode: null,
+    wasteDetails: null,
+    handedOverAt: null,
+    ...props,
+  };
+}
+
+export function createBsdasriEmitterMock(props: Partial<BsdasriEmitter>): BsdasriEmitter {
+  return {
+    __typename: "BsdasriEmitter",
+    company: null,
+    workSite: null,
+    handOverToTransporterAt: null,
+    customInfo: null,
+    ...props,
+  };
+}
+
+export function createBsdasriEmitterInputMock(props: Partial<BsdasriEmitterInput>): BsdasriEmitterInput {
+  return {
+    company: null,
+    workSite: null,
+    customInfo: null,
+    ...props,
+  };
+}
+
+export function createBsdasriInputMock(props: Partial<BsdasriInput>): BsdasriInput {
+  return {
+    customId: null,
+    emitter: null,
+    emission: null,
+    transporter: null,
+    transport: null,
+    recipient: null,
+    reception: null,
+    operation: null,
+    ...props,
+  };
+}
+
+export function createBsdasriOperationMock(props: Partial<BsdasriOperation>): BsdasriOperation {
+  return {
+    __typename: "BsdasriOperation",
+    signedBy: null,
+    signedAt: null,
+    processingOperation: null,
+    processedAt: null,
+    ...props,
+  };
+}
+
+export function createBsdasriOperationInputMock(props: Partial<BsdasriOperationInput>): BsdasriOperationInput {
+  return {
+    processingOperation: null,
+    processedAt: null,
+    ...props,
+  };
+}
+
+export function createBsdasriPackagingInfoMock(props: Partial<BsdasriPackagingInfo>): BsdasriPackagingInfo {
+  return {
+    __typename: "BsdasriPackagingInfo",
+    type: BsdasriPackagings.BoiteCarton,
+    other: null,
+    quantity: 0,
+    volume: 0,
+    ...props,
+  };
+}
+
+export function createBsdasriPackagingInfoInputMock(props: Partial<BsdasriPackagingInfoInput>): BsdasriPackagingInfoInput {
+  return {
+    type: BsdasriPackagings.BoiteCarton,
+    other: null,
+    volume: 0,
+    quantity: 0,
+    ...props,
+  };
+}
+
+export function createBsdasriReceptionMock(props: Partial<BsdasriReception>): BsdasriReception {
+  return {
+    __typename: "BsdasriReception",
+    wasteDetails: null,
+    wasteAcceptation: null,
+    receivedAt: null,
+    signedBy: null,
+    signedAt: null,
+    ...props,
+  };
+}
+
+export function createBsdasriReceptionInputMock(props: Partial<BsdasriReceptionInput>): BsdasriReceptionInput {
+  return {
+    wasteDetails: null,
+    receivedAt: null,
+    ...props,
+  };
+}
+
+export function createBsdasriRecipientMock(props: Partial<BsdasriRecipient>): BsdasriRecipient {
+  return {
+    __typename: "BsdasriRecipient",
+    company: null,
+    customInfo: null,
+    ...props,
+  };
+}
+
+export function createBsdasriRecipientInputMock(props: Partial<BsdasriRecipientInput>): BsdasriRecipientInput {
+  return {
+    company: null,
+    customInfo: null,
+    ...props,
+  };
+}
+
+export function createBsdasriRecipientWasteDetailInputMock(props: Partial<BsdasriRecipientWasteDetailInput>): BsdasriRecipientWasteDetailInput {
+  return {
+    quantity: null,
+    volume: null,
+    ...props,
+  };
+}
+
+export function createBsdasriSignatureInputMock(props: Partial<BsdasriSignatureInput>): BsdasriSignatureInput {
+  return {
+    type: BsdasriSignatureType.Emission,
+    signedBy: "",
+    securityCode: null,
+    ...props,
+  };
+}
+
+export function createBsdasriTransportMock(props: Partial<BsdasriTransport>): BsdasriTransport {
+  return {
+    __typename: "BsdasriTransport",
+    wasteDetails: null,
+    wasteAcceptation: null,
+    handedOverAt: null,
+    takenOverAt: null,
+    signedBy: null,
+    signedAt: null,
+    ...props,
+  };
+}
+
+export function createBsdasriTransporterMock(props: Partial<BsdasriTransporter>): BsdasriTransporter {
+  return {
+    __typename: "BsdasriTransporter",
+    company: null,
+    receipt: null,
+    receiptDepartment: null,
+    receiptValidityLimit: null,
+    customInfo: null,
+    ...props,
+  };
+}
+
+export function createBsdasriTransporterInputMock(props: Partial<BsdasriTransporterInput>): BsdasriTransporterInput {
+  return {
+    company: null,
+    receipt: null,
+    receiptDepartment: null,
+    receiptValidityLimit: null,
+    customInfo: null,
+    ...props,
+  };
+}
+
+export function createBsdasriTransportInputMock(props: Partial<BsdasriTransportInput>): BsdasriTransportInput {
+  return {
+    wasteDetails: null,
+    takenOverAt: null,
+    handedOverAt: null,
+    wasteAcceptation: null,
+    ...props,
+  };
+}
+
+export function createBsdasriUpdateInputMock(props: Partial<BsdasriUpdateInput>): BsdasriUpdateInput {
+  return {
+    id: "",
+    customId: null,
+    emitter: null,
+    emission: null,
+    transporter: null,
+    transport: null,
+    recipient: null,
+    reception: null,
+    operation: null,
+    ...props,
+  };
+}
+
+export function createBsdasriWasteAcceptationMock(props: Partial<BsdasriWasteAcceptation>): BsdasriWasteAcceptation {
+  return {
+    __typename: "BsdasriWasteAcceptation",
+    status: null,
+    refusalReason: null,
+    refusedQuantity: null,
+    ...props,
+  };
+}
+
+export function createBsdasriWasteAcceptationInputMock(props: Partial<BsdasriWasteAcceptationInput>): BsdasriWasteAcceptationInput {
+  return {
+    status: null,
+    refusalReason: null,
+    refusedQuantity: null,
+    ...props,
+  };
+}
+
+export function createBsdasriWasteDetailInputMock(props: Partial<BsdasriWasteDetailInput>): BsdasriWasteDetailInput {
+  return {
+    quantity: null,
+    quantityType: null,
+    packagingInfos: null,
+    onuCode: null,
+    ...props,
+  };
+}
+
+export function createBsdasriWasteDetailsMock(props: Partial<BsdasriWasteDetails>): BsdasriWasteDetails {
+  return {
+    __typename: "BsdasriWasteDetails",
+    quantity: null,
+    quantityType: null,
+    volume: null,
+    packagingInfos: null,
+    onuCode: null,
+    ...props,
+  };
+}
+
 export function createCompanyFavoriteMock(props: Partial<CompanyFavorite>): CompanyFavorite {
   return {
     __typename: "CompanyFavorite",
@@ -2860,285 +3160,6 @@ export function createCreateTransporterReceiptInputMock(props: Partial<CreateTra
     receiptNumber: "",
     validityLimit: new Date().toISOString(),
     department: "",
-    ...props,
-  };
-}
-
-export function createDasriMock(props: Partial<Dasri>): Dasri {
-  return {
-    __typename: "Dasri",
-    id: "",
-    readableId: "",
-    customId: null,
-    status: DasriStatus.Draft,
-    createdAt: null,
-    updatedAt: null,
-    emitter: null,
-    emission: null,
-    transporter: null,
-    transport: null,
-    recipient: null,
-    reception: null,
-    operation: null,
-    ...props,
-  };
-}
-
-export function createDasriCreateInputMock(props: Partial<DasriCreateInput>): DasriCreateInput {
-  return {
-    customId: null,
-    emitter: null,
-    emission: null,
-    transporter: null,
-    transport: null,
-    recipient: null,
-    reception: null,
-    operation: null,
-    ...props,
-  };
-}
-
-export function createDasriEmissionMock(props: Partial<DasriEmission>): DasriEmission {
-  return {
-    __typename: "DasriEmission",
-    wasteCode: null,
-    wasteDetailsOnuCode: null,
-    wasteDetails: null,
-    handedOverAt: null,
-    signedBy: null,
-    signedAt: null,
-    ...props,
-  };
-}
-
-export function createDasriEmissionInputMock(props: Partial<DasriEmissionInput>): DasriEmissionInput {
-  return {
-    wasteCode: null,
-    wasteDetailsOnuCode: null,
-    wasteDetails: null,
-    handedOverAt: null,
-    ...props,
-  };
-}
-
-export function createDasriEmitterMock(props: Partial<DasriEmitter>): DasriEmitter {
-  return {
-    __typename: "DasriEmitter",
-    company: null,
-    workSite: null,
-    handOverToTransporterAt: null,
-    ...props,
-  };
-}
-
-export function createDasriEmitterInputMock(props: Partial<DasriEmitterInput>): DasriEmitterInput {
-  return {
-    company: null,
-    workSite: null,
-    ...props,
-  };
-}
-
-export function createDasriInputMock(props: Partial<DasriInput>): DasriInput {
-  return {
-    customId: null,
-    emitter: null,
-    emission: null,
-    transporter: null,
-    transport: null,
-    recipient: null,
-    reception: null,
-    operation: null,
-    ...props,
-  };
-}
-
-export function createDasriOperationMock(props: Partial<DasriOperation>): DasriOperation {
-  return {
-    __typename: "DasriOperation",
-    signedBy: null,
-    signedAt: null,
-    processingOperation: null,
-    processedAt: null,
-    ...props,
-  };
-}
-
-export function createDasriOperationInputMock(props: Partial<DasriOperationInput>): DasriOperationInput {
-  return {
-    processingOperation: null,
-    processedAt: null,
-    ...props,
-  };
-}
-
-export function createDasriPackagingInfoMock(props: Partial<DasriPackagingInfo>): DasriPackagingInfo {
-  return {
-    __typename: "DasriPackagingInfo",
-    type: DasriPackagings.BoiteCarton,
-    other: null,
-    quantity: 0,
-    volume: 0,
-    ...props,
-  };
-}
-
-export function createDasriPackagingInfoInputMock(props: Partial<DasriPackagingInfoInput>): DasriPackagingInfoInput {
-  return {
-    type: DasriPackagings.BoiteCarton,
-    other: null,
-    volume: 0,
-    quantity: 0,
-    ...props,
-  };
-}
-
-export function createDasriReceptionMock(props: Partial<DasriReception>): DasriReception {
-  return {
-    __typename: "DasriReception",
-    wasteDetails: null,
-    wasteAcceptation: null,
-    receivedAt: null,
-    signedBy: null,
-    signedAt: null,
-    ...props,
-  };
-}
-
-export function createDasriReceptionInputMock(props: Partial<DasriReceptionInput>): DasriReceptionInput {
-  return {
-    wasteDetails: null,
-    receivedAt: null,
-    ...props,
-  };
-}
-
-export function createDasriRecipientMock(props: Partial<DasriRecipient>): DasriRecipient {
-  return {
-    __typename: "DasriRecipient",
-    company: null,
-    ...props,
-  };
-}
-
-export function createDasriRecipientInputMock(props: Partial<DasriRecipientInput>): DasriRecipientInput {
-  return {
-    company: null,
-    ...props,
-  };
-}
-
-export function createDasriRecipientWasteDetailInputMock(props: Partial<DasriRecipientWasteDetailInput>): DasriRecipientWasteDetailInput {
-  return {
-    quantity: null,
-    volume: null,
-    ...props,
-  };
-}
-
-export function createDasriSignatureInputMock(props: Partial<DasriSignatureInput>): DasriSignatureInput {
-  return {
-    type: DasriSignatureType.Emission,
-    signedBy: "",
-    securityCode: null,
-    ...props,
-  };
-}
-
-export function createDasriTransportMock(props: Partial<DasriTransport>): DasriTransport {
-  return {
-    __typename: "DasriTransport",
-    wasteDetails: null,
-    wasteAcceptation: null,
-    handedOverAt: null,
-    takenOverAt: null,
-    signedBy: null,
-    signedAt: null,
-    ...props,
-  };
-}
-
-export function createDasriTransporterMock(props: Partial<DasriTransporter>): DasriTransporter {
-  return {
-    __typename: "DasriTransporter",
-    company: null,
-    receipt: null,
-    receiptDepartment: null,
-    receiptValidityLimit: null,
-    ...props,
-  };
-}
-
-export function createDasriTransporterInputMock(props: Partial<DasriTransporterInput>): DasriTransporterInput {
-  return {
-    company: null,
-    receipt: null,
-    receiptDepartment: null,
-    receiptValidityLimit: null,
-    ...props,
-  };
-}
-
-export function createDasriTransportInputMock(props: Partial<DasriTransportInput>): DasriTransportInput {
-  return {
-    wasteDetails: null,
-    takenOverAt: null,
-    handedOverAt: null,
-    wasteAcceptation: null,
-    ...props,
-  };
-}
-
-export function createDasriUpdateInputMock(props: Partial<DasriUpdateInput>): DasriUpdateInput {
-  return {
-    id: "",
-    customId: null,
-    emitter: null,
-    emission: null,
-    transporter: null,
-    transport: null,
-    recipient: null,
-    reception: null,
-    operation: null,
-    ...props,
-  };
-}
-
-export function createDasriWasteAcceptationMock(props: Partial<DasriWasteAcceptation>): DasriWasteAcceptation {
-  return {
-    __typename: "DasriWasteAcceptation",
-    status: null,
-    refusalReason: null,
-    refusedQuantity: null,
-    ...props,
-  };
-}
-
-export function createDasriWasteAcceptationInputMock(props: Partial<DasriWasteAcceptationInput>): DasriWasteAcceptationInput {
-  return {
-    status: null,
-    refusalReason: null,
-    refusedQuantity: null,
-    ...props,
-  };
-}
-
-export function createDasriWasteDetailInputMock(props: Partial<DasriWasteDetailInput>): DasriWasteDetailInput {
-  return {
-    quantity: null,
-    quantityType: null,
-    packagingInfos: null,
-    ...props,
-  };
-}
-
-export function createDasriWasteDetailsMock(props: Partial<DasriWasteDetails>): DasriWasteDetails {
-  return {
-    __typename: "DasriWasteDetails",
-    quantity: null,
-    quantityType: null,
-    volume: null,
-    packagingInfos: null,
     ...props,
   };
 }

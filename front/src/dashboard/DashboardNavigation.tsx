@@ -120,7 +120,7 @@ export function DashboardNav({
                 </li>
                 <li>
                   <NavLink
-                    to={generatePath(routes.dashboard.transport.dasriToCollect, {
+                    to={generatePath(routes.dashboard.dasriTransport.toCollect, {
                       siret: currentSiret,
                     })}
                     className={`${styles.dashboardNavLink} ${styles.dashboardNavIndented}`}
@@ -132,7 +132,7 @@ export function DashboardNav({
                 </li>
                 <li>
                   <NavLink
-                    to={generatePath(routes.dashboard.transport.collected, {
+                    to={generatePath(routes.dashboard.dasriTransport.collected, {
                       siret: currentSiret,
                     })}
                     className={`${styles.dashboardNavLink} ${styles.dashboardNavIndented}`}

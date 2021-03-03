@@ -1,32 +1,22 @@
-import { Field, useFormikContext } from "formik";
-import React, { useEffect, useState } from "react";
-import RedErrorMessage from "common/components/RedErrorMessage";
+import React from "react";
 import CompanySelector from "../form/company/CompanySelector";
-import DateInput from "../form/custom-inputs/DateInput";
-import initialState from "./dasri-initial-state";
-import { Form } from "generated/graphql/types";
-// import ProcessingOperation from "./processing-operation/ProcessingOperation";
+import Packagings from "./packagings/Packagings";
+import { Field, connect } from "formik";
 
-import TdSwitch from "../common/components/Switch";
-
-import styles from "./Recipient.module.scss";
-import classNames from "classnames";
-
-export default function Recipient() {
-  const { values, setFieldValue } = useFormikContext<Form>();
-
+export default connect<{}>( function Recipient() {
   return (
     <>
-     
-
-      <h4 className="form__section-heading">
-        Installation{" "}
-        {values.recipient?.isTempStorage
-          ? "d'entreposage ou de reconditionnement"
-          : "de destination"}
-      </h4>
+      <h4 className="form__section-heading">Installation de destination</h4>
 
       <CompanySelector name="recipient.company" />
+
+      <div className="form__row">
+        <h4 className="form__section-heading">Conditionnement</h4>
+        <Field
+          name="reception.wasteDetails.packagingInfos"
+          component={Packagings}
+        />
+      </div>
     </>
   );
-}
+});
