@@ -1,5 +1,5 @@
 import prisma from "../../prisma";
-import { DasriStatus, QuantityType, Prisma } from "@prisma/client";
+import { BsdasriStatus, QuantityType, Prisma } from "@prisma/client";
 
 export function getDasriReadableId() {
   const year = new Date().getFullYear().toString().slice(-2);
@@ -11,18 +11,8 @@ export function getDasriReadableId() {
   return `DASRI-${year}-${uid}`;
 }
 
-export function getReadableId() {
-  const year = new Date().getFullYear().toString().slice(-2);
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  const uid = Array.from({ length: 8 })
-    .map(() => chars.charAt(Math.floor(Math.random() * chars.length)))
-    .join("");
-
-  return `TD-${year}-${uid}`;
-}
-
 const dasriData = {
-  status: "DRAFT" as DasriStatus,
+  status: "DRAFT" as BsdasriStatus,
 
   isDeleted: false,
   emitterCompanyName: "hospital",
@@ -85,7 +75,7 @@ export const dasriFactory = async ({
   opt = {}
 }: {
   ownerId: string;
-  opt?: Partial<Prisma.DasriCreateInput>;
+  opt?: Partial<Prisma.BsdasriCreateInput>;
 }) => {
   const dasriParams = { ...dasriData, ...opt };
   return prisma.bsdasri.create({

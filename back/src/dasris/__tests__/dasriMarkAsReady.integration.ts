@@ -8,7 +8,7 @@ import prisma from "../../prisma";
 
 const DASRI_MARK_AS_READY = `
 mutation DasriMarkAsReady($id: ID!){
-  dasriMarkAsReady(id: $id)  {
+  markAsReadyBsdasri(id: $id)  {
     id
     readableId
     customId
@@ -32,8 +32,8 @@ mutation DasriMarkAsReady($id: ID!){
     }
     emission {
       wasteCode
-      wasteDetailsOnuCode
       wasteDetails {
+        onuCode
         volume
         quantity
         quantityType
@@ -144,7 +144,7 @@ describe("Mutation.dasriMarkAsReady", () => {
       }
     });
 
-    expect(data.dasriMarkAsReady.status).toBe("SEALED");
+    expect(data.markAsReadyBsdasri.status).toBe("SEALED");
 
     const sealedDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }

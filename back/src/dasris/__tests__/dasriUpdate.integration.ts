@@ -3,12 +3,12 @@ import { ErrorCode } from "../../common/errors";
 import { dasriFactory } from "./factories";
 import { userWithCompanyFactory } from "../../__tests__/factories";
 import makeClient from "../../__tests__/testClient";
-import { DasriStatus } from "@prisma/client";
+import { BsdasriStatus } from "@prisma/client";
 import prisma from "../../prisma";
 
 const DASRI_UPDATE = `
-mutation DasriUpdate($input: DasriUpdateInput!) {
-  dasriUpdate(dasriUpdateInput: $input) {
+mutation DasriUpdate($input: BsdasriUpdateInput!) {
+  updateBsdasri(bsdasriUpdateInput: $input) {
     id
     readableId
     customId
@@ -24,8 +24,8 @@ mutation DasriUpdate($input: DasriUpdateInput!) {
     }
     emission {
       wasteCode
-      wasteDetailsOnuCode
       wasteDetails {
+        onuCode
         quantity
         quantityType
           }
@@ -175,7 +175,7 @@ describe("Mutation.dasriUpdate", () => {
     ]);
   });
 
-  it.each([DasriStatus.PROCESSED, DasriStatus.REFUSED])(
+  it.each([BsdasriStatus.PROCESSED, BsdasriStatus.REFUSED])(
     "should disallow to update a %p dasri",
     async status => {
       const { user, company } = await userWithCompanyFactory("MEMBER");
@@ -209,7 +209,7 @@ describe("Mutation.dasriUpdate", () => {
       ]);
     }
   );
-  it.each([DasriStatus.DRAFT, DasriStatus.SEALED])(
+  it.each([BsdasriStatus.DRAFT, BsdasriStatus.SEALED])(
     "should be possible to update a %p dasri",
     async status => {
       const { user, company } = await userWithCompanyFactory("MEMBER");
@@ -233,7 +233,7 @@ describe("Mutation.dasriUpdate", () => {
         }
       });
 
-      expect(data.dasriUpdate.emitter.company.mail).toBe("test@test.test");
+      expect(data.updateBsdasri.emitter.company.mail).toBe("test@test.test");
     }
   );
 
@@ -242,7 +242,7 @@ describe("Mutation.dasriUpdate", () => {
     const dasri = await dasriFactory({
       ownerId: user.id,
       opt: {
-        status: DasriStatus.READY_FOR_TAKEOVER,
+        status: BsdasriStatus.READY_FOR_TAKEOVER,
         emitterCompanySiret: company.siret,
         emissionSignedBy: user.name,
         emissionSignatory: { connect: { id: user.id } },
@@ -281,7 +281,7 @@ describe("Mutation.dasriUpdate", () => {
     let dasri = await dasriFactory({
       ownerId: user.id,
       opt: {
-        status: DasriStatus.READY_FOR_TAKEOVER,
+        status: BsdasriStatus.READY_FOR_TAKEOVER,
         emitterCompanySiret: company.siret,
         emissionSignedBy: user.name,
         emissionSignatory: { connect: { id: user.id } },
@@ -320,7 +320,7 @@ describe("Mutation.dasriUpdate", () => {
     const dasri = await dasriFactory({
       ownerId: user.id,
       opt: {
-        status: DasriStatus.SENT,
+        status: BsdasriStatus.SENT,
         emitterCompanySiret: company.siret,
         transportSignedBy: user.name,
         transportSignatory: { connect: { id: user.id } },
@@ -364,7 +364,7 @@ describe("Mutation.dasriUpdate", () => {
     const dasri = await dasriFactory({
       ownerId: user.id,
       opt: {
-        status: DasriStatus.SENT,
+        status: BsdasriStatus.SENT,
         emitterCompanySiret: company.siret,
         transportSignedBy: user.name,
         transportSignatory: { connect: { id: user.id } },
@@ -395,7 +395,7 @@ describe("Mutation.dasriUpdate", () => {
     const dasri = await dasriFactory({
       ownerId: user.id,
       opt: {
-        status: DasriStatus.RECEIVED,
+        status: BsdasriStatus.RECEIVED,
         emitterCompanySiret: company.siret,
         receptionSignedBy: user.name,
         receptionSignatory: { connect: { id: user.id } },
@@ -435,7 +435,7 @@ describe("Mutation.dasriUpdate", () => {
     const dasri = await dasriFactory({
       ownerId: user.id,
       opt: {
-        status: DasriStatus.SENT,
+        status: BsdasriStatus.SENT,
         emitterCompanySiret: company.siret,
         transportSignedBy: user.name,
         transportSignatory: { connect: { id: user.id } },
@@ -458,7 +458,9 @@ describe("Mutation.dasriUpdate", () => {
       variables: { input }
     });
 
-    expect(data.dasriUpdate.recipient.company.mail).toBe("recipient@test.test");
+    expect(data.updateBsdasri.recipient.company.mail).toBe(
+      "recipient@test.test"
+    );
   });
 
   it("should disallow emitter, transporter and reception fields update after reception signature", async () => {
@@ -466,7 +468,7 @@ describe("Mutation.dasriUpdate", () => {
     const dasri = await dasriFactory({
       ownerId: user.id,
       opt: {
-        status: DasriStatus.RECEIVED,
+        status: BsdasriStatus.RECEIVED,
         emitterCompanySiret: company.siret,
         receptionSignedBy: user.name,
         receptionSignatory: { connect: { id: user.id } },
@@ -507,7 +509,7 @@ describe("Mutation.dasriUpdate", () => {
     let dasri = await dasriFactory({
       ownerId: user.id,
       opt: {
-        status: DasriStatus.RECEIVED,
+        status: BsdasriStatus.RECEIVED,
         emitterCompanySiret: company.siret,
         receptionSignedBy: user.name,
         receptionSignatory: { connect: { id: user.id } },

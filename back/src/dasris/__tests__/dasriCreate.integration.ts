@@ -4,8 +4,8 @@ import { userFactory, userWithCompanyFactory } from "../../__tests__/factories";
 import makeClient from "../../__tests__/testClient";
 
 const DASRI_CREATE = `
-mutation DasriCreate($input: DasriCreateInput!) {
-  dasriCreate(dasriCreateInput: $input)  {
+mutation DasriCreate($input: BsdasriCreateInput!) {
+  createBsdasri(bsdasriCreateInput: $input)  {
     id
     readableId
     customId
@@ -25,8 +25,8 @@ mutation DasriCreate($input: DasriCreateInput!) {
     }
     emission {
       wasteCode
-      wasteDetailsOnuCode
       wasteDetails {
+        onuCode
         volume
         quantity
         quantityType
@@ -157,7 +157,7 @@ describe("Mutation.createDasri", () => {
       }
     });
 
-    expect(data.dasriCreate.recipient.company).toMatchObject(
+    expect(data.createBsdasri.recipient.company).toMatchObject(
       input.recipient.company
     );
   });

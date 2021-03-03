@@ -3,7 +3,7 @@ import { dasriFactory } from "./factories";
 import { userFactory } from "../../__tests__/factories";
 
 describe("Test Factories", () => {
-  afterAll(resetDatabase);
+  afterEach(resetDatabase);
 
   test("should create a user", async () => {
     const usr = await userFactory();

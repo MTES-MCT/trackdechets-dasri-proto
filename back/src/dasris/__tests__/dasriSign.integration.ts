@@ -4,16 +4,16 @@ import { userWithCompanyFactory } from "../../__tests__/factories";
 import makeClient from "../../__tests__/testClient";
 import {
   QuantityType,
-  DasriStatus,
+  BsdasriStatus,
   WasteAcceptationStatus
 } from "@prisma/client";
 import { dasriFactory } from "./factories";
 import prisma from "../../prisma";
 
 const DASRI_SIGN = `
-mutation DasriSign($id: ID!, $input: DasriSignatureInput
+mutation DasriSign($id: ID!, $input: BsdasriSignatureInput
 !) {
-  dasriSign(id: $id, signatureInput: $input	) {
+  signBsdasri(id: $id, signatureInput: $input	) {
     id
   }
 }
@@ -137,7 +137,7 @@ describe("Mutation.dasriSign emission", () => {
     const { user, company } = await userWithCompanyFactory("MEMBER");
     const dasri = await dasriFactory({
       ownerId: user.id,
-      opt: { ...draftData(company), status: DasriStatus.SEALED }
+      opt: { ...draftData(company), status: BsdasriStatus.SEALED }
     });
     const { mutate } = makeClient(user); // emitter
 
@@ -171,7 +171,7 @@ describe("Mutation.dasriSign emission with secret code", () => {
       ownerId: user.id,
       opt: {
         ...draftData(company),
-        status: DasriStatus.SEALED,
+        status: BsdasriStatus.SEALED,
         transporterCompanySiret: transporterCompany.siret
       }
     });
@@ -213,7 +213,7 @@ describe("Mutation.dasriSign emission with secret code", () => {
       ownerId: emitter.id,
       opt: {
         ...draftData(company),
-        status: DasriStatus.SEALED,
+        status: BsdasriStatus.SEALED,
         transporterCompanySiret: transporterCompany.siret
       }
     });
@@ -257,7 +257,7 @@ describe("Mutation.dasriSign transport", () => {
       opt: {
         ...draftData(emitterCompany),
         ...readyToTakeOverData(transporterCompany),
-        status: DasriStatus.READY_FOR_TAKEOVER
+        status: BsdasriStatus.READY_FOR_TAKEOVER
       }
     });
     const { mutate } = makeClient(transporter); // transporter
@@ -295,7 +295,7 @@ describe("Mutation.dasriSign transport", () => {
       opt: {
         ...draftData(emitterCompany),
         ...readyToTakeOverData(transporterCompany),
-        status: DasriStatus.SEALED
+        status: BsdasriStatus.SEALED
       }
     });
     const { mutate } = makeClient(transporter);
@@ -331,7 +331,7 @@ describe("Mutation.dasriSign transport", () => {
       opt: {
         ...draftData(emitterCompany),
         ...readyToTakeOverData(transporterCompany),
-        status: DasriStatus.SEALED
+        status: BsdasriStatus.SEALED
       }
     });
     const { mutate } = makeClient(transporter);
@@ -378,7 +378,7 @@ describe("Mutation.dasriSign transport", () => {
         transporterWasteAcceptationStatus: WasteAcceptationStatus.REFUSED,
         transporterWasteRefusalReason: "J'en veux pas",
         transporterWasteRefusedQuantity: 66,
-        status: DasriStatus.READY_FOR_TAKEOVER
+        status: BsdasriStatus.READY_FOR_TAKEOVER
       }
     });
     const { mutate } = makeClient(transporter); // transporter
@@ -423,7 +423,7 @@ describe("Mutation.dasriSign reception", () => {
         ...readyToTakeOverData(transporterCompany),
         ...readyToReceiveData(recipientCompany),
         receivedAt: new Date("2020-12-15T11:00:00.000Z"),
-        status: DasriStatus.SENT
+        status: BsdasriStatus.SENT
       }
     });
     expect(dasri.handedOverToRecipientAt).toBeNull(); // sanity check
@@ -472,7 +472,7 @@ describe("Mutation.dasriSign reception", () => {
         ...readyToTakeOverData(transporterCompany),
         ...readyToReceiveData(recipientCompany),
         handedOverToRecipientAt: new Date("2020-12-20T11:00:00.000Z"),
-        status: DasriStatus.SENT
+        status: BsdasriStatus.SENT
       }
     });
 
@@ -519,7 +519,7 @@ describe("Mutation.dasriSign reception", () => {
         recipientWasteRefusalReason: "Non conforme",
         recipientWasteRefusedQuantity: 66,
 
-        status: DasriStatus.SENT
+        status: BsdasriStatus.SENT
       }
     });
     const { mutate } = makeClient(recipient);
@@ -563,7 +563,7 @@ describe("Mutation.dasriSign operation", () => {
         ...readyToTakeOverData(transporterCompany),
         ...readyToReceiveData(recipientCompany),
         ...{ processingOperation: "XYZ", processedAt: new Date() },
-        status: DasriStatus.RECEIVED
+        status: BsdasriStatus.RECEIVED
       }
     });
     const { mutate } = makeClient(recipient);
@@ -612,7 +612,7 @@ describe("Mutation.dasriSign operation", () => {
         ...readyToTakeOverData(transporterCompany),
         ...readyToReceiveData(recipientCompany),
         ...readyToProcessData,
-        status: DasriStatus.RECEIVED
+        status: BsdasriStatus.RECEIVED
       }
     });
     const { mutate } = makeClient(recipient); // recipient
