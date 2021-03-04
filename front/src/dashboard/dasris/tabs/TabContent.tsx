@@ -18,7 +18,7 @@ export default function TabContent({
     <>
       <RefreshLoader networkStatus={networkStatus} />
   
-      <BsdHeaderActions refetch={refetch} bsdType={BsdTypes.DASRI} />
+      {/* <BsdHeaderActions refetch={refetch} bsdType={BsdTypes.DASRI} hideCreate={true}/> */}
 
       {children}
       {/* <LoadMore forms={forms} fetchMore={fetchMore} /> */}

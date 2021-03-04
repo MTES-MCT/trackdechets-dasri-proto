@@ -9,7 +9,7 @@ interface Props {
 export default function EmptyTab(props: Props) {
   return (
     <div className="empty-tab">
-      <BsdHeaderActions bsdType={props.bsdType}/>
+      <BsdHeaderActions bsdType={props.bsdType} showCreate={false}/>
       {props.children}
     </div>
   );

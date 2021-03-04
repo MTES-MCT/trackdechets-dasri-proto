@@ -33,7 +33,7 @@ export default function DraftsTab() {
       <EmptyTab bsdType={BsdTypes.DASRI}>
         <img src="/illu/illu_empty.svg" alt="" />
         <h4>Il n'y a aucun bordereau en brouillon</h4>
-        <p>
+        {/* <p>
           Si vous le souhaitez, vous pouvez{" "}
           <Link to={generatePath(routes.dashboard.dasris.create, { siret })}>
             <button className="btn btn--outline-primary btn--medium-text">
@@ -45,7 +45,7 @@ export default function DraftsTab() {
           <span style={{ display: "inline" }}>
             <DuplicateFile color={COLORS.blueLight} />
           </span>
-        </p>
+        </p> */}
       </EmptyTab>
     );
 

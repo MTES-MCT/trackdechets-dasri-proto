@@ -22,20 +22,24 @@ const actionConfig: actionConfigInterface = {
 export default function BsdHeaderActions({
   bsdType,
   refetch,
+  showCreate  ,
 }: {
   bsdType: BsdTypes;
   refetch?: () => void;
+  showCreate?: boolean;
 }) {
   const { siret } = useParams<{ siret: string }>();
   const config = actionConfig[bsdType];
   return (
     <div className={styles.slipHeaderActions}>
-      <Link
-        to={generatePath(config.createRoute, { siret })}
-        className="btn btn--primary"
-      >
-        Créer un {config.bsdName}
-      </Link>
+      {!!showCreate && (
+        <Link
+          to={generatePath(config.createRoute, { siret })}
+          className="btn btn--primary"
+        >
+          Créer un {config.bsdName}
+        </Link>
+      )}
       {!!refetch && (
         <button
           className={`btn btn--primary ${styles.refreshButton}`}
