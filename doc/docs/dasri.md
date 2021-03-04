@@ -51,20 +51,20 @@ Le diagramme ci dessous retrace le cycle de vie d'un DASRI dans Trackdéchets:
 
 <div class="mermaid">
 graph TD
-AO(NO STATE) -->|dasriCreate| A
-A -->|"dasriUpdate (tous les champs)"| A
-B -->|"dasriUpdate (tous les champs)"| B
-C-->|"dasriUpdate (sauf champs signés)"| C
-D-->|"dasriUpdate (sauf champs signés)"| D
-E-->|"dasriUpdate (sauf champs signés)"| E
-A[DRAFT] -->|dasriMarkAsReady| B(SEALED)
-B -->|"dasriSign (EMISSION / EMISSION_WITH_SECRET_CODE)"| C(READY_FOR_TAKEOVER)
-B -->|"dasriSign (TRANSPORT) - si autorisé par émetteur" | D(SENT)
-C -->|"dasriSign (TRANSPORT)"| D(SENT)
-D -->|"dasriSign (RECEPTION)"| E(RECEIVED)
-E -->|"dasriSign (OPERATION)"| F(PROCESSED)
-D -->|"dasriSign (TRANSPORT *)"| G(REFUSED)
-C -->|"dasriSign (RECEPTION *)"| G(REFUSED)
+AO(NO STATE) -->|createBsdasri| A
+A -->|"updateBsdasri (tous les champs)"| A
+B -->|"updateBsdasri (tous les champs)"| B
+C-->|"updateBsdasri (sauf champs signés)"| C
+D-->|"updateBsdasri (sauf champs signés)"| D
+E-->|"updateBsdasri (sauf champs signés)"| E
+A[DRAFT] -->|markAsReadyBsdasri| B(SEALED)
+B -->|"signDasri (EMISSION / EMISSION_WITH_SECRET_CODE)"| C(READY_FOR_TAKEOVER)
+B -->|"signDasri (TRANSPORT) - si autorisé par émetteur" | D(SENT)
+C -->|"signDasri (TRANSPORT)"| D(SENT)
+D -->|"signDasri (RECEPTION)"| E(RECEIVED)
+E -->|"signDasri (OPERATION)"| F(PROCESSED)
+D -->|"signDasri (TRANSPORT *)"| G(REFUSED)
+C -->|"signDasri (RECEPTION *)"| G(REFUSED)
 
 </div>
 

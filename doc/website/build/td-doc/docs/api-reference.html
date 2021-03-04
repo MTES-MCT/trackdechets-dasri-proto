@@ -87,24 +87,8 @@
 </td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>companyInfos</strong></td>
-<td valign="top"><a href="#companypublic">CompanyPublic</a>!</td>
-<td>
-<p>Renvoie des informations publiques sur un établissement
-extrait de la base SIRENE et de la base des installations
-classées pour la protection de l'environnement (ICPE)</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">siret</td>
-<td valign="top"><a href="#string">String</a>!</td>
-<td>
-<p>SIRET de l'établissement</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>dasri</strong></td>
-<td valign="top"><a href="#dasri">Dasri</a></td>
+<td colspan="2" valign="top"><strong>bsdasri</strong></td>
+<td valign="top"><a href="#bsdasri">Bsdasri</a></td>
 <td></td>
 </tr>
 <tr>
@@ -122,21 +106,21 @@ classées pour la protection de l'environnement (ICPE)</p>
 </td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>dasris</strong></td>
-<td valign="top">[<a href="#dasri">Dasri</a>!]!</td>
+<td colspan="2" valign="top"><strong>bsdasris</strong></td>
+<td valign="top">[<a href="#bsdasri">Bsdasri</a>!]!</td>
 <td>
-<p>Renvoie les Dasri de l'établissement sélectionné.
+<p>Renvoie les Bsdasri de l'établissement sélectionné.
 Si aucun SIRET n'est précisé et que l'utilisateur est membre d'une seule entreprise
-alors les Dasri de cette entreprise sont retournés.
+alors les Bsdasri de cette entreprise sont retournés.
 Si l'utilisateur est membre de 2 entreprises ou plus, vous devez obligatoirement
 préciser un SIRET
 Si l'utilisateur n'est membre d'aucune entreprise, un tableau vide sera renvoyé</p>
 <p>Vous pouvez filtrer:</p>
 <ul>
-<li>par rôle que joue votre entreprise sur le Dasri via <code>role</code></li>
+<li>par rôle que joue votre entreprise sur le Bsdasri via <code>role</code></li>
 <li>par date de dernière modification via <code>updatedAfter</code></li>
 <li>par date d'envoi via <code>sentAfter</code></li>
-<li>par statut du Dasri via <code>status</code></li>
+<li>par statut du Bsdasri via <code>status</code></li>
 <li>par code déchet via <code>wasteCode</code></li>
 <li>par SIRET d'une entreprise présente n'importe où sur le bordereau via <code>siretPresentOnForm</code></li>
 </ul>
@@ -162,10 +146,10 @@ Si l'utilisateur n'est membre d'aucune entreprise, un tableau vide sera renvoyé
 <td>
 <p>(Optionnel) PAGINATION
 Permet en conjonction avec <code>first</code> de paginer &quot;en avant&quot;
-(des Dasri les plus récents aux Dasri les plus anciens)
-Curseur après lequel les Dasri doivent être retournés
+(des Bsdasri les plus récents aux Bsdasri les plus anciens)
+Curseur après lequel les Bsdasri doivent être retournés
 Attend un identifiant (propriété <code>id</code>) de BSD
-Défaut à vide, pour retourner les Dasri les plus récents
+Défaut à vide, pour retourner les Bsdasri les plus récents
 Le BSD précisé dans le curseur ne fait pas partie du résultat</p>
 </td>
 </tr>
@@ -175,8 +159,8 @@ Le BSD précisé dans le curseur ne fait pas partie du résultat</p>
 <td>
 <p>(Optionnel) PAGINATION
 Permet en conjonction avec <code>after</code> de paginer &quot;en avant&quot;
-(des Dasri les plus récents aux Dasri les plus anciens)
-Nombre de Dasri retournés après le <code>cursorAfter</code>
+(des Bsdasri les plus récents aux Bsdasri les plus anciens)
+Nombre de Bsdasri retournés après le <code>cursorAfter</code>
 Défaut à 50, maximum à 500</p>
 </td>
 </tr>
@@ -186,10 +170,10 @@ Défaut à 50, maximum à 500</p>
 <td>
 <p>(Optionnel) PAGINATION
 Permet en conjonction avec <code>last</code> de paginer &quot;en arrière&quot;
-(des Dasri les plus anciens aux Dasri les plus récents)
-Curseur avant lequel les Dasri doivent être retournés
+(des Bsdasri les plus anciens aux Bsdasris les plus récents)
+Curseur avant lequel les Bsdasri doivent être retournés
 Attend un identifiant (propriété <code>id</code>) de BSD
-Défaut à vide, pour retourner les Dasri les plus anciens
+Défaut à vide, pour retourner les Bsdasri les plus anciens
 Le BSD précisé dans le curseur ne fait pas partie du résultat</p>
 </td>
 </tr>
@@ -198,7 +182,7 @@ Le BSD précisé dans le curseur ne fait pas partie du résultat</p>
 <td valign="top"><a href="#int">Int</a></td>
 <td>
 <p>(Optionnel) PAGINATION
-Nombre de Dasri retournés avant le <code>before</code>
+Nombre de Bsdasri retournés avant le <code>before</code>
 Défaut à 50, maximum à 500</p>
 </td>
 </tr>
@@ -206,7 +190,7 @@ Défaut à 50, maximum à 500</p>
 <td colspan="2" align="right" valign="top">updatedAfter</td>
 <td valign="top"><a href="#string">String</a></td>
 <td>
-<p>(Optionnel) Retourne les Dasri modifiés après la date
+<p>(Optionnel) Retourne les Bsdasri modifiés après la date
 Filtre sur la date de dernière modification
 Au format (YYYY-MM-DD)
 Par défaut vide, aucun filtre n'est appliqué</p>
@@ -214,10 +198,10 @@ Par défaut vide, aucun filtre n'est appliqué</p>
 </tr>
 <tr>
 <td colspan="2" align="right" valign="top">status</td>
-<td valign="top">[<a href="#dasristatus">BsdasriStatus</a>!]</td>
+<td valign="top">[<a href="#bsdasristatus">BsdasriStatus</a>!]</td>
 <td>
-<p>(Optionnel) Filtre sur les statuts des Dasri
-Si aucun filtre n'est passé, les Dasri seront retournés quel que soit leur statut
+<p>(Optionnel) Filtre sur les statuts des Bsdasri
+Si aucun filtre n'est passé, les Bsdasri seront retournés quel que soit leur statut
 Défaut à vide.</p>
 </td>
 </tr>
@@ -225,9 +209,9 @@ Défaut à vide.</p>
 <td colspan="2" align="right" valign="top">siretPresentOnForm</td>
 <td valign="top"><a href="#string">String</a></td>
 <td>
-<p>(Optionnel) Siret d'une autre entreprise présente sur le Dasri
+<p>(Optionnel) Siret d'une autre entreprise présente sur le Bsdasri
 Vous n'avez pas besoin d'être membre de cette entreprise.
-Seuls les Dasri où cette entreprise apparait (dans n'importe quel cadre) seront retournés.
+Seuls les Bsdasri où cette entreprise apparait (dans n'importe quel cadre) seront retournés.
 Défaut à vide.</p>
 </td>
 </tr>
@@ -242,17 +226,44 @@ Défaut à vide.</p>
 </tr>
 <tr>
 <td colspan="2" align="right" valign="top">roles</td>
-<td valign="top">[<a href="#dasrirole">DasriRole</a>!]</td>
+<td valign="top">[<a href="#bsdasrirole">BsdasriRole</a>!]</td>
 <td>
 <p>(Optionnel) Filtre sur le role de demandeur dans le dasri
 Par exemple:</p>
 <ul>
-<li><code>roles: [TRANSPORTER]</code> renverra les Dasri pour lesquels je suis transporteur</li>
-<li><code>roles: [EMITTER, RECIPIENT]</code> renverra les Dasri dont je suis l'émetteur ou le destinataire final
+<li><code>roles: [TRANSPORTER]</code> renverra les Bsdasri pour lesquels je suis transporteur</li>
+<li><code>roles: [EMITTER, RECIPIENT]</code> renverra les Bsdasri dont je suis l'émetteur ou le destinataire final
 Voir <code>DasriRole</code> pour la liste des roles sur lesquels il est possible de filtrer.
-Si aucune filtre n'est passé, les Dasri seront retournés quel que soit votre role dessus.
+Si aucune filtre n'est passé, les Bsdasri seront retournés quel que soit votre role dessus.
 Défaut à vide.</li>
 </ul>
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">hasNextStep</td>
+<td valign="top"><a href="#boolean">Boolean</a></td>
+<td>
+<p>(Optionnel) Permet de filtrer sur les dasris en attente d'une action de votre part
+Si <code>true</code>, seul les dasris attendant une action sont renvoyés
+Si <code>false</code>, seul les dasris n'attendant aucune action son renvoyés
+Si vide, tous les dasris sont renvoyés
+Défaut à vide.</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>companyInfos</strong></td>
+<td valign="top"><a href="#companypublic">CompanyPublic</a>!</td>
+<td>
+<p>Renvoie des informations publiques sur un établissement
+extrait de la base SIRENE et de la base des installations
+classées pour la protection de l'environnement (ICPE)</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">siret</td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td>
+<p>SIRET de l'établissement</p>
 </td>
 </tr>
 <tr>
@@ -658,6 +669,20 @@ sur la nom de l'établissement, ex: 'Boulangerie Dupont'</p>
 </thead>
 <tbody>
 <tr>
+<td colspan="2" valign="top"><strong>createBsdasri</strong></td>
+<td valign="top"><a href="#bsdasri">Bsdasri</a>!</td>
+<td>
+<p>Crée un nouveau dasri</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">bsdasriCreateInput</td>
+<td valign="top"><a href="#bsdasricreateinput">BsdasriCreateInput</a>!</td>
+<td>
+<p>Payload de création d'un dasri</p>
+</td>
+</tr>
+<tr>
 <td colspan="2" valign="top"><strong>createForm</strong></td>
 <td valign="top"><a href="#form">Form</a>!</td>
 <td>
@@ -669,68 +694,6 @@ sur la nom de l'établissement, ex: 'Boulangerie Dupont'</p>
 <td valign="top"><a href="#createforminput">CreateFormInput</a>!</td>
 <td>
 <p>Payload de création d'un bordereau</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>dasriCreate</strong></td>
-<td valign="top"><a href="#dasri">Dasri</a>!</td>
-<td>
-<p>Crée un nouveau dasri</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">dasriCreateInput</td>
-<td valign="top"><a href="#dasricreateinput">DasriCreateInput</a>!</td>
-<td>
-<p>Payload de création d'un dasri</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>dasriMarkAsReady</strong></td>
-<td valign="top"><a href="#dasri">Dasri</a></td>
-<td>
-<p>Marque un dasri brouillon comme prêt (SEALED)</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">id</td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td>
-<p>ID d'un Dasri</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>dasriSign</strong></td>
-<td valign="top"><a href="#dasri">Dasri</a></td>
-<td>
-<p>Appose une signature sur un Dasri, verrouille les cadres correspondant</p>
-<p>Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
-Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">id</td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">signatureInput</td>
-<td valign="top"><a href="#dasrisignatureinput">BsdasriSignatureInput</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>dasriUpdate</strong></td>
-<td valign="top"><a href="#dasri">Dasri</a>!</td>
-<td>
-<p>Met à jour un dasri existant
-Par défaut, tous les champs sont modifiables.</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">dasriUpdateInput</td>
-<td valign="top"><a href="#dasriupdateinput">DasriUpdateInput</a>!</td>
-<td>
-<p>Payload de mise à jour d'un dasri</p>
 </td>
 </tr>
 <tr>
@@ -858,6 +821,20 @@ d'un utilisateur.</p>
 <td valign="top"><a href="#processedforminput">ProcessedFormInput</a>!</td>
 <td>
 <p>Informations liées au traitement</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>markAsReadyBsdasri</strong></td>
+<td valign="top"><a href="#bsdasri">Bsdasri</a></td>
+<td>
+<p>Marque un dasri brouillon comme prêt (SEALED)</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">id</td>
+<td valign="top"><a href="#id">ID</a>!</td>
+<td>
+<p>ID d'un Bsdasri</p>
 </td>
 </tr>
 <tr>
@@ -1110,6 +1087,27 @@ l'établissement qui ont le choix de l'accepter ou de la refuser.</p>
 <td></td>
 </tr>
 <tr>
+<td colspan="2" valign="top"><strong>signBsdasri</strong></td>
+<td valign="top"><a href="#bsdasri">Bsdasri</a></td>
+<td>
+<p>Appose une signature sur un Bsdasri, verrouille les cadres correspondant</p>
+<p>Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
+Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport</p>
+<p>Toutefois il existe un exception: le cadre emetteur peut être signé par le transporteur grâce au code de
+sécurité de l'émetteur (BsdasriSignatureType: EMISSION_WITH_SECRET_CODE)</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">id</td>
+<td valign="top"><a href="#id">ID</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">signatureInput</td>
+<td valign="top"><a href="#bsdasrisignatureinput">BsdasriSignatureInput</a>!</td>
+<td></td>
+</tr>
+<tr>
 <td colspan="2" valign="top"><strong>signedByTransporter</strong></td>
 <td valign="top"><a href="#form">Form</a></td>
 <td>
@@ -1154,6 +1152,21 @@ Il faut alors fournir le code de l'éco-organisme en indiquant qu'il est l'auteu
 <td colspan="2" align="right" valign="top">takeOverInfo</td>
 <td valign="top"><a href="#takeoverinput">TakeOverInput</a>!</td>
 <td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>updateBsdasri</strong></td>
+<td valign="top"><a href="#bsdasri">Bsdasri</a>!</td>
+<td>
+<p>Met à jour un dasri existant
+Par défaut, tous les champs sont modifiables.</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">bsdasriUpdateInput</td>
+<td valign="top"><a href="#bsdasriupdateinput">BsdasriUpdateInput</a>!</td>
+<td>
+<p>Payload de mise à jour d'un dasri</p>
+</td>
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>updateForm</strong></td>
@@ -1227,6 +1240,468 @@ header d'autorisation <code>Authorization: Bearer ******</code></p>
 <td>
 <p>Utilisateur lié au token</p>
 </td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasri"></a><a href="#bsdasri" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Bsdasri</h3>
+<p>Bordereau Bsdasri</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>id</strong></td>
+<td valign="top"><a href="#id">ID</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>readableId</strong></td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>customId</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>status</strong></td>
+<td valign="top"><a href="#bsdasristatus">BsdasriStatus</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>createdAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>updatedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emitter</strong></td>
+<td valign="top"><a href="#bsdasriemitter">BsdasriEmitter</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emission</strong></td>
+<td valign="top"><a href="#bsdasriemission">BsdasriEmission</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transporter</strong></td>
+<td valign="top"><a href="#bsdasritransporter">BsdasriTransporter</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transport</strong></td>
+<td valign="top"><a href="#bsdasritransport">BsdasriTransport</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>recipient</strong></td>
+<td valign="top"><a href="#bsdasrirecipient">BsdasriRecipient</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>reception</strong></td>
+<td valign="top"><a href="#bsdasrireception">BsdasriReception</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>operation</strong></td>
+<td valign="top"><a href="#bsdasrioperation">BsdasriOperation</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasriemission"></a><a href="#bsdasriemission" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriEmission</h3>
+<p>Informations relatives au déchet émis</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>wasteCode</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
+<td valign="top"><a href="#bsdasriwastedetails">BsdasriWasteDetails</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>handedOverAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedBy</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasriemitter"></a><a href="#bsdasriemitter" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriEmitter</h3>
+<p>Émetteur du Bsdasri, Personne responsable de l'émimination des déchets (PRED)</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#formcompany">FormCompany</a></td>
+<td>
+<p>Établissement émetteur</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>workSite</strong></td>
+<td valign="top"><a href="#worksite">WorkSite</a></td>
+<td>
+<p>Site d'emport du déceht, si différent de celle de l'émetteur</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>handOverToTransporterAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td>
+<p>Date de remise au tranporteur</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>customInfo</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+<p>Champ libre</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasrioperation"></a><a href="#bsdasrioperation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriOperation</h3>
+<p>Informations relatives au traitement du Bsdasri</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>signedBy</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>processingOperation</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>processedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasripackaginginfo"></a><a href="#bsdasripackaginginfo" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriPackagingInfo</h3>
+<p>Informations sur le conditionnement Bsdasri</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>type</strong></td>
+<td valign="top"><a href="#bsdasripackagings">BsdasriPackagings</a>!</td>
+<td>
+<p>Type de conditionnement</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>other</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+<p>Description du conditionnement dans le cas où le type de conditionnement est <code>AUTRE</code></p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>quantity</strong></td>
+<td valign="top"><a href="#int">Int</a>!</td>
+<td>
+<p>Nombre de colis associés à ce conditionnement</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>volume</strong></td>
+<td valign="top"><a href="#int">Int</a>!</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasrireception"></a><a href="#bsdasrireception" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriReception</h3>
+<p>Informations relatives à la réception du Bsdasri</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
+<td valign="top"><a href="#bsdasriwastedetails">BsdasriWasteDetails</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wasteAcceptation</strong></td>
+<td valign="top"><a href="#bsdasriwasteacceptation">BsdasriWasteAcceptation</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receivedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedBy</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasrirecipient"></a><a href="#bsdasrirecipient" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriRecipient</h3>
+<p>Destinataire du Bsdasri</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#formcompany">FormCompany</a></td>
+<td>
+<p>Installation destinataire</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>customInfo</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+<p>Champ libre</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasritransport"></a><a href="#bsdasritransport" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriTransport</h3>
+<p>Informations relatives au transport du Bsdasri</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
+<td valign="top"><a href="#bsdasriwastedetails">BsdasriWasteDetails</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wasteAcceptation</strong></td>
+<td valign="top"><a href="#bsdasriwasteacceptation">BsdasriWasteAcceptation</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>handedOverAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>takenOverAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedBy</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasritransporter"></a><a href="#bsdasritransporter" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriTransporter</h3>
+<p>Collecteur transporteur</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#formcompany">FormCompany</a></td>
+<td>
+<p>Établissement de destination</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receipt</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+<p>N° de récipissé</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receiptDepartment</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+<p>Département</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receiptValidityLimit</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td>
+<p>Limite de validité du récipissé</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>customInfo</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+<p>Champ libre</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasriwasteacceptation"></a><a href="#bsdasriwasteacceptation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriWasteAcceptation</h3>
+<p>Informations relatives à l'acceptation ou au refus du déchet (Bsdasri)</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>status</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>refusalReason</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>refusedQuantity</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasriwastedetails"></a><a href="#bsdasriwastedetails" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriWasteDetails</h3>
+<p>Détail sur le déchet proprement dit du Bsdasri</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>quantity</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>quantityType</strong></td>
+<td valign="top"><a href="#quantitytype">QuantityType</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>volume</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>packagingInfos</strong></td>
+<td valign="top">[<a href="#bsdasripackaginginfo">BsdasriPackagingInfo</a>!]</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>onuCode</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -1672,447 +2147,6 @@ associé à cet établissement</p>
 <td>
 <p>Liste des statistiques</p>
 </td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasri"></a><a href="#dasri" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Dasri</h3>
-<p>Bordereau Dasri</p>
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>id</strong></td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>readableId</strong></td>
-<td valign="top"><a href="#string">String</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>customId</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>status</strong></td>
-<td valign="top"><a href="#dasristatus">BsdasriStatus</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>createdAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>updatedAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>emitter</strong></td>
-<td valign="top"><a href="#dasriemitter">DasriEmitter</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>emission</strong></td>
-<td valign="top"><a href="#dasriemission">DasriEmission</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>transporter</strong></td>
-<td valign="top"><a href="#dasritransporter">DasriTransporter</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>transport</strong></td>
-<td valign="top"><a href="#dasritransport">DasriTransport</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>recipient</strong></td>
-<td valign="top"><a href="#dasrirecipient">DasriRecipient</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>reception</strong></td>
-<td valign="top"><a href="#dasrireception">DasriReception</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>operation</strong></td>
-<td valign="top"><a href="#dasrioperation">DasriOperation</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasriemission"></a><a href="#dasriemission" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriEmission</h3>
-<p>Informations relatives au déchet émis</p>
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>wasteCode</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>wasteDetailsOnuCode</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
-<td valign="top"><a href="#dasriwastedetails">DasriWasteDetails</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>handedOverAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>signedBy</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>signedAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasriemitter"></a><a href="#dasriemitter" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriEmitter</h3>
-<p>Émetteur du Dasri, Personne responsable de l'émimination des déchets (PRED)</p>
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>company</strong></td>
-<td valign="top"><a href="#formcompany">FormCompany</a></td>
-<td>
-<p>Établissement émetteur</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>workSite</strong></td>
-<td valign="top"><a href="#worksite">WorkSite</a></td>
-<td>
-<p>Site d'emport du déceht, si différent de celle de l'émetteur</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>handOverToTransporterAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td>
-<p>Date de remise au tranporteur</p>
-</td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasrioperation"></a><a href="#dasrioperation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriOperation</h3>
-<p>Informations relatives au traitement du Dasri</p>
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>signedBy</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>signedAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>processingOperation</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>processedAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasripackaginginfo"></a><a href="#dasripackaginginfo" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriPackagingInfo</h3>
-<p>Informations sur le conditionnement Dasri</p>
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>type</strong></td>
-<td valign="top"><a href="#dasripackagings">DasriPackagings</a>!</td>
-<td>
-<p>Type de conditionnement</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>other</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td>
-<p>Description du conditionnement dans le cas où le type de conditionnement est <code>AUTRE</code></p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>quantity</strong></td>
-<td valign="top"><a href="#int">Int</a>!</td>
-<td>
-<p>Nombre de colis associés à ce conditionnement</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>volume</strong></td>
-<td valign="top"><a href="#int">Int</a>!</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasrireception"></a><a href="#dasrireception" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriReception</h3>
-<p>Informations relatives à la réception du Dasri</p>
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
-<td valign="top"><a href="#dasriwastedetails">DasriWasteDetails</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>wasteAcceptation</strong></td>
-<td valign="top"><a href="#dasriwasteacceptation">DasriWasteAcceptation</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>receivedAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>signedBy</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>signedAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasrirecipient"></a><a href="#dasrirecipient" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriRecipient</h3>
-<p>Destinataire du Dasri</p>
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>company</strong></td>
-<td valign="top"><a href="#formcompany">FormCompany</a></td>
-<td>
-<p>Installation destinataire</p>
-</td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasritransport"></a><a href="#dasritransport" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriTransport</h3>
-<p>Informations relatives au transport du Dasri</p>
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
-<td valign="top"><a href="#dasriwastedetails">DasriWasteDetails</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>wasteAcceptation</strong></td>
-<td valign="top"><a href="#dasriwasteacceptation">DasriWasteAcceptation</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>handedOverAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>takenOverAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>signedBy</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>signedAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasritransporter"></a><a href="#dasritransporter" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriTransporter</h3>
-<p>Collecteur transporteur</p>
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>company</strong></td>
-<td valign="top"><a href="#formcompany">FormCompany</a></td>
-<td>
-<p>Établissement de destination</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>receipt</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td>
-<p>N° de récipissé</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>receiptDepartment</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td>
-<p>Département</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>receiptValidityLimit</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td>
-<p>Limite de validité du récipissé</p>
-</td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasriwasteacceptation"></a><a href="#dasriwasteacceptation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriWasteAcceptation</h3>
-<p>Informations relatives à l'acceptation ou au refus du déchet (Dasri)</p>
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>status</strong></td>
-<td valign="top"><a href="#wasteacceptationstatusinput">WasteAcceptationStatusInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>refusalReason</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>refusedQuantity</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasriwastedetails"></a><a href="#dasriwastedetails" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriWasteDetails</h3>
-<p>Détail sur le décehte proprement dit du Dasri</p>
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>quantity</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>quantityType</strong></td>
-<td valign="top"><a href="#quantitytype">QuantityType</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>volume</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>packagingInfos</strong></td>
-<td valign="top">[<a href="#dasripackaginginfo">DasriPackagingInfo</a>!]</td>
-<td></td>
 </tr>
 </tbody>
 </table>
@@ -3940,6 +3974,533 @@ Le readableId permet de le récupérer via la query form.</p>
 </tr>
 </tbody>
 </table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasricreateinput"></a><a href="#bsdasricreateinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriCreateInput</h3>
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>customId</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+<p>Identifiant custom</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emitter</strong></td>
+<td valign="top"><a href="#bsdasriemitterinput">BsdasriEmitterInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emission</strong></td>
+<td valign="top"><a href="#bsdasriemissioninput">BsdasriEmissionInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transporter</strong></td>
+<td valign="top"><a href="#bsdasritransporterinput">BsdasriTransporterInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transport</strong></td>
+<td valign="top"><a href="#bsdasritransportinput">BsdasriTransportInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>recipient</strong></td>
+<td valign="top"><a href="#bsdasrirecipientinput">BsdasriRecipientInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>reception</strong></td>
+<td valign="top"><a href="#bsdasrireceptioninput">BsdasriReceptionInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>operation</strong></td>
+<td valign="top"><a href="#bsdasrioperationinput">BsdasriOperationInput</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasriemissioninput"></a><a href="#bsdasriemissioninput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriEmissionInput</h3>
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>wasteCode</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wasteDetailsOnuCode</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
+<td valign="top"><a href="#bsdasriwastedetailinput">BsdasriWasteDetailInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>handedOverAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasriemitterinput"></a><a href="#bsdasriemitterinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriEmitterInput</h3>
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#companyinput">CompanyInput</a></td>
+<td>
+<p>Établissement émetteur</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>workSite</strong></td>
+<td valign="top"><a href="#worksiteinput">WorkSiteInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>customInfo</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+<p>Champ libre émetteur</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasriinput"></a><a href="#bsdasriinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriInput</h3>
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>customId</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emitter</strong></td>
+<td valign="top"><a href="#bsdasriemitterinput">BsdasriEmitterInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emission</strong></td>
+<td valign="top"><a href="#bsdasriemissioninput">BsdasriEmissionInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transporter</strong></td>
+<td valign="top"><a href="#bsdasritransporterinput">BsdasriTransporterInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transport</strong></td>
+<td valign="top"><a href="#bsdasritransportinput">BsdasriTransportInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>recipient</strong></td>
+<td valign="top"><a href="#bsdasrirecipientinput">BsdasriRecipientInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>reception</strong></td>
+<td valign="top"><a href="#bsdasrireceptioninput">BsdasriReceptionInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>operation</strong></td>
+<td valign="top"><a href="#bsdasrioperationinput">BsdasriOperationInput</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasrioperationinput"></a><a href="#bsdasrioperationinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriOperationInput</h3>
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>processingOperation</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>processedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasripackaginginfoinput"></a><a href="#bsdasripackaginginfoinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriPackagingInfoInput</h3>
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>type</strong></td>
+<td valign="top"><a href="#bsdasripackagings">BsdasriPackagings</a>!</td>
+<td>
+<p>Type de conditionnement</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>other</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+<p>Description du conditionnement dans le cas où le type de conditionnement est <code>AUTRE</code></p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>volume</strong></td>
+<td valign="top"><a href="#int">Int</a>!</td>
+<td>
+<p>Nombre de colis associés à ce conditionnement</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>quantity</strong></td>
+<td valign="top"><a href="#int">Int</a>!</td>
+<td>
+<p>Nombre de colis associés à ce conditionnement</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasrireceptioninput"></a><a href="#bsdasrireceptioninput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriReceptionInput</h3>
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
+<td valign="top"><a href="#bsdasriwastedetailinput">BsdasriWasteDetailInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receivedAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasrirecipientinput"></a><a href="#bsdasrirecipientinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriRecipientInput</h3>
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#companyinput">CompanyInput</a></td>
+<td>
+<p>Établissement émetteur</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>customInfo</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+<p>Champ libre transporteur</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasrirecipientwastedetailinput"></a><a href="#bsdasrirecipientwastedetailinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriRecipientWasteDetailInput</h3>
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>quantity</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>volume</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasrisignatureinput"></a><a href="#bsdasrisignatureinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriSignatureInput</h3>
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>type</strong></td>
+<td valign="top"><a href="#bsdasrisignaturetype">BsdasriSignatureType</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signedBy</strong></td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>securityCode</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasritransportinput"></a><a href="#bsdasritransportinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriTransportInput</h3>
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
+<td valign="top"><a href="#bsdasriwastedetailinput">BsdasriWasteDetailInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>takenOverAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>handedOverAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wasteAcceptation</strong></td>
+<td valign="top"><a href="#bsdasriwasteacceptationinput">BsdasriWasteAcceptationInput</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasritransporterinput"></a><a href="#bsdasritransporterinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriTransporterInput</h3>
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#companyinput">CompanyInput</a></td>
+<td>
+<p>Établissement collecteur - transporteur</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receipt</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+<p>N° de récipissé</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receiptDepartment</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+<p>Département</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>receiptValidityLimit</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td>
+<p>Limite de validité du récipissé</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>customInfo</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+<p>Champ libre transporteur</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasriupdateinput"></a><a href="#bsdasriupdateinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriUpdateInput</h3>
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>id</strong></td>
+<td valign="top"><a href="#id">ID</a>!</td>
+<td>
+<p>Identifiant opaque</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>customId</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+<p>Identifiant custom</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emitter</strong></td>
+<td valign="top"><a href="#bsdasriemitterinput">BsdasriEmitterInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emission</strong></td>
+<td valign="top"><a href="#bsdasriemissioninput">BsdasriEmissionInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transporter</strong></td>
+<td valign="top"><a href="#bsdasritransporterinput">BsdasriTransporterInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transport</strong></td>
+<td valign="top"><a href="#bsdasritransportinput">BsdasriTransportInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>recipient</strong></td>
+<td valign="top"><a href="#bsdasrirecipientinput">BsdasriRecipientInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>reception</strong></td>
+<td valign="top"><a href="#bsdasrireceptioninput">BsdasriReceptionInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>operation</strong></td>
+<td valign="top"><a href="#bsdasrioperationinput">BsdasriOperationInput</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasriwasteacceptationinput"></a><a href="#bsdasriwasteacceptationinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriWasteAcceptationInput</h3>
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>status</strong></td>
+<td valign="top"><a href="#wasteacceptationstatusinput">WasteAcceptationStatusInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>refusalReason</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>refusedQuantity</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasriwastedetailinput"></a><a href="#bsdasriwastedetailinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriWasteDetailInput</h3>
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>quantity</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>quantityType</strong></td>
+<td valign="top"><a href="#quantitytype">QuantityType</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>packagingInfos</strong></td>
+<td valign="top">[<a href="#bsdasripackaginginfoinput">BsdasriPackagingInfoInput</a>!]</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>onuCode</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h3><a class="anchor" aria-hidden="true" id="companyinput"></a><a href="#companyinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>CompanyInput</h3>
 <p>Payload d'un établissement</p>
 <table>
@@ -4064,502 +4625,6 @@ objet un système d'information tierce</p>
 <tr>
 <td colspan="2" valign="top"><strong>temporaryStorageDetail</strong></td>
 <td valign="top"><a href="#temporarystoragedetailinput">TemporaryStorageDetailInput</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasricreateinput"></a><a href="#dasricreateinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriCreateInput</h3>
-<table>
-<thead>
-<tr>
-<th colspan="2" align="left">Field</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>customId</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td>
-<p>Identifiant custom</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>emitter</strong></td>
-<td valign="top"><a href="#dasriemitterinput">DasriEmitterInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>emission</strong></td>
-<td valign="top"><a href="#dasriemissioninput">DasriEmissionInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>transporter</strong></td>
-<td valign="top"><a href="#dasritransporterinput">DasriTransporterInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>transport</strong></td>
-<td valign="top"><a href="#dasritransportinput">DasriTransportInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>recipient</strong></td>
-<td valign="top"><a href="#dasrirecipientinput">DasriRecipientInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>reception</strong></td>
-<td valign="top"><a href="#dasrireceptioninput">DasriReceptionInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>operation</strong></td>
-<td valign="top"><a href="#dasrioperationinput">DasriOperationInput</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasriemissioninput"></a><a href="#dasriemissioninput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriEmissionInput</h3>
-<table>
-<thead>
-<tr>
-<th colspan="2" align="left">Field</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>wasteCode</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>wasteDetailsOnuCode</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
-<td valign="top"><a href="#dasriwastedetailinput">DasriWasteDetailInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>handedOverAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasriemitterinput"></a><a href="#dasriemitterinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriEmitterInput</h3>
-<table>
-<thead>
-<tr>
-<th colspan="2" align="left">Field</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>company</strong></td>
-<td valign="top"><a href="#companyinput">CompanyInput</a></td>
-<td>
-<p>Établissement émetteur</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>workSite</strong></td>
-<td valign="top"><a href="#worksiteinput">WorkSiteInput</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasriinput"></a><a href="#dasriinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriInput</h3>
-<table>
-<thead>
-<tr>
-<th colspan="2" align="left">Field</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>customId</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>emitter</strong></td>
-<td valign="top"><a href="#dasriemitterinput">DasriEmitterInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>emission</strong></td>
-<td valign="top"><a href="#dasriemissioninput">DasriEmissionInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>transporter</strong></td>
-<td valign="top"><a href="#dasritransporterinput">DasriTransporterInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>transport</strong></td>
-<td valign="top"><a href="#dasritransportinput">DasriTransportInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>recipient</strong></td>
-<td valign="top"><a href="#dasrirecipientinput">DasriRecipientInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>reception</strong></td>
-<td valign="top"><a href="#dasrireceptioninput">DasriReceptionInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>operation</strong></td>
-<td valign="top"><a href="#dasrioperationinput">DasriOperationInput</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasrioperationinput"></a><a href="#dasrioperationinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriOperationInput</h3>
-<table>
-<thead>
-<tr>
-<th colspan="2" align="left">Field</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>processingOperation</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>processedAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasripackaginginfoinput"></a><a href="#dasripackaginginfoinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriPackagingInfoInput</h3>
-<table>
-<thead>
-<tr>
-<th colspan="2" align="left">Field</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>type</strong></td>
-<td valign="top"><a href="#dasripackagings">DasriPackagings</a>!</td>
-<td>
-<p>Type de conditionnement</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>other</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td>
-<p>Description du conditionnement dans le cas où le type de conditionnement est <code>AUTRE</code></p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>volume</strong></td>
-<td valign="top"><a href="#int">Int</a>!</td>
-<td>
-<p>Nombre de colis associés à ce conditionnement</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>quantity</strong></td>
-<td valign="top"><a href="#int">Int</a>!</td>
-<td>
-<p>Nombre de colis associés à ce conditionnement</p>
-</td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasrireceptioninput"></a><a href="#dasrireceptioninput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriReceptionInput</h3>
-<table>
-<thead>
-<tr>
-<th colspan="2" align="left">Field</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
-<td valign="top"><a href="#dasriwastedetailinput">DasriWasteDetailInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>receivedAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasrirecipientinput"></a><a href="#dasrirecipientinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriRecipientInput</h3>
-<table>
-<thead>
-<tr>
-<th colspan="2" align="left">Field</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>company</strong></td>
-<td valign="top"><a href="#companyinput">CompanyInput</a></td>
-<td>
-<p>Établissement émetteur</p>
-</td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasrirecipientwastedetailinput"></a><a href="#dasrirecipientwastedetailinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriRecipientWasteDetailInput</h3>
-<table>
-<thead>
-<tr>
-<th colspan="2" align="left">Field</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>quantity</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>volume</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasrisignatureinput"></a><a href="#dasrisignatureinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriSignatureInput</h3>
-<table>
-<thead>
-<tr>
-<th colspan="2" align="left">Field</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>type</strong></td>
-<td valign="top"><a href="#dasrisignaturetype">BsdasriSignatureType</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>signedBy</strong></td>
-<td valign="top"><a href="#string">String</a>!</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasritransportinput"></a><a href="#dasritransportinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriTransportInput</h3>
-<table>
-<thead>
-<tr>
-<th colspan="2" align="left">Field</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>wasteDetails</strong></td>
-<td valign="top"><a href="#dasriwastedetailinput">DasriWasteDetailInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>takenOverAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>handedOverAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>wasteAcceptation</strong></td>
-<td valign="top"><a href="#dasriwasteacceptationinput">DasriWasteAcceptationInput</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasritransporterinput"></a><a href="#dasritransporterinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriTransporterInput</h3>
-<table>
-<thead>
-<tr>
-<th colspan="2" align="left">Field</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>company</strong></td>
-<td valign="top"><a href="#companyinput">CompanyInput</a></td>
-<td>
-<p>Établissement collecteur - transporteur</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>receipt</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td>
-<p>N° de récipissé</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>receiptDepartment</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td>
-<p>Département</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>receiptValidityLimit</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td>
-<p>Limite de validité du récipissé</p>
-</td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasriupdateinput"></a><a href="#dasriupdateinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriUpdateInput</h3>
-<table>
-<thead>
-<tr>
-<th colspan="2" align="left">Field</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>id</strong></td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td>
-<p>Identifiant opaque</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>customId</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td>
-<p>Identifiant custom</p>
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>emitter</strong></td>
-<td valign="top"><a href="#dasriemitterinput">DasriEmitterInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>emission</strong></td>
-<td valign="top"><a href="#dasriemissioninput">DasriEmissionInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>transporter</strong></td>
-<td valign="top"><a href="#dasritransporterinput">DasriTransporterInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>transport</strong></td>
-<td valign="top"><a href="#dasritransportinput">DasriTransportInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>recipient</strong></td>
-<td valign="top"><a href="#dasrirecipientinput">DasriRecipientInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>reception</strong></td>
-<td valign="top"><a href="#dasrireceptioninput">DasriReceptionInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>operation</strong></td>
-<td valign="top"><a href="#dasrioperationinput">DasriOperationInput</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasriwasteacceptationinput"></a><a href="#dasriwasteacceptationinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriWasteAcceptationInput</h3>
-<table>
-<thead>
-<tr>
-<th colspan="2" align="left">Field</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>status</strong></td>
-<td valign="top"><a href="#wasteacceptationstatusinput">WasteAcceptationStatusInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>refusalReason</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>refusedQuantity</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasriwastedetailinput"></a><a href="#dasriwastedetailinput" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriWasteDetailInput</h3>
-<table>
-<thead>
-<tr>
-<th colspan="2" align="left">Field</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>quantity</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>quantityType</strong></td>
-<td valign="top"><a href="#quantitytype">QuantityType</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>packagingInfos</strong></td>
-<td valign="top">[<a href="#dasripackaginginfoinput">DasriPackagingInfoInput</a>!]</td>
 <td></td>
 </tr>
 </tbody>
@@ -5831,6 +5896,169 @@ objet un système d'information tierce</p>
 </tbody>
 </table>
 <h2><a class="anchor" aria-hidden="true" id="enums"></a><a href="#enums" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Enums</h2>
+<h3><a class="anchor" aria-hidden="true" id="bsdasripackagings"></a><a href="#bsdasripackagings" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriPackagings</h3>
+<p>Type de packaging du déchet</p>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>BOITE_CARTON</strong></td>
+<td>
+<p>Caisse en carton avec sac en plastique</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>FUT</strong></td>
+<td>
+<p>Fûts ou jerrican à usage unique</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>BOITE_PERFORANTS</strong></td>
+<td>
+<p>Boîtes et Mini-collecteurs pour déchets perforants</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>GRAND_EMBALLAGE</strong></td>
+<td>
+<p>Grand emballage</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>VRAC</strong></td>
+<td>
+<p>Grand récipient pour vrac</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>AUTRE</strong></td>
+<td>
+<p>Autre</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasrirole"></a><a href="#bsdasrirole" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriRole</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>TRANSPORTER</strong></td>
+<td>
+<p>Les Bsdasri dont je suis transporteur</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>RECIPIENT</strong></td>
+<td>
+<p>Les Bsdasri dont je suis la destination de traitement</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>EMITTER</strong></td>
+<td>
+<p>Les Bsdasri dont je suis l'émetteur</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasrisignaturetype"></a><a href="#bsdasrisignaturetype" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriSignatureType</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>EMISSION</strong></td>
+<td>
+<p>Signature du cadre émetteur (PRED)</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>EMISSION_WITH_SECRET_CODE</strong></td>
+<td>
+<p>Signature du cadre émetteur (PRED) par le transporteur, grâce au code de sécurité de l'émetteur</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>TRANSPORT</strong></td>
+<td>
+<p>Signature du cadre collecteur transporteur</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>RECEPTION</strong></td>
+<td>
+<p>Signature de la réception du déchet</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>OPERATION</strong></td>
+<td>
+<p>Signature du traitement du déchet</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3><a class="anchor" aria-hidden="true" id="bsdasristatus"></a><a href="#bsdasristatus" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriStatus</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>DRAFT</strong></td>
+<td>
+<p>Bsdasri à l'état de brouillon</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>SEALED</strong></td>
+<td>
+<p>Bsdasri scellé (publié)</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>READY_FOR_TAKEOVER</strong></td>
+<td>
+<p>Optionnel, Bsdasri signé par la PRED (émetteur)</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>SENT</strong></td>
+<td>
+<p>Bsdasri envoyé vers l'établissement de destination</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>RECEIVED</strong></td>
+<td>
+<p>Bsdasri reçu par l'établissement de destination</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>PROCESSED</strong></td>
+<td>
+<p>Bsdasri dont les déchets ont été traités</p>
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>REFUSED</strong></td>
+<td>
+<p>Déchet refusé</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3><a class="anchor" aria-hidden="true" id="companytype"></a><a href="#companytype" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>CompanyType</h3>
 <p>Profil entreprise</p>
 <table>
@@ -5919,155 +6147,6 @@ objet un système d'information tierce</p>
 <td valign="top"><strong>DOUGHY</strong></td>
 <td>
 <p>Pâteux</p>
-</td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasripackagings"></a><a href="#dasripackagings" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriPackagings</h3>
-<p>Type de packaging du déchet</p>
-<table>
-<thead>
-<th align="left">Value</th>
-<th align="left">Description</th>
-</thead>
-<tbody>
-<tr>
-<td valign="top"><strong>BOITE_CARTON</strong></td>
-<td>
-<p>Caisse en carton avec sac en plastique</p>
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>FUT</strong></td>
-<td>
-<p>Fûts ou jerrican à usage unique</p>
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>BOITE_PERFORANTS</strong></td>
-<td>
-<p>Boîtes et Mini-collecteurs pour déchets perforants</p>
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>GRAND_EMBALLAGE</strong></td>
-<td>
-<p>Grand emballage</p>
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>VRAC</strong></td>
-<td>
-<p>Grand récipient pour vrac</p>
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>AUTRE</strong></td>
-<td>
-<p>Autre</p>
-</td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasrirole"></a><a href="#dasrirole" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DasriRole</h3>
-<table>
-<thead>
-<th align="left">Value</th>
-<th align="left">Description</th>
-</thead>
-<tbody>
-<tr>
-<td valign="top"><strong>TRANSPORTER</strong></td>
-<td>
-<p>Les Dasri dont je suis transporteur</p>
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>RECIPIENT</strong></td>
-<td>
-<p>Les Dasri dont je suis la destination de traitement</p>
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>EMITTER</strong></td>
-<td>
-<p>Les Dasri dont je suis l'émetteur</p>
-</td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasrisignaturetype"></a><a href="#dasrisignaturetype" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriSignatureType</h3>
-<table>
-<thead>
-<th align="left">Value</th>
-<th align="left">Description</th>
-</thead>
-<tbody>
-<tr>
-<td valign="top"><strong>EMISSION</strong></td>
-<td></td>
-</tr>
-<tr>
-<td valign="top"><strong>TRANSPORT</strong></td>
-<td></td>
-</tr>
-<tr>
-<td valign="top"><strong>RECEPTION</strong></td>
-<td></td>
-</tr>
-<tr>
-<td valign="top"><strong>OPERATION</strong></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3><a class="anchor" aria-hidden="true" id="dasristatus"></a><a href="#dasristatus" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BsdasriStatus</h3>
-<table>
-<thead>
-<th align="left">Value</th>
-<th align="left">Description</th>
-</thead>
-<tbody>
-<tr>
-<td valign="top"><strong>DRAFT</strong></td>
-<td>
-<p>Dasri à l'état de brouillon</p>
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>SEALED</strong></td>
-<td>
-<p>Dasri scellé (publié)</p>
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>READY_FOR_TAKEOVER</strong></td>
-<td>
-<p>Optionnel, Dasri signé par la PRED (émetteur)</p>
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>SENT</strong></td>
-<td>
-<p>Dasri envoyé vers l'établissement de destination</p>
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>RECEIVED</strong></td>
-<td>
-<p>Dasri reçu par l'établissement de destination</p>
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>PROCESSED</strong></td>
-<td>
-<p>Dasri dont les déchets ont été traités</p>
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>REFUSED</strong></td>
-<td>
-<p>Déchet refusé</p>
 </td>
 </tr>
 </tbody>
@@ -6580,4 +6659,4 @@ pour le détail de chacun des rôles</p>
 <p>The <code>String</code> scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.</p>
 <h3><a class="anchor" aria-hidden="true" id="url"></a><a href="#url" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>URL</h3>
 <p>Chaîne de caractère au format URL, débutant par un protocole http(s).</p>
-</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/dasri"><span class="arrow-prev">← </span><span>Cycle de vie du Dasri</span></a><a class="docs-next button" href="/docs/changelog"><span>Changelog</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#query">Query</a></li><li><a href="#mutation">Mutation</a></li><li><a href="#objects">Objects</a><ul class="toc-headings"><li><a href="#authpayload">AuthPayload</a></li><li><a href="#companymember">CompanyMember</a></li><li><a href="#companyprivate">CompanyPrivate</a></li><li><a href="#companypublic">CompanyPublic</a></li><li><a href="#companysearchresult">CompanySearchResult</a></li><li><a href="#companystat">CompanyStat</a></li><li><a href="#dasri">Dasri</a></li><li><a href="#dasriemission">DasriEmission</a></li><li><a href="#dasriemitter">DasriEmitter</a></li><li><a href="#dasrioperation">DasriOperation</a></li><li><a href="#dasripackaginginfo">DasriPackagingInfo</a></li><li><a href="#dasrireception">DasriReception</a></li><li><a href="#dasrirecipient">DasriRecipient</a></li><li><a href="#dasritransport">DasriTransport</a></li><li><a href="#dasritransporter">DasriTransporter</a></li><li><a href="#dasriwasteacceptation">DasriWasteAcceptation</a></li><li><a href="#dasriwastedetails">DasriWasteDetails</a></li><li><a href="#declaration">Declaration</a></li><li><a href="#destination">Destination</a></li><li><a href="#ecoorganisme">EcoOrganisme</a></li><li><a href="#emitter">Emitter</a></li><li><a href="#filedownload">FileDownload</a></li><li><a href="#form">Form</a></li><li><a href="#formcompany">FormCompany</a></li><li><a href="#formecoorganisme">FormEcoOrganisme</a></li><li><a href="#formsubscription">FormSubscription</a></li><li><a href="#installation">Installation</a></li><li><a href="#membershiprequest">MembershipRequest</a></li><li><a href="#nextdestination">NextDestination</a></li><li><a href="#packaginginfo">PackagingInfo</a></li><li><a href="#recipient">Recipient</a></li><li><a href="#rubrique">Rubrique</a></li><li><a href="#stat">Stat</a></li><li><a href="#statesummary">StateSummary</a></li><li><a href="#statuslog">StatusLog</a></li><li><a href="#statuslogform">StatusLogForm</a></li><li><a href="#statusloguser">StatusLogUser</a></li><li><a href="#subscription">Subscription</a></li><li><a href="#temporarystoragedetail">TemporaryStorageDetail</a></li><li><a href="#temporarystorer">TemporaryStorer</a></li><li><a href="#trader">Trader</a></li><li><a href="#traderreceipt">TraderReceipt</a></li><li><a href="#transportsegment">TransportSegment</a></li><li><a href="#transporter">Transporter</a></li><li><a href="#transporterreceipt">TransporterReceipt</a></li><li><a href="#user">User</a></li><li><a href="#wastedetails">WasteDetails</a></li><li><a href="#worksite">WorkSite</a></li><li><a href="#formslifecycledata">formsLifeCycleData</a></li></ul></li><li><a href="#inputs">Inputs</a><ul class="toc-headings"><li><a href="#acceptedforminput">AcceptedFormInput</a></li><li><a href="#appendixforminput">AppendixFormInput</a></li><li><a href="#companyinput">CompanyInput</a></li><li><a href="#createforminput">CreateFormInput</a></li><li><a href="#dasricreateinput">DasriCreateInput</a></li><li><a href="#dasriemissioninput">DasriEmissionInput</a></li><li><a href="#dasriemitterinput">DasriEmitterInput</a></li><li><a href="#dasriinput">DasriInput</a></li><li><a href="#dasrioperationinput">DasriOperationInput</a></li><li><a href="#dasripackaginginfoinput">DasriPackagingInfoInput</a></li><li><a href="#dasrireceptioninput">DasriReceptionInput</a></li><li><a href="#dasrirecipientinput">DasriRecipientInput</a></li><li><a href="#dasrirecipientwastedetailinput">DasriRecipientWasteDetailInput</a></li><li><a href="#dasrisignatureinput">BsdasriSignatureInput</a></li><li><a href="#dasritransportinput">DasriTransportInput</a></li><li><a href="#dasritransporterinput">DasriTransporterInput</a></li><li><a href="#dasriupdateinput">DasriUpdateInput</a></li><li><a href="#dasriwasteacceptationinput">DasriWasteAcceptationInput</a></li><li><a href="#dasriwastedetailinput">DasriWasteDetailInput</a></li><li><a href="#destinationinput">DestinationInput</a></li><li><a href="#ecoorganismeinput">EcoOrganismeInput</a></li><li><a href="#emitterinput">EmitterInput</a></li><li><a href="#forminput">FormInput</a></li><li><a href="#importpaperforminput">ImportPaperFormInput</a></li><li><a href="#internationalcompanyinput">InternationalCompanyInput</a></li><li><a href="#nextdestinationinput">NextDestinationInput</a></li><li><a href="#nextsegmentinfoinput">NextSegmentInfoInput</a></li><li><a href="#packaginginfoinput">PackagingInfoInput</a></li><li><a href="#processedforminput">ProcessedFormInput</a></li><li><a href="#receivedforminput">ReceivedFormInput</a></li><li><a href="#recipientinput">RecipientInput</a></li><li><a href="#resealedforminput">ResealedFormInput</a></li><li><a href="#resentforminput">ResentFormInput</a></li><li><a href="#sentforminput">SentFormInput</a></li><li><a href="#signatureforminput">SignatureFormInput</a></li><li><a href="#takeoverinput">TakeOverInput</a></li><li><a href="#tempstoredforminput">TempStoredFormInput</a></li><li><a href="#tempstoreracceptedforminput">TempStorerAcceptedFormInput</a></li><li><a href="#temporarystoragedetailinput">TemporaryStorageDetailInput</a></li><li><a href="#traderinput">TraderInput</a></li><li><a href="#transporterinput">TransporterInput</a></li><li><a href="#transportersignatureforminput">TransporterSignatureFormInput</a></li><li><a href="#updateforminput">UpdateFormInput</a></li><li><a href="#wastedetailsinput">WasteDetailsInput</a></li><li><a href="#worksiteinput">WorkSiteInput</a></li></ul></li><li><a href="#enums">Enums</a><ul class="toc-headings"><li><a href="#companytype">CompanyType</a></li><li><a href="#consistence">Consistence</a></li><li><a href="#dasripackagings">DasriPackagings</a></li><li><a href="#dasrirole">DasriRole</a></li><li><a href="#dasrisignaturetype">BsdasriSignatureType</a></li><li><a href="#dasristatus">BsdasriStatus</a></li><li><a href="#emittertype">EmitterType</a></li><li><a href="#formrole">FormRole</a></li><li><a href="#formstatus">FormStatus</a></li><li><a href="#formsregisterexportformat">FormsRegisterExportFormat</a></li><li><a href="#formsregisterexporttype">FormsRegisterExportType</a></li><li><a href="#gereptype">GerepType</a></li><li><a href="#membershiprequeststatus">MembershipRequestStatus</a></li><li><a href="#packagings">Packagings</a></li><li><a href="#quantitytype">QuantityType</a></li><li><a href="#signatureauthor">SignatureAuthor</a></li><li><a href="#transportmode">TransportMode</a></li><li><a href="#userrole">UserRole</a></li><li><a href="#wasteacceptationstatusinput">WasteAcceptationStatusInput</a></li><li><a href="#wastetype">WasteType</a></li></ul></li><li><a href="#scalars">Scalars</a><ul class="toc-headings"><li><a href="#boolean">Boolean</a></li><li><a href="#datetime">DateTime</a></li><li><a href="#float">Float</a></li><li><a href="#id">ID</a></li><li><a href="#int">Int</a></li><li><a href="#json">JSON</a></li><li><a href="#string">String</a></li><li><a href="#url">URL</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/favicon.ico" alt="Trackdéchets Développeurs (Dasri)" width="66" height="58"/></a><div><h5>Trackdéchets</h5><a href="https://trackdechets.beta.gouv.fr">Site web</a><a href="https://trello.com/b/2pkc7bFg/trackd%C3%A9chets-roadmap-produit">Roadmap produit</a><a href="https://github.com/MTES-MCT/trackdechets">Code source</a><a class="github-button" href="https://github.com/MTES-MCT/trackdechets" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div><div><h5>Communauté</h5><a href="https://forum.trackdechets.beta.gouv.fr">Forum technique</a></div><div><h5>API</h5><a href="/docs/api-reference">Référence de l&#x27;API</a><a href="https://status.trackdechets.beta.gouv.fr">Statut de l&#x27;API</a><a href="https://api.trackdechets.beta.gouv.fr">Playground</a></div></section><a href="https://beta.gouv.fr/incubateurs/mtes.html" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/img/logo-mtes-mef.svg" alt="La Fabrique Numérique" width="170" height="45"/></a><section class="copyright">Copyright 2021 Ministère de la Transition Écologique et Solidaire</section></footer></div></body></html>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/dasri"><span class="arrow-prev">← </span><span>Cycle de vie du Dasri</span></a><a class="docs-next button" href="/docs/changelog"><span>Changelog</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#query">Query</a></li><li><a href="#mutation">Mutation</a></li><li><a href="#objects">Objects</a><ul class="toc-headings"><li><a href="#authpayload">AuthPayload</a></li><li><a href="#bsdasri">Bsdasri</a></li><li><a href="#bsdasriemission">BsdasriEmission</a></li><li><a href="#bsdasriemitter">BsdasriEmitter</a></li><li><a href="#bsdasrioperation">BsdasriOperation</a></li><li><a href="#bsdasripackaginginfo">BsdasriPackagingInfo</a></li><li><a href="#bsdasrireception">BsdasriReception</a></li><li><a href="#bsdasrirecipient">BsdasriRecipient</a></li><li><a href="#bsdasritransport">BsdasriTransport</a></li><li><a href="#bsdasritransporter">BsdasriTransporter</a></li><li><a href="#bsdasriwasteacceptation">BsdasriWasteAcceptation</a></li><li><a href="#bsdasriwastedetails">BsdasriWasteDetails</a></li><li><a href="#companymember">CompanyMember</a></li><li><a href="#companyprivate">CompanyPrivate</a></li><li><a href="#companypublic">CompanyPublic</a></li><li><a href="#companysearchresult">CompanySearchResult</a></li><li><a href="#companystat">CompanyStat</a></li><li><a href="#declaration">Declaration</a></li><li><a href="#destination">Destination</a></li><li><a href="#ecoorganisme">EcoOrganisme</a></li><li><a href="#emitter">Emitter</a></li><li><a href="#filedownload">FileDownload</a></li><li><a href="#form">Form</a></li><li><a href="#formcompany">FormCompany</a></li><li><a href="#formecoorganisme">FormEcoOrganisme</a></li><li><a href="#formsubscription">FormSubscription</a></li><li><a href="#installation">Installation</a></li><li><a href="#membershiprequest">MembershipRequest</a></li><li><a href="#nextdestination">NextDestination</a></li><li><a href="#packaginginfo">PackagingInfo</a></li><li><a href="#recipient">Recipient</a></li><li><a href="#rubrique">Rubrique</a></li><li><a href="#stat">Stat</a></li><li><a href="#statesummary">StateSummary</a></li><li><a href="#statuslog">StatusLog</a></li><li><a href="#statuslogform">StatusLogForm</a></li><li><a href="#statusloguser">StatusLogUser</a></li><li><a href="#subscription">Subscription</a></li><li><a href="#temporarystoragedetail">TemporaryStorageDetail</a></li><li><a href="#temporarystorer">TemporaryStorer</a></li><li><a href="#trader">Trader</a></li><li><a href="#traderreceipt">TraderReceipt</a></li><li><a href="#transportsegment">TransportSegment</a></li><li><a href="#transporter">Transporter</a></li><li><a href="#transporterreceipt">TransporterReceipt</a></li><li><a href="#user">User</a></li><li><a href="#wastedetails">WasteDetails</a></li><li><a href="#worksite">WorkSite</a></li><li><a href="#formslifecycledata">formsLifeCycleData</a></li></ul></li><li><a href="#inputs">Inputs</a><ul class="toc-headings"><li><a href="#acceptedforminput">AcceptedFormInput</a></li><li><a href="#appendixforminput">AppendixFormInput</a></li><li><a href="#bsdasricreateinput">BsdasriCreateInput</a></li><li><a href="#bsdasriemissioninput">BsdasriEmissionInput</a></li><li><a href="#bsdasriemitterinput">BsdasriEmitterInput</a></li><li><a href="#bsdasriinput">BsdasriInput</a></li><li><a href="#bsdasrioperationinput">BsdasriOperationInput</a></li><li><a href="#bsdasripackaginginfoinput">BsdasriPackagingInfoInput</a></li><li><a href="#bsdasrireceptioninput">BsdasriReceptionInput</a></li><li><a href="#bsdasrirecipientinput">BsdasriRecipientInput</a></li><li><a href="#bsdasrirecipientwastedetailinput">BsdasriRecipientWasteDetailInput</a></li><li><a href="#bsdasrisignatureinput">BsdasriSignatureInput</a></li><li><a href="#bsdasritransportinput">BsdasriTransportInput</a></li><li><a href="#bsdasritransporterinput">BsdasriTransporterInput</a></li><li><a href="#bsdasriupdateinput">BsdasriUpdateInput</a></li><li><a href="#bsdasriwasteacceptationinput">BsdasriWasteAcceptationInput</a></li><li><a href="#bsdasriwastedetailinput">BsdasriWasteDetailInput</a></li><li><a href="#companyinput">CompanyInput</a></li><li><a href="#createforminput">CreateFormInput</a></li><li><a href="#destinationinput">DestinationInput</a></li><li><a href="#ecoorganismeinput">EcoOrganismeInput</a></li><li><a href="#emitterinput">EmitterInput</a></li><li><a href="#forminput">FormInput</a></li><li><a href="#importpaperforminput">ImportPaperFormInput</a></li><li><a href="#internationalcompanyinput">InternationalCompanyInput</a></li><li><a href="#nextdestinationinput">NextDestinationInput</a></li><li><a href="#nextsegmentinfoinput">NextSegmentInfoInput</a></li><li><a href="#packaginginfoinput">PackagingInfoInput</a></li><li><a href="#processedforminput">ProcessedFormInput</a></li><li><a href="#receivedforminput">ReceivedFormInput</a></li><li><a href="#recipientinput">RecipientInput</a></li><li><a href="#resealedforminput">ResealedFormInput</a></li><li><a href="#resentforminput">ResentFormInput</a></li><li><a href="#sentforminput">SentFormInput</a></li><li><a href="#signatureforminput">SignatureFormInput</a></li><li><a href="#takeoverinput">TakeOverInput</a></li><li><a href="#tempstoredforminput">TempStoredFormInput</a></li><li><a href="#tempstoreracceptedforminput">TempStorerAcceptedFormInput</a></li><li><a href="#temporarystoragedetailinput">TemporaryStorageDetailInput</a></li><li><a href="#traderinput">TraderInput</a></li><li><a href="#transporterinput">TransporterInput</a></li><li><a href="#transportersignatureforminput">TransporterSignatureFormInput</a></li><li><a href="#updateforminput">UpdateFormInput</a></li><li><a href="#wastedetailsinput">WasteDetailsInput</a></li><li><a href="#worksiteinput">WorkSiteInput</a></li></ul></li><li><a href="#enums">Enums</a><ul class="toc-headings"><li><a href="#bsdasripackagings">BsdasriPackagings</a></li><li><a href="#bsdasrirole">BsdasriRole</a></li><li><a href="#bsdasrisignaturetype">BsdasriSignatureType</a></li><li><a href="#bsdasristatus">BsdasriStatus</a></li><li><a href="#companytype">CompanyType</a></li><li><a href="#consistence">Consistence</a></li><li><a href="#emittertype">EmitterType</a></li><li><a href="#formrole">FormRole</a></li><li><a href="#formstatus">FormStatus</a></li><li><a href="#formsregisterexportformat">FormsRegisterExportFormat</a></li><li><a href="#formsregisterexporttype">FormsRegisterExportType</a></li><li><a href="#gereptype">GerepType</a></li><li><a href="#membershiprequeststatus">MembershipRequestStatus</a></li><li><a href="#packagings">Packagings</a></li><li><a href="#quantitytype">QuantityType</a></li><li><a href="#signatureauthor">SignatureAuthor</a></li><li><a href="#transportmode">TransportMode</a></li><li><a href="#userrole">UserRole</a></li><li><a href="#wasteacceptationstatusinput">WasteAcceptationStatusInput</a></li><li><a href="#wastetype">WasteType</a></li></ul></li><li><a href="#scalars">Scalars</a><ul class="toc-headings"><li><a href="#boolean">Boolean</a></li><li><a href="#datetime">DateTime</a></li><li><a href="#float">Float</a></li><li><a href="#id">ID</a></li><li><a href="#int">Int</a></li><li><a href="#json">JSON</a></li><li><a href="#string">String</a></li><li><a href="#url">URL</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/favicon.ico" alt="Trackdéchets Développeurs (Dasri)" width="66" height="58"/></a><div><h5>Trackdéchets</h5><a href="https://trackdechets.beta.gouv.fr">Site web</a><a href="https://trello.com/b/2pkc7bFg/trackd%C3%A9chets-roadmap-produit">Roadmap produit</a><a href="https://github.com/MTES-MCT/trackdechets">Code source</a><a class="github-button" href="https://github.com/MTES-MCT/trackdechets" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div><div><h5>Communauté</h5><a href="https://forum.trackdechets.beta.gouv.fr">Forum technique</a></div><div><h5>API</h5><a href="/docs/api-reference">Référence de l&#x27;API</a><a href="https://status.trackdechets.beta.gouv.fr">Statut de l&#x27;API</a><a href="https://api.trackdechets.beta.gouv.fr">Playground</a></div></section><a href="https://beta.gouv.fr/incubateurs/mtes.html" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/img/logo-mtes-mef.svg" alt="La Fabrique Numérique" width="170" height="45"/></a><section class="copyright">Copyright 2021 Ministère de la Transition Écologique et Solidaire</section></footer></div></body></html>
