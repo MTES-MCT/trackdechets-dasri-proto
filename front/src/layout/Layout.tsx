@@ -22,6 +22,7 @@ export default function Layout({
             padding: "10px",
             fontWeight: "bold",
             color: "#721c24",
+            textAlign: "center",
           }}
           className="text-center"
         >

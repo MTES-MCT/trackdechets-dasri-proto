@@ -21,7 +21,7 @@ export default function DraftsTab() {
     Pick<Query, "bsdasris">,
     Partial<QueryBsdasrisArgs>
   >(DASRI_DRAFT_TAB, {
-    variables: { siret  },
+    variables: { siret },
     notifyOnNetworkStatusChange: true,
   });
 
