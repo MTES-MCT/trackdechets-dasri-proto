@@ -72,7 +72,7 @@ export default dasriSign;
 
 type getFieldsUpdateFn = ({
   bsdasri: Dasri,
-  signatureInput: DasriSignatureInput
+  signatureInput: BsdasriSignatureInput
 }) => Partial<Bsdasri>;
 /**
  
