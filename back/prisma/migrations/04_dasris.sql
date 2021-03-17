@@ -66,6 +66,7 @@ CREATE TABLE "default$default"."Bsdasri" (
     "recipientWasteRefusalReason" TEXT,
     "recipientWasteRefusedQuantity" INTEGER,
     "recipientWasteQuantity" INTEGER,
+    "recipientWasteQuantity" "default$default"."QuantityType",
     "recipientWasteVolume" INTEGER,
     "recipientCustomInfo" TEXT,
     "receivedAt" TIMESTAMP(3),

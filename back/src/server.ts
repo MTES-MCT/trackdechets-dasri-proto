@@ -29,6 +29,8 @@ import { oauth2Router } from "./routers/oauth2-router";
 import { resolvers, typeDefs } from "./schema";
 import { userActivationHandler } from "./users/activation";
 import { getUIBaseURL } from "./utils";
+import dasriPdfHandler from "./dasris/dasriPdf";
+import path from "path";
 
 const {
   SENTRY_DSN,
@@ -248,6 +250,10 @@ app.use(oauth2Router);
 app.get("/ping", (_, res) => res.send("Pong!"));
 app.get("/userActivation", userActivationHandler);
 app.get("/download", downloadFileHandler);
+
+app.use(express.static(path.join(__dirname, "../public")));
+
+app.get("/dasripdf/:bsdasriId", dasriPdfHandler);
 
 // TODO Remove
 app.get("/pdf", (_, res) =>

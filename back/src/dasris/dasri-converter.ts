@@ -107,6 +107,7 @@ export function expandBsdasriFromDb(bsdasri: Bsdasri): GqlBsdasri {
     reception: nullIfNoValues<BsdasriReception>({
       wasteDetails: nullIfNoValues<BsdasriWasteDetails>({
         quantity: bsdasri.recipientWasteQuantity,
+        quantityType: bsdasri.recipientWasteQuantityType as QuantityType,
         volume: bsdasri.recipientWasteVolume,
         packagingInfos: bsdasri.recipientWastePackagingsInfo as BsdasriPackagingInfo[]
       }),

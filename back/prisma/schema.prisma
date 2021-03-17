@@ -614,6 +614,8 @@ model Bsdasri {
   recipientWasteRefusalReason        String?
   recipientWasteRefusedQuantity      Int? // kg
   recipientWasteQuantity             Int? // kg
+  recipientWasteQuantityType         QuantityType?
+
   recipientWasteVolume               Int? // liters
   receivedAt                         DateTime? // accepted or refused date
   
