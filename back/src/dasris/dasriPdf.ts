@@ -3,9 +3,15 @@ import QRCode from "qrcode";
 import { join } from "path";
 import ejs from "ejs";
 import prisma from "../prisma";
+import { checkCanReadBsdasri } from "./permissions";
+
 const dasriPdfHandler = async (req, res) => {
   const { bsdasriId } = req.params;
 
+  if (!req.user) {
+    return res.status(401).send("Vous nêtes pas authentifié");
+  }
+  const { user } = req;
   if (typeof bsdasriId !== "string") {
     return res.status(400).send("Le format d'identifiant est invalide");
   }
@@ -16,6 +22,7 @@ const dasriPdfHandler = async (req, res) => {
   if (bsdasri == null || bsdasri.isDeleted == true) {
     return res.status(404).send("Ce bordereau n'existe pas");
   }
+  await checkCanReadBsdasri(user, bsdasri);
   const qrcode =
     bsdasri?.status !== "DRAFT"
       ? await QRCode.toString(bsdasri.readableId, { type: "svg" })
