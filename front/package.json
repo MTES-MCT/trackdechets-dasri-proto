@@ -57,6 +57,9 @@
     "build:tailwind": "tailwindcss build src/tailwind.css -o src/generated/css/tailwind.generated.css",
     "lint": "eslint --ext .ts,.tsx ./src"
   },
+  "engines": {
+    "node": "^14"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -107,6 +110,6 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.21.2",
     "prettier": "^2.0.5",
-    "typescript": "^3.9.7"
+    "typescript": "^3.7.5"
   }
 }
