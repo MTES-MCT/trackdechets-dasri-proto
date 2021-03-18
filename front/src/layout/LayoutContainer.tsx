@@ -141,6 +141,7 @@ export default withRouter(function LayoutContainer({ history }) {
               >
                 <DasriEditionContainer />
               </PrivateRoute>
+
               {/*
                 This is a legacy URL we need to keep for some time
                 in order to redirect users from the old URL to the new one

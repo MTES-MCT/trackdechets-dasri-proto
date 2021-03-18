@@ -1,9 +1,6 @@
 import React from "react";
 
-import {
-  BsdActions,
-  DasriDynamicActions,
-} from "dashboard/dasris/dasri-actions/DasriActions";
+import { BsdasriActions } from "dashboard/dasris/dasri-actions/DasriActions";
 import { DateTime } from "luxon";
 import { statusLabels } from "./constants";
 import Shorten from "common/components/Shorten";
@@ -99,12 +96,11 @@ export default function Dasris({
               )}
               <td>
                 {" "}
-                {/* <BsdActions
-                  bsdType="dasri"
-                  bsdId={s.id}
+                <BsdasriActions
+                  bsdasriId={s.id}
                   bsdStatus={s.status}
                   siret={siret}
-                />  */}
+                />
               </td>
             </tr>
           ))}

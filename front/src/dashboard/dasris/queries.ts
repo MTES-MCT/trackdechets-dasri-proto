@@ -3,8 +3,8 @@ import { gql } from "@apollo/client";
 import { fullDasriFragment } from "common/fragments/dasris";
 
 export const DASRI_GET = gql`
-  query dasri($id: ID!) {
-    dasri(id: $id) {
+  query Bsdasri($id: ID!) {
+    bsdasri(id: $id) {
       ...FullDasri
     }
   }
@@ -12,12 +12,12 @@ export const DASRI_GET = gql`
 `;
 
 export const DASRIS_TRANSPORT_GET = gql`
-  query DasrisGet(
+  query Bsdasris(
     $siret: String
     $status: [BsdasriStatus!]
     $roles: [BsdasriRole!]
   ) {
-    dasris(siret: $siret, status: $status, roles: $roles) {
+    bsdasris(siret: $siret, status: $status, roles: $roles) {
       ...FullDasri
     }
   }
@@ -26,8 +26,8 @@ export const DASRIS_TRANSPORT_GET = gql`
 
  
 export const DASRIS_GET = gql`
-  query DasrisGet($siret: String, $status: [BsdasriStatus!]) {
-    dasris(siret: $siret, status: $status) {
+  query Bsdasris($siret: String, $status: [BsdasriStatus!]) {
+    bsdasris(siret: $siret, status: $status) {
       ...FullDasri
     }
   }

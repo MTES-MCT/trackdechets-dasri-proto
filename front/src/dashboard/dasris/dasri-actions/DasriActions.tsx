@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import React, { useState, useEffect, useCallback } from "react";
 import { Bsdasri } from "generated/graphql/types";
-
+import { PdfIcon } from "common/components/Icons";
 import {
   WaterDamIcon,
   PaperWriteIcon,
@@ -11,7 +11,6 @@ import {
 
 import "./DasriActions.scss";
 
-import Edit from "./Edit";
 import DasriSignature from "./Signature";
 // import Duplicate from "./Duplicate";
 import DasriQuicklook from "dashboard/dasris/dasri-actions/DasriQuicklook";
@@ -27,7 +26,7 @@ import OutsideClickHandler from "react-outside-click-handler";
 import { COLORS } from "common/config";
 import TdModal from "common/components/Modal";
 import ActionButton from "common/components/ActionButton";
-import { bsdTypes } from "common/types";
+const { REACT_APP_API_ENDPOINT } = process.env;
 
 export type BsdActionProps = {
   onSubmit: (vars: any) => any;
@@ -35,15 +34,13 @@ export type BsdActionProps = {
   dasri: Bsdasri;
 };
 interface BsdActionsProps {
-  bsdType: bsdTypes;
-  bsdId: string;
+  bsdasriId: string;
   bsdStatus: string;
   siret: string;
 }
 
-export const BsdActions = ({
-  bsdType,
-  bsdId,
+export const BsdasriActions = ({
+  bsdasriId,
   bsdStatus,
   siret,
 }: BsdActionsProps) => {
@@ -89,38 +86,30 @@ export const BsdActions = ({
             <ul className="slips-actions__items">
               <li className="slips-actions__item">
                 <DasriQuicklook
-                  formId={bsdId}
+                  formId={bsdasriId}
                   buttonClass="btn--no-style slips-actions__button"
                   onOpen={disableOutsideClick}
                   onClose={onClose}
                 />
               </li>
-              <li className="slips-actions__item">
-                <Edit bsdId={bsdId} bsdType={bsdType} />
-              </li>
+
               {bsdStatus === "DRAFT" ? (
-                <>
-                  <li className="slips-actions__item">
-                    {/* <Delete
-                      formId={form.id}
-                      onOpen={disableOutsideClick}
-                      onClose={onClose}
-                    /> */}
-                  </li>
-                </>
+                <></>
               ) : (
                 <>
                   <li className="slips-actions__item">
-                    <Edit bsdId={bsdId} bsdType={bsdType} />
-                  </li>
-                  <li className="slips-actions__item">
-                    {/* <DownloadPdf formId={form.id} onSuccess={onClose} /> */}
+                    <a
+                      className="btn--no-style slips-actions__button"
+                      type="button"
+                      href={`${REACT_APP_API_ENDPOINT}/dasripdf/${bsdasriId}`}
+                      target="_blank"
+                    >
+                      <PdfIcon size={24} color={COLORS.blueLight} />
+                      <span>Pdf</span>
+                    </a>
                   </li>
                 </>
               )}
-              <li className="slips-actions__item">
-                {/* <Duplicate formId={form.id} onClose={onClose} /> */}
-              </li>
             </ul>
           </div>
         )}
