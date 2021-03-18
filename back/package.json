@@ -14,7 +14,7 @@
     "update:dev": "ts-node prisma/scripts/index.ts",
     "test": "jest",
     "prebuild": "npm run generate",
-    "build": "tsc && copyfiles -e **/*.ts src/**/*.{graphql,pdf,png,ttf} prisma/**/*.{prisma,sql} dist/",
+    "build": "tsc && copyfiles -e **/*.ts src/**/*.{graphql,pdf,png,ttf,ejs} prisma/**/*.{prisma,sql} dist/",
     "scalingo-postbuild": "npm run build && cd dist && npm run migrate",
     "lint": "eslint -c .eslintrc.js --ext .ts ./src",
     "lint:fix": "eslint -c .eslintrc.js --fix --ext .ts ./src",
