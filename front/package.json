@@ -45,8 +45,8 @@
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
-    "clever": "serve -s build -l 8080",
-    "start": "react-scripts start",
+    "dev": "react-scripts start",
+    "start": "npx serve -s build -l $PORT",
     "build": "react-scripts build",
     "build:recette": "env-cmd -f .env.recette npm run build",
     "build:sandbox": "env-cmd -f .env.sandbox npm run build",
