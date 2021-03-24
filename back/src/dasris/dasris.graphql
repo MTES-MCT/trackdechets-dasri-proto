@@ -181,6 +181,9 @@ type Bsdasri {
   recipient: BsdasriRecipient
   reception: BsdasriReception
   operation: BsdasriOperation
+
+  "Bordereaux regroupés"
+  regroupedBsdasris: [Bsdasri!]
 }
 
 type Query {

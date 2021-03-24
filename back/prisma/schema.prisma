@@ -631,4 +631,10 @@ model Bsdasri {
   operationSignatory                 User? @relation("BsdasriOperationSignature", fields: [operationSignatoryId], references: [id])
   operationSignatoryId               String?
   operationSignedAt                  DateTime?
+
+
+  regroupedBsdasris                 Bsdasri[]                  @relation("BsdasriToBsdasri")
+  regroupedOnBsdasri                Bsdasri?                   @relation("BsdasriToBsdasri", fields: [regroupedOnBsdasriId], references: [id])
+  regroupedOnBsdasriId              String?
+
 }

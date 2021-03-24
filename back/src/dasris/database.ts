@@ -68,3 +68,35 @@ export async function getFullBsdasri(bsdasri: Bsdasri): Promise<FullBsdasri> {
     owner
   };
 }
+
+export function stringifyDates(obj: Bsdasri) {
+  if (!obj) {
+    return null;
+  }
+
+  return {
+    ...obj,
+    ...(obj?.createdAt && { createdAt: obj.createdAt.toISOString() }),
+    ...(obj?.updatedAt && { updatedAt: obj.updatedAt.toISOString() }),
+    ...(obj?.emissionSignedAt && {
+      emissionSignedAt: obj.emissionSignedAt.toISOString()
+    }),
+    ...(obj?.transporterTakenOverAt && {
+      transporterTakenOverAt: obj.transporterTakenOverAt.toISOString()
+    }),
+    ...(obj?.handedOverToRecipientAt && {
+      handedOverToRecipientAt: obj.handedOverToRecipientAt.toISOString()
+    }),
+    ...(obj?.transportSignedAt && {
+      transportSignedAt: obj.handedOverToRecipientAt.toISOString()
+    }),
+    ...(obj?.receivedAt && { receivedAt: obj.receivedAt.toISOString() }),
+    ...(obj?.receptionSignedAt && {
+      receptionSignedAt: obj.receptionSignedAt.toISOString()
+    }),
+    ...(obj?.processedAt && { processedAt: obj.processedAt.toISOString() }),
+    ...(obj?.operationSignedAt && {
+      operationSignedAt: obj.operationSignedAt.toISOString()
+    })
+  };
+}

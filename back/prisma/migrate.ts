@@ -8,7 +8,7 @@ const dbConfig = {
   host: process.env.POSTGRES_HOST,
   port: parseInt(process.env.POSTGRES_PORT, 10)
 };
-
+console.log(dbConfig)
 migrate(dbConfig, path.join(__dirname, "migrations"))
   .then(() => console.log("Migration successful"))
   .catch(err => console.error(err));

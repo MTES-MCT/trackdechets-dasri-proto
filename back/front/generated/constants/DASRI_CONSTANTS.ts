@@ -1,7 +1,9 @@
 enum DasriProcessingOperationType {
   Incineration = "INCINERATION",
   IncinerationValorisation = "INCINERATIONVALORISATION",
-  Pretraitement = "PRETRAITEMENT"
+  Pretraitement = "PRETRAITEMENT",
+  RegroupementPrealableD9D10 = "REGROUPEMENTPREALABLED9D10",
+  RegroupementPrealableR1 = "REGROUPEMENTPREALABLEDR1"
 }
 
 export const DASRI_WASTE_CODES = [
@@ -28,7 +30,17 @@ export const DASRI_PROCESSING_OPERATIONS = [
   {
     type: DasriProcessingOperationType.Pretraitement,
     code: "D9",
-    description: "Pretraitement par désinfection"
+    description: "Prétraitement par désinfection"
+  },
+  {
+    type: DasriProcessingOperationType.RegroupementPrealableD9D10,
+    code: "D13",
+    description: "Regroupement D13 Préalable à D9 ou D10"
+  },
+  {
+    type: DasriProcessingOperationType.RegroupementPrealableR1,
+    code: "R13",
+    description: "Regroupement R13 Préalable à R1"
   }
 ];
 export const DASRI_PROCESSING_OPERATIONS_CODES: string[] = DASRI_PROCESSING_OPERATIONS.map(

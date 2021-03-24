@@ -85,7 +85,7 @@ const dasriUpdateResolver = async (
 
   const { bsdasriUpdateInput } = { ...args };
 
-  const { id, ...dasriContent } = bsdasriUpdateInput;
+  const { regroupedBsdasris, id, ...dasriContent } = bsdasriUpdateInput;
 
   const existingDasri = await getBsdasriOrNotFound({ id });
 
@@ -120,7 +120,7 @@ const dasriUpdateResolver = async (
 
   const updatedDasri = await prisma.bsdasri.update({
     where: { id },
-    data: flattened
+    data: { ...flattened, regroupedBsdasris: { connect: regroupedBsdasris } }
   });
   return expandBsdasriFromDb(updatedDasri);
 };

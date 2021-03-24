@@ -15,10 +15,12 @@ import { checkIsBsdasriContributor } from "../../permissions";
 
 const createBsdasriResolver = async (
   parent: ResolversParentTypes["Mutation"],
-  { bsdasriCreateInput }: MutationCreateBsdasriArgs,
+  { bsdasriCreateInput: input }: MutationCreateBsdasriArgs,
   context: GraphQLContext
 ) => {
   const user = checkIsAuthenticated(context);
+
+  const { regroupedBsdasris, ...bsdasriCreateInput } = input;
 
   const formSirets = {
     emitterCompanySiret: bsdasriCreateInput.emitter?.company?.siret,
@@ -39,7 +41,8 @@ const createBsdasriResolver = async (
       data: {
         ...flattenedInput,
         readableId: await getReadableId(ReadableIdPrefix.DASRI),
-        owner: { connect: { id: user.id } }
+        owner: { connect: { id: user.id } },
+        regroupedBsdasris: { connect: regroupedBsdasris }
       }
     });
     return expandBsdasriFromDb(newDasri);

@@ -102,6 +102,12 @@ input BsdasriInput {
   operation: BsdasriOperationInput
 }
 
+"Payload de regroupement"
+input RegroupedBsdasriInput {
+  "Identifiant unique du bordereau"
+  id: ID
+}
+
 input BsdasriCreateInput {
   "Identifiant custom"
   customId: String
@@ -113,6 +119,8 @@ input BsdasriCreateInput {
   recipient: BsdasriRecipientInput
   reception: BsdasriReceptionInput
   operation: BsdasriOperationInput
+
+  regroupedBsdasris: [RegroupedBsdasriInput]
 }
 
 input BsdasriUpdateInput {
@@ -129,6 +137,8 @@ input BsdasriUpdateInput {
   recipient: BsdasriRecipientInput
   reception: BsdasriReceptionInput
   operation: BsdasriOperationInput
+
+  regroupedBsdasris: [RegroupedBsdasriInput]
 }
 
 enum BsdasriSignatureType {

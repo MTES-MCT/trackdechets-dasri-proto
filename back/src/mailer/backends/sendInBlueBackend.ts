@@ -12,8 +12,7 @@ const {
   NODE_ENV
 } = process.env;
 
-const baseUrl =
-  NODE_ENV === "production " ? SIB_BASE_URL : "http://mailservice"; // use a fake url for tests
+const baseUrl = SIB_BASE_URL;
 const SIB_SMTP_URL = `${baseUrl}/smtp/email`;
 const SIB_CONTACT_URL = `${baseUrl}/contacts`;
 
@@ -25,6 +24,7 @@ const sendInBlueBackend = {
   backendName: "SendInBlue",
 
   sendMail: function (mail: Mail) {
+    console.log(mail)
     if (!mail.templateId) {
       mail.templateId = templateIds.MAIN;
     }
@@ -49,7 +49,7 @@ const sendInBlueBackend = {
         }
       ];
     }
-
+    console.log(payload)
     const req = axios.post(SIB_SMTP_URL, payload, {
       headers: headers,
       timeout: 5000

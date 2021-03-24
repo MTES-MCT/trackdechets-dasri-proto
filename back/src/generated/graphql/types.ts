@@ -81,6 +81,8 @@ export type Bsdasri = {
   recipient?: Maybe<BsdasriRecipient>;
   reception?: Maybe<BsdasriReception>;
   operation?: Maybe<BsdasriOperation>;
+  /** Bordereaux regroupés */
+  regroupedBsdasris?: Maybe<Array<Bsdasri>>;
 };
 
 export type BsdasriCreateInput = {
@@ -93,6 +95,7 @@ export type BsdasriCreateInput = {
   recipient?: Maybe<BsdasriRecipientInput>;
   reception?: Maybe<BsdasriReceptionInput>;
   operation?: Maybe<BsdasriOperationInput>;
+  regroupedBsdasris?: Maybe<Array<Maybe<RegroupedBsdasriInput>>>;
 };
 
 /** Informations relatives au déchet émis */
@@ -332,6 +335,7 @@ export type BsdasriUpdateInput = {
   recipient?: Maybe<BsdasriRecipientInput>;
   reception?: Maybe<BsdasriReceptionInput>;
   operation?: Maybe<BsdasriOperationInput>;
+  regroupedBsdasris?: Maybe<Array<Maybe<RegroupedBsdasriInput>>>;
 };
 
 /** Informations relatives à l'acceptation ou au refus du déchet (Bsdasri) */
@@ -2075,6 +2079,12 @@ export type RecipientInput = {
   isTempStorage?: Maybe<Scalars['Boolean']>;
 };
 
+/** Payload de regroupement */
+export type RegroupedBsdasriInput = {
+  /** Identifiant unique du bordereau */
+  id?: Maybe<Scalars['ID']>;
+};
+
 /** Payload lié au détails du déchet du BSD suite (case 14 à 19) */
 export type ResealedFormInput = {
   /** Destination finale du déchet (case 14) */
@@ -2852,6 +2862,7 @@ export type ResolversTypes = {
   BsdasriRecipientInput: BsdasriRecipientInput;
   BsdasriReceptionInput: BsdasriReceptionInput;
   BsdasriOperationInput: BsdasriOperationInput;
+  RegroupedBsdasriInput: RegroupedBsdasriInput;
   PrivateCompanyInput: PrivateCompanyInput;
   CreateFormInput: CreateFormInput;
   EmitterInput: EmitterInput;
@@ -2973,6 +2984,7 @@ export type ResolversParentTypes = {
   BsdasriRecipientInput: BsdasriRecipientInput;
   BsdasriReceptionInput: BsdasriReceptionInput;
   BsdasriOperationInput: BsdasriOperationInput;
+  RegroupedBsdasriInput: RegroupedBsdasriInput;
   PrivateCompanyInput: PrivateCompanyInput;
   CreateFormInput: CreateFormInput;
   EmitterInput: EmitterInput;
@@ -3039,6 +3051,7 @@ export type BsdasriResolvers<ContextType = GraphQLContext, ParentType extends Re
   recipient?: Resolver<Maybe<ResolversTypes['BsdasriRecipient']>, ParentType, ContextType>;
   reception?: Resolver<Maybe<ResolversTypes['BsdasriReception']>, ParentType, ContextType>;
   operation?: Resolver<Maybe<ResolversTypes['BsdasriOperation']>, ParentType, ContextType>;
+  regroupedBsdasris?: Resolver<Maybe<Array<ResolversTypes['Bsdasri']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3731,6 +3744,7 @@ export function createBsdasriMock(props: Partial<Bsdasri>): Bsdasri {
     recipient: null,
     reception: null,
     operation: null,
+    regroupedBsdasris: null,
     ...props,
   };
 }
@@ -3745,6 +3759,7 @@ export function createBsdasriCreateInputMock(props: Partial<BsdasriCreateInput>)
     recipient: null,
     reception: null,
     operation: null,
+    regroupedBsdasris: null,
     ...props,
   };
 }
@@ -3956,6 +3971,7 @@ export function createBsdasriUpdateInputMock(props: Partial<BsdasriUpdateInput>)
     recipient: null,
     reception: null,
     operation: null,
+    regroupedBsdasris: null,
     ...props,
   };
 }
@@ -4515,6 +4531,13 @@ export function createRecipientInputMock(props: Partial<RecipientInput>): Recipi
     processingOperation: null,
     company: null,
     isTempStorage: null,
+    ...props,
+  };
+}
+
+export function createRegroupedBsdasriInputMock(props: Partial<RegroupedBsdasriInput>): RegroupedBsdasriInput {
+  return {
+    id: null,
     ...props,
   };
 }
