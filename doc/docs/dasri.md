@@ -60,13 +60,13 @@ C-->|"updateBsdasri (sauf champs signés)"| C
 D-->|"updateBsdasri (sauf champs signés)"| D
 E-->|"updateBsdasri (sauf champs signés)"| E
 A[DRAFT] -->|markAsReadyBsdasri| B(SEALED)
-B -->|"signDasri (EMISSION / EMISSION_WITH_SECRET_CODE)"| C(READY_FOR_TAKEOVER)
-B -->|"signDasri (TRANSPORT) - si autorisé par émetteur" | D(SENT)
-C -->|"signDasri (TRANSPORT)"| D(SENT)
-D -->|"signDasri (RECEPTION)"| E(RECEIVED)
-E -->|"signDasri (OPERATION)"| F(PROCESSED)
-D -->|"signDasri (TRANSPORT *)"| G(REFUSED)
-C -->|"signDasri (RECEPTION *)"| G(REFUSED)
+B -->|"signBsdasri (EMISSION / EMISSION_WITH_SECRET_CODE)"| C(READY_FOR_TAKEOVER)
+B -->|"signBsdasri (TRANSPORT) - si autorisé par émetteur" | D(SENT)
+C -->|"signBsdasri (TRANSPORT)"| D(SENT)
+D -->|"signBsdasri (RECEPTION)"| E(RECEIVED)
+E -->|"signBsdasri (OPERATION)"| F(PROCESSED)
+D -->|"signBsdasri (TRANSPORT *)"| G(REFUSED)
+C -->|"signBsdasri (RECEPTION *)"| G(REFUSED)
 
 </div>
 
@@ -77,7 +77,7 @@ A venir
 
 ## DASRI au format pdf
 
-A venir
+Le rendu html est accessible sur: `https://api.dasris.trackdechets.beta.gouv.fr/dasripdf/<id de bsd dasri>`
 
 ## Flux de modifications de BSD
 
