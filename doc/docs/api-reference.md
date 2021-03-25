@@ -1502,6 +1502,15 @@ Bordereau Bsdasri
 <td valign="top"><a href="#bsdasrioperation">BsdasriOperation</a></td>
 <td></td>
 </tr>
+<tr>
+<td colspan="2" valign="top"><strong>regroupedBsdasris</strong></td>
+<td valign="top">[<a href="#bsdasri">Bsdasri</a>!]</td>
+<td>
+
+Bordereaux regroupés
+
+</td>
+</tr>
 </tbody>
 </table>
 
@@ -4840,6 +4849,11 @@ Identifiant custom
 <td valign="top"><a href="#bsdasrioperationinput">BsdasriOperationInput</a></td>
 <td></td>
 </tr>
+<tr>
+<td colspan="2" valign="top"><strong>regroupedBsdasris</strong></td>
+<td valign="top">[<a href="#regroupedbsdasriinput">RegroupedBsdasriInput</a>]</td>
+<td></td>
+</tr>
 </tbody>
 </table>
 
@@ -5306,6 +5320,11 @@ Identifiant custom
 <tr>
 <td colspan="2" valign="top"><strong>operation</strong></td>
 <td valign="top"><a href="#bsdasrioperationinput">BsdasriOperationInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>regroupedBsdasris</strong></td>
+<td valign="top">[<a href="#regroupedbsdasriinput">RegroupedBsdasriInput</a>]</td>
 <td></td>
 </tr>
 </tbody>
@@ -6242,6 +6261,31 @@ Opération d'élimination / valorisation prévue (code D/R)
 <td>
 
 Si c'est un entreprosage provisoire ou reconditionnement
+
+</td>
+</tr>
+</tbody>
+</table>
+
+### RegroupedBsdasriInput
+
+Payload de regroupement
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>id</strong></td>
+<td valign="top"><a href="#id">ID</a></td>
+<td>
+
+Identifiant unique du bordereau
 
 </td>
 </tr>
