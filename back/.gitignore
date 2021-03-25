@@ -1,5 +1,0 @@
-/node_modules
-/csv
-/dist
-/prisma/seed.dev.ts
-.clever.json
