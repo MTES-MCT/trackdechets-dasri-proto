@@ -3,13 +3,15 @@ id: dasri
 title: Cycle de vie du bordereau dasri
 sidebar_label: Cycle de vie du Dasri
 ---
-*Avertissement: l'implémentation Dasri et cette documentation constituent une version Beta et sont destinées à l'évaluation des intégrateurs* 
+*Avertissement: l'implémentation Dasri et cette documentation constituent une version Beta et sont destinées à l'évaluation des intégrateurs. L'api est suceptible d'évoluer* 
+
+*Le regoupement est en cours de développement*
 
 *Les Dasri sont à ce jour uniquement disponibles sur https://api.dasris.trackdechets.beta.gouv.fr/*
 
 ## Numéro de DASRI
 
-Chaque DASRI est associé à un identifiant opaque unique. Cet identifiant correspond au champ `id` et doit être utilisé lors des différentes requêtes. En plus de l'identifiant opaque, un identifiant "lisible" est généré (champ `readableId`). Cet identifiant apparait sur le bordereau dans la case "Bordereau n°". L'identifiant est sous la forme `DASRY-{YYYYMMDD}-{identifiant aléatoire}` (Ex: `"DASRI-20210118-RTAQRJA6P"`). Il peut être utiliser pour récupérer l'identifiant opaque unique via la query `dasri`.
+Chaque DASRI est associé à un identifiant opaque unique. Cet identifiant correspond au champ `id` et doit être utilisé lors des différentes requêtes. En plus de l'identifiant opaque, un identifiant "lisible" est généré (champ `readableId`). Cet identifiant apparait sur le bordereau dans la case "Bordereau n°". L'identifiant est sous la forme `DASRI-{YYYYMMDD}-{identifiant aléatoire}` (Ex: `"DASRI-20210118-RTAQRJA6P"`). Il peut être utiliser pour récupérer l'identifiant opaque unique via la query `dasri`.
 
 Vous pouvez également ajouter un identifiant qui vous est propre pour faire le lien avec votre SI. Il vous faut pour cela utiliser le champ `customId`.
 
@@ -18,17 +20,17 @@ Vous pouvez également ajouter un identifiant qui vous est propre pour faire le 
 Le mode opératoire est sensiblement différents de celui des BSDD.
 
 Pour donner plus de flexibilité et limiter les mutations, les principes suivants sont adoptés:
-- le nombre de mutation est reduit à 4: dasriCreate, dasriUpdate, dasriMarkAsReady, dasriSign
+- le nombre de mutation est reduit à 4: createBsdasri, updateBsdasri, markAsReadyBsdasri, signBsdasri
 - la mutation dasriUpdate permet de mettre à jour les dasri pendant leur cycle de vie
-- la mutation dasriSign (EMISSION, TRANSPORT, RECPTION, OPERATION) appose une signature ssur le cadre correspondant
+- la mutation signBsdasri (EMISSION, TRANSPORT, RECPTION, OPERATION) appose une signature ssur le cadre correspondant
 - une fois qu'une signature est apposée, champs du cadre correspondant ne sont plus modifiables
-- dasriSign (EMISSION) verrouille tous les champs emitter/emission
-- dasriSign (TRANSPORT) verrouille tous les champs transporter/transport, sauf la date de remise à l'installation destinataire ({transport { handedOverAt}}
+- signBsdasri (EMISSION) verrouille tous les champs emitter/emission
+- signBsdasri (TRANSPORT) verrouille tous les champs transporter/transport, sauf la date de remise à l'installation destinataire ({transport { handedOverAt}}
 )
-- dasriSign (RECEPTION) verrouille tous les champs recipient, et les champ reception
-- dasriSign (OPERATION) les champ operation
-- si le champ wasteAcceptation ({transport {wasteAcceptation}}) est REFUSED dasriSign (TRANSPORT) passe le dasri à l'état REFUSED
-- si le champ wasteAcceptation ({reception {wasteAcceptation}}) est REFUSED dasriSign (RECEPTION) passe le dasri à l'état REFUSED
+- signBsdasri (RECEPTION) verrouille tous les champs recipient, et les champ reception
+- signBsdasri (OPERATION) les champ operation
+- si le champ wasteAcceptation ({transport {wasteAcceptation}}) est REFUSED signBsdasri (TRANSPORT) passe le dasri à l'état REFUSED
+- si le champ wasteAcceptation ({reception {wasteAcceptation}}) est REFUSED signBsdasri (RECEPTION) passe le dasri à l'état REFUSED
  
 
 ## États du DASRI
