@@ -528,8 +528,7 @@ enum BsdasriStatus {
   REFUSED
 }
 model Bsdasri {
-  id                                 String                  @id @default(cuid())
-  readableId                         String                  @unique
+  id                                 String                  @unique
   customId                           String? 
   status                             BsdasriStatus           @default(INITIAL)
   createdAt                          DateTime                @default(now())

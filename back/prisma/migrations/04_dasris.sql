@@ -6,7 +6,6 @@ CREATE TYPE "BsdasriStatus" AS ENUM ('INITIAL', 'SIGNED_BY_PRODUCER', 'SENT', 'R
 -- CreateTable
 CREATE TABLE "default$default"."Bsdasri" (
     "id" TEXT NOT NULL,
-    "readableId" TEXT NOT NULL,
     "customId" TEXT,
     "status" "BsdasriStatus" NOT NULL DEFAULT E'DRAFT',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -82,8 +81,6 @@ CREATE TABLE "default$default"."Bsdasri" (
     PRIMARY KEY ("id")
 );
 
--- CreateIndex
-CREATE UNIQUE INDEX IF NOT EXISTS  "Bsdasri.readableId_unique" ON "default$default"."Bsdasri"("readableId");
-
+ 
 -- AddForeignKey
 ALTER TABLE "default$default"."Bsdasri" ADD FOREIGN KEY("ownerId")REFERENCES "default$default"."User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
