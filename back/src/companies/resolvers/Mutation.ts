@@ -6,6 +6,7 @@ import createUploadLink from "./mutations/createUploadLink";
 import createTraderReceipt from "./mutations/createTraderReceipt";
 import updateTraderReceipt from "./mutations/updateTraderReceipt";
 import deleteTraderReceipt from "./mutations/deleteTraderReceipt";
+
 import createTransporterReceipt from "./mutations/createTransporterReceipt";
 import updateTransporterReceipt from "./mutations/updateTransporterReceipt";
 import deleteTransporterReceipt from "./mutations/deleteTransporterReceipt";
@@ -18,6 +19,7 @@ const Mutation: MutationResolvers = {
   createTraderReceipt,
   updateTraderReceipt,
   deleteTraderReceipt,
+
   createTransporterReceipt,
   updateTransporterReceipt,
   deleteTransporterReceipt

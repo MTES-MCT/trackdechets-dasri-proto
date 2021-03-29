@@ -131,6 +131,7 @@ const columns: Column[] = [
     label: "Négociant adresse",
     format: identity
   },
+
   // cadre 8
   {
     field: "transporterCompanySiret",

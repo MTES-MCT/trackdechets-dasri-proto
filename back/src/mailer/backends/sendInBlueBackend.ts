@@ -24,7 +24,7 @@ const sendInBlueBackend = {
   backendName: "SendInBlue",
 
   sendMail: function (mail: Mail) {
-    console.log(mail)
+    console.log(mail);
     if (!mail.templateId) {
       mail.templateId = templateIds.MAIN;
     }
@@ -49,7 +49,7 @@ const sendInBlueBackend = {
         }
       ];
     }
-    console.log(payload)
+    console.log(payload);
     const req = axios.post(SIB_SMTP_URL, payload, {
       headers: headers,
       timeout: 5000

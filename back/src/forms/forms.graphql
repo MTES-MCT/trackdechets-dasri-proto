@@ -1,5 +1,6 @@
 """
-The `DateTime` scalar expects a date-formatted string matching one of the following formats:
+Le scalaire `DateTime` accepte des chaines de caractères
+formattées selon le standard ISO 8601. Exemples:
 - "yyyy-MM-dd" (eg. 2020-11-23)
 - "yyyy-MM-ddTHH:mm:ss" (eg. 2020-11-23T13:34:55)
 - "yyyy-MM-ddTHH:mm:ssX" (eg. 2020-11-23T13:34:55Z)
@@ -17,7 +18,7 @@ type Query {
     id: ID
     "Identifiant lisible du BSD"
     readableId: String
-  ): Form
+  ): Form!
 
   """
   Renvoie les BSDs de l'établissement sélectionné.
@@ -396,7 +397,10 @@ type Mutation {
   markAsTempStored(id: ID!, tempStoredInfos: TempStoredFormInput!): Form
 
   "Valide l'acceptation ou le refus d'un BSD d'un entreposage provisoire ou reconditionnement"
-  markAsTempStorerAccepted(id: ID!, tempStorerAcceptedInfo: TempStorerAcceptedFormInput!): Form
+  markAsTempStorerAccepted(
+    id: ID!
+    tempStorerAcceptedInfo: TempStorerAcceptedFormInput!
+  ): Form
 
   "Valide la complétion des cadres 14 à 19 lors d'un entreposage provisoire ou reconditionnement"
   markAsResealed(id: ID!, resealedInfos: ResealedFormInput!): Form
@@ -543,6 +547,8 @@ type Form {
   Identifiant lisible utilisé comme numéro sur le CERFA (case "Bordereau n°****").
   Il est possible de l'utiliser pour récupérer l'identifiant unique du bordereau via la query form,
   utilisé pour le reste des opérations.
+  Cet identifiant possède le format BSD-{yyyyMMdd}-{XXXXXXXX} où yyyyMMdd est la date du jour
+  et XXXXXXXXX une chaine de 9 caractères alphanumériques. Ex: BSD-20210101-HY87F54D1
   """
   readableId: String!
 
@@ -561,7 +567,7 @@ type Form {
   "Établissement émetteur/producteur du déchet (case 1)"
   emitter: Emitter
 
-  "Établissement qui reçoit le déchet (case 2)"
+  "Installation de destination ou d’entreposage ou de reconditionnement prévue (case 2)"
   recipient: Recipient
 
   "Transporteur du déchet (case 8)"
@@ -1041,6 +1047,11 @@ enum FormsRegisterExportType {
   Art 4: Les négociants tiennent à jour un registre chronologique des déchets détenus.
   """
   TRADED
+
+  """
+  Registre courtier
+  """
+  BROKERED
 }
 
 """

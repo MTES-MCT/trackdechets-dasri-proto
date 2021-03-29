@@ -1,13 +1,14 @@
-import { Form, Prisma } from "@prisma/client";
-import { resetDatabase } from "../../../../../integration-tests/helper";
+import { Form, Prisma, Status } from "@prisma/client";
+import { format } from "date-fns";
 import prisma from "../../../../prisma";
-import { ImportPaperFormInput } from "../../../../generated/graphql/types";
 import {
-  getReadableId,
   userFactory,
   userWithCompanyFactory
 } from "../../../../__tests__/factories";
 import makeClient from "../../../../__tests__/testClient";
+import getReadableId from "../../../readableId";
+import { resetDatabase } from "../../../../../integration-tests/helper";
+import { allowedFormats } from "../../../../common/dates";
 
 const IMPORT_PAPER_FORM = `
   mutation ImportPaperForm($input: ImportPaperFormInput!){
@@ -23,7 +24,7 @@ describe("mutation / importPaperForm", () => {
     afterEach(resetDatabase);
 
     function getImportPaperFormInput() {
-      const input: ImportPaperFormInput = {
+      const input = {
         customId: "customId",
         emitter: {
           type: "PRODUCER",
@@ -72,6 +73,7 @@ describe("mutation / importPaperForm", () => {
         },
         receivedInfo: {
           receivedAt: "2019-12-21T00:00:00.000Z",
+          signedAt: "2019-12-20T00:00:00.000Z",
           receivedBy: "Mr Destination",
           wasteAcceptationStatus: "ACCEPTED",
           quantityReceived: 1.0
@@ -81,7 +83,8 @@ describe("mutation / importPaperForm", () => {
           processedBy: "Mr Recipient",
           processingOperationDone: "R 1",
           processingOperationDescription: "Traitement final"
-        }
+        },
+        ecoOrganisme: null
       };
       return input;
     }
@@ -207,6 +210,43 @@ describe("mutation / importPaperForm", () => {
         })
       ]);
     });
+
+    test.each(allowedFormats)(
+      "%p should be a valid format form date fields",
+      async f => {
+        const { user, company } = await userWithCompanyFactory("MEMBER");
+
+        const { mutate } = makeClient(user);
+
+        const sentAt = new Date("2021-01-01");
+        const receivedAt = new Date("2021-01-02");
+        const signedAt = new Date("2021-01-03");
+        const processedAt = new Date("2021-01-04");
+
+        const input = getImportPaperFormInput();
+        input.recipient.company.siret = company.siret;
+        input.signingInfo.sentAt = format(sentAt, f);
+        input.receivedInfo.receivedAt = format(receivedAt, f);
+        input.receivedInfo.signedAt = format(signedAt, f);
+        input.processedInfo.processedAt = format(processedAt, f);
+
+        const { data } = await mutate(IMPORT_PAPER_FORM, {
+          variables: { input }
+        });
+
+        expect(data.importPaperForm.status).toEqual(Status.PROCESSED);
+        expect(data.importPaperForm.isImportedFromPaper).toEqual(true);
+
+        const form = await prisma.form.findUnique({
+          where: { id: data.importPaperForm.id }
+        });
+        expect(form.status).toEqual(Status.PROCESSED);
+        expect(form.sentAt).toEqual(sentAt);
+        expect(form.receivedAt).toEqual(receivedAt);
+        expect(form.signedAt).toEqual(signedAt);
+        expect(form.processedAt).toEqual(processedAt);
+      }
+    );
   });
 
   describe("update an existing BSD with imported data", () => {
@@ -297,13 +337,13 @@ describe("mutation / importPaperForm", () => {
 
       expect(updatedForm.status).toEqual("PROCESSED");
       expect(updatedForm.isImportedFromPaper).toEqual(true);
-      expect(updatedForm.sentAt.toISOString()).toEqual(
-        importedData.signingInfo.sentAt
+      expect(updatedForm.sentAt).toEqual(
+        new Date(importedData.signingInfo.sentAt)
       );
       expect(updatedForm.sentBy).toEqual(importedData.signingInfo.sentBy);
 
-      expect(updatedForm.receivedAt.toISOString()).toEqual(
-        importedData.receivedInfo.receivedAt
+      expect(updatedForm.receivedAt).toEqual(
+        new Date(importedData.receivedInfo.receivedAt)
       );
       expect(updatedForm.receivedBy).toEqual(
         importedData.receivedInfo.receivedBy
@@ -315,7 +355,7 @@ describe("mutation / importPaperForm", () => {
         importedData.receivedInfo.quantityReceived
       );
       expect(updatedForm.processedAt).toEqual(
-        importedData.processedInfo.processedAt
+        new Date(importedData.processedInfo.processedAt)
       );
       expect(updatedForm.processedBy).toEqual(
         importedData.processedInfo.processedBy

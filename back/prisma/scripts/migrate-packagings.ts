@@ -27,7 +27,7 @@ export class MigratePackagingsUpdater implements Updater {
 
       const updateParams = notMigratedForms.map(form => {
         const { wasteDetailsNumberOfPackages: numberOfPackages } = form;
-        const packagings = form.wasteDetailsPackagings as Packagings[] ?? [];
+        const packagings = (form.wasteDetailsPackagings as Packagings[]) ?? [];
 
         // If numberOfPackages is 0 or less we obviously have corrupted data
         // So we "kind of uncorrupt" the data by assigning 0 to each

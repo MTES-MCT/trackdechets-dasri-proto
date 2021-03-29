@@ -53,6 +53,7 @@ enum CompanyType {
 
   "Négociant"
   TRADER
+ 
 
   "Éco-organisme"
   ECO_ORGANISME
@@ -120,10 +121,11 @@ type CompanyPrivate {
   transporterReceipt: TransporterReceipt
 
   """
-  Récépissé négociant (le cas échéant, pour les profils transporteur)
+  Récépissé négociant (le cas échéant, pour les profils négociant)
   """
   traderReceipt: TraderReceipt
 
+ 
   """
   Liste des agréments de l'éco-organisme
   """
@@ -171,6 +173,13 @@ type CompanyPublic {
   isRegistered: Boolean
 
   """
+  Profil de l'établissement sur Trackdéchets
+  ayant pour valeur un tableau vide quand l'établissement
+  n'est pas inscrit sur la plateforme `isRegistered=false`
+  """
+  companyTypes: [CompanyType!]!
+
+  """
   Récépissé transporteur associé à cet établissement (le cas échéant)
   """
   transporterReceipt: TransporterReceipt
@@ -180,6 +189,7 @@ type CompanyPublic {
   """
   traderReceipt: TraderReceipt
 
+ 
   """
   Liste des agréments de l'éco-organisme
   """
@@ -203,9 +213,6 @@ type CompanySearchResult {
   "Nom de l'établissement"
   name: String
 
-  "Profil de l'établissement"
-  companyTypes: [CompanyType]
-
   "Code NAF"
   naf: String
 
@@ -227,6 +234,7 @@ type CompanySearchResult {
   Récépissé négociant associé à cet établissement (le cas échant)
   """
   traderReceipt: TraderReceipt
+ 
 }
 
 """
@@ -261,7 +269,7 @@ type TransporterReceipt {
   receiptNumber: String!
 
   """
-  Limite de validatié du récépissé
+  Limite de validité du récépissé
   """
   validityLimit: DateTime!
 
@@ -283,7 +291,7 @@ type TraderReceipt {
   receiptNumber: String!
 
   """
-  Limite de validatié du récépissé
+  Limite de validité du récépissé
   """
   validityLimit: DateTime!
 
@@ -292,6 +300,7 @@ type TraderReceipt {
   """
   department: String!
 }
+ 
 
 "Information sur utilisateur au sein d'un établissement"
 type CompanyMember {

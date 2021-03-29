@@ -20,6 +20,7 @@ export async function updateCompanyFn({
   givenName,
   transporterReceiptId,
   traderReceiptId,
+ 
   ecoOrganismeAgreements
 }: MutationUpdateCompanyArgs): Promise<CompanyPrivate> {
   const data = {

@@ -5,10 +5,16 @@ import { ErrorCode } from "../../../../common/errors";
 import * as mailsHelper from "../../../../mailer/mailing";
 import { companyFactory, userFactory } from "../../../../__tests__/factories";
 import makeClient from "../../../../__tests__/testClient";
+import * as geocode from "../../../geocode";
 
 // No mails
 const sendMailSpy = jest.spyOn(mailsHelper, "sendMail");
 sendMailSpy.mockImplementation(() => Promise.resolve());
+
+// Mock calls to API adresse
+const geocodeSpy = jest.spyOn(geocode, "default");
+const geoInfo = { latitude: 43.302546, longitude: 5.384324 };
+geocodeSpy.mockResolvedValue(geoInfo);
 
 const CREATE_COMPANY = `
   mutation CreateCompany($companyInput: PrivateCompanyInput!) {
@@ -73,6 +79,13 @@ describe("Mutation.createCompany", () => {
         where: { company: { siret: companyInput.siret }, user: { id: user.id } }
       })) != null;
     expect(newCompanyAssociationExists).toBe(true);
+
+    const refreshedUser = await prisma.user.findUnique({
+      where: { id: user.id }
+    });
+
+    // association date is filled
+    expect(refreshedUser.firstAssociationDate).toBeTruthy();
   });
 
   it("should link to a transporterReceipt", async () => {
@@ -144,28 +157,6 @@ describe("Mutation.createCompany", () => {
     expect(data.createCompany.traderReceipt.department).toEqual(
       traderReceipt.department
     );
-  });
-
-  it("should create document keys", async () => {
-    const user = await userFactory();
-
-    const companyInput = {
-      siret: "12345678912345",
-      companyName: "Acme",
-      companyTypes: ["PRODUCER"],
-      documentKeys: ["key1", "key2"]
-    };
-    const { mutate } = makeClient({ ...user, auth: AuthType.Session });
-    await mutate(CREATE_COMPANY, {
-      variables: {
-        companyInput
-      }
-    });
-
-    const company = await prisma.company.findUnique({
-      where: { siret: companyInput.siret }
-    });
-    expect(company.documentKeys).toEqual(["key1", "key2"]);
   });
 
   it("should throw error if the company already exist", async () => {

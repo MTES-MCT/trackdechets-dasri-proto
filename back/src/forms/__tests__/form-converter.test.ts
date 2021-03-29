@@ -73,7 +73,7 @@ test("chain should optionnally chain data access", () => {
 test("expandFormFromDb", () => {
   const form: Partial<Form> = {
     id: "ckcejngdp00p00895cxaze1e8",
-    readableId: "TD-61feb7d24fd67a5688e761eb1cbcb497",
+    readableId: "BSD-20210101-AAAAAAAA",
     isImportedFromPaper: false,
     customId: null,
     isDeleted: false,
@@ -213,7 +213,7 @@ test("expandFormFromDb", () => {
       isExemptedOfReceipt: form.transporterIsExemptedOfReceipt,
       receipt: form.transporterReceipt,
       department: form.transporterDepartment,
-      validityLimit: form.transporterValidityLimit.toISOString(),
+      validityLimit: form.transporterValidityLimit,
       numberPlate: form.transporterNumberPlate,
       customInfo: form.transporterCustomInfo
     },
@@ -231,12 +231,13 @@ test("expandFormFromDb", () => {
       pop: form.wasteDetailsPop
     },
     trader: null,
+    broker: null,
     ecoOrganisme: null,
-    createdAt: form.createdAt.toISOString(),
-    updatedAt: form.updatedAt.toISOString(),
+    createdAt: form.createdAt,
+    updatedAt: form.updatedAt,
     status: form.status,
     signedByTransporter: form.signedByTransporter,
-    sentAt: form.sentAt.toISOString(),
+    sentAt: form.sentAt,
     sentBy: form.sentBy,
     wasteAcceptationStatus: form.wasteAcceptationStatus,
     wasteRefusalReason: form.wasteRefusalReason,
@@ -247,7 +248,7 @@ test("expandFormFromDb", () => {
     processingOperationDone: form.processingOperationDone,
     processingOperationDescription: form.processingOperationDescription,
     processedBy: form.processedBy,
-    processedAt: form.processedBy,
+    processedAt: form.processedAt,
     noTraceability: form.noTraceability,
     nextDestination: null,
     currentTransporterSiret: form.currentTransporterSiret,
@@ -292,7 +293,7 @@ describe("flattenFormInput", () => {
       transporter: {
         receipt: "12379",
         department: "07",
-        validityLimit: "2020-06-30",
+        validityLimit: new Date("2020-06-30"),
         numberPlate: "AD-007-TS",
         company: null
       },
@@ -329,7 +330,7 @@ describe("flattenFormInput", () => {
       transporterCompanyMail: null,
       transporterReceipt: input.transporter.receipt,
       transporterDepartment: input.transporter.department,
-      transporterValidityLimit: new Date(input.transporter.validityLimit),
+      transporterValidityLimit: input.transporter.validityLimit,
       transporterNumberPlate: input.transporter.numberPlate,
       wasteDetailsCode: null,
       wasteDetailsName: null,

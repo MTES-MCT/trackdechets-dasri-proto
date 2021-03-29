@@ -190,11 +190,10 @@ function allWasteWhereInput(sirets: string[]): Prisma.FormWhereInput {
           { ecoOrganismeSiret: { in: sirets } },
           { recipientCompanySiret: { in: sirets } },
           { traderCompanySiret: { in: sirets } },
+
           {
             temporaryStorageDetail: { destinationCompanySiret: { in: sirets } }
           },
-          { traderCompanySiret: { in: sirets } },
-          { traderCompanySiret: { in: sirets } },
           { transporterCompanySiret: { in: sirets } },
           {
             temporaryStorageDetail: { transporterCompanySiret: { in: sirets } }

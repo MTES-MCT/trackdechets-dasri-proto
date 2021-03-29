@@ -1,6 +1,7 @@
 import { Prisma, Status } from "@prisma/client";
 import prisma from "../../../prisma";
 import { checkIsAuthenticated } from "../../../common/permissions";
+import getReadableId from "../../readableId";
 import {
   MutationCreateFormArgs,
   ResolversParentTypes
@@ -13,7 +14,6 @@ import {
   flattenFormInput,
   flattenTemporaryStorageDetailInput
 } from "../../form-converter";
-import getReadableId from "../../../common/readableId";
 import { draftFormSchema } from "../../validation";
 import { checkIsFormContributor } from "../../permissions";
 import { FormSirets } from "../../types";
@@ -36,6 +36,7 @@ const createFormResolver = async (
     recipientCompanySiret: formContent.recipient?.company?.siret,
     transporterCompanySiret: formContent.transporter?.company?.siret,
     traderCompanySiret: formContent.trader?.company?.siret,
+
     ecoOrganismeSiret: formContent.ecoOrganisme?.siret,
     ...(temporaryStorageDetail?.destination?.company?.siret
       ? {
@@ -54,9 +55,9 @@ const createFormResolver = async (
   const form = flattenFormInput(formContent);
   const formCreateInput: Prisma.FormCreateInput = {
     ...form,
-    readableId: await getReadableId(),
+    readableId: getReadableId(),
     owner: { connect: { id: user.id } },
-    appendix2Forms: { connect: appendix2Forms }
+    appendix2Forms: appendix2Forms ? { connect: appendix2Forms } : undefined
   };
 
   await draftFormSchema.validate(formCreateInput);

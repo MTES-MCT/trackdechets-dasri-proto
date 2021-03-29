@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "BsdasriStatus" AS ENUM ('DRAFT', 'SEALED', 'READY_FOR_TAKEOVER', 'SENT', 'RECEIVED', 'REFUSED_BY_RECIPIENT','PROCESSED', 'REFUSED');
+CREATE TYPE "BsdasriStatus" AS ENUM ('INITIAL', 'SIGNED_BY_PRODUCER', 'SENT', 'RECEIVED', 'REFUSED_BY_RECIPIENT','PROCESSED', 'REFUSED');
 
 
 
@@ -13,6 +13,7 @@ CREATE TABLE "default$default"."Bsdasri" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "ownerId" TEXT NOT NULL,
     "isDeleted" BOOLEAN DEFAULT false,
+    "isDraft" BOOLEAN DEFAULT false;
     "emitterCompanyName" TEXT,
     "emitterCompanySiret" TEXT,
     "emitterCompanyAddress" TEXT,
@@ -32,8 +33,8 @@ CREATE TABLE "default$default"."Bsdasri" (
     "emitterWastePackagingsInfo" JSONB,
     "emitterCustomInfo" TEXT,
     "handedOverToTransporterAt" TIMESTAMP(3),
-    "emissionSignedBy" TEXT,
-    "emissionSignedAt" TIMESTAMP(3),
+    "emissionSignatureAuthor" TEXT,
+    "emissionSignatureDate" TIMESTAMP(3),
     "transporterCompanyName" TEXT,
     "transporterCompanySiret" TEXT,
     "transporterCompanyAddress" TEXT,
@@ -53,8 +54,8 @@ CREATE TABLE "default$default"."Bsdasri" (
     "transporterWasteVolume" INTEGER,
     "transporterCustomInfo" TEXT,
     "handedOverToRecipientAt" TIMESTAMP(3),
-    "transportSignedBy" TEXT,
-    "transportSignedAt" TIMESTAMP(3),
+    "transportSignatureAuthor" TEXT,
+    "transportSignatureDate" TIMESTAMP(3),
     "recipientCompanyName" TEXT,
     "recipientCompanySiret" TEXT,
     "recipientCompanyAddress" TEXT,
@@ -72,11 +73,11 @@ CREATE TABLE "default$default"."Bsdasri" (
     "receivedAt" TIMESTAMP(3),
     "processingOperation" TEXT,
     "processedAt" TIMESTAMP(3),
-    "receptionSignedBy" TEXT,
-    "receptionSignedAt" TIMESTAMP(3),
-    "operationSignedAt" TIMESTAMP(3),
-    "operationSignedBy" TEXT,
-    "processSignedAt" TIMESTAMP(3),
+    "receptionSignatureAuthor" TEXT,
+    "receptionSignatureDate" TIMESTAMP(3),
+    "operationSignatureDate" TIMESTAMP(3),
+    "operationSignatureAuthor" TEXT,
+
 
     PRIMARY KEY ("id")
 );

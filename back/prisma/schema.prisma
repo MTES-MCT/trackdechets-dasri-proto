@@ -141,6 +141,9 @@ model Company {
   createdAt              DateTime             @default(now())
   securityCode           Int
   name                   String?
+  address                String?
+  longitude              Float?
+  latitude               Float?
   gerepId                String?
   codeNaf                String?
   givenName              String?
@@ -256,7 +259,7 @@ model Form {
   receivedBy                         String?
   wasteDetailsConsistence            Consistence?
   processedBy                        String?
-  processedAt                        String?
+  processedAt                        DateTime?
   nextDestinationProcessingOperation String?
   traderCompanyName                  String?
   traderCompanySiret                 String?
@@ -474,6 +477,8 @@ model User {
   phone               String?
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
+  activatedAt                 DateTime?            // when was this user activated ? - emailing purpose
+  firstAssociationDate        DateTime?            // when was this user first associated to any company ? - emailing purpose
   isActive            Boolean?             @default(false)
   applicationId       String?
   application         Application?         @relation(fields: [applicationId], references: [id])
@@ -515,9 +520,8 @@ model UserActivationHash {
 // Bsdasri models
 
 enum BsdasriStatus {
-  DRAFT 
-  SEALED
-  READY_FOR_TAKEOVER
+  INITIAL
+  SIGNED_BY_PRODUCER
   SENT
   RECEIVED
   PROCESSED
@@ -527,12 +531,13 @@ model Bsdasri {
   id                                 String                  @id @default(cuid())
   readableId                         String                  @unique
   customId                           String? 
-  status                             BsdasriStatus           @default(DRAFT)
+  status                             BsdasriStatus           @default(INITIAL)
   createdAt                          DateTime                @default(now())
   updatedAt                          DateTime                @updatedAt
   ownerId                            String
   owner                              User                    @relation("BsdasriOwnedBy", fields: [ownerId], references: [id])
   isDeleted                          Boolean?                @default(false)
+  isDraft                            Boolean?                @default(false)
   
   // emitter
   emitterCompanyName                 String?
@@ -560,10 +565,10 @@ model Bsdasri {
   emitterWastePackagingsInfo         Json?
   handedOverToTransporterAt          DateTime?
 
-  emissionSignedBy                   String?
   emissionSignatory                  User? @relation("BsdasriEmissionSignature",fields: [emissionSignatoryId], references: [id])
   emissionSignatoryId                String?
-  emissionSignedAt                   DateTime?
+  emissionSignatureDate              DateTime?
+  emissionSignatureAuthor            String?
   
 // transporter
   transporterCompanyName             String?
@@ -593,10 +598,11 @@ model Bsdasri {
 
   handedOverToRecipientAt            DateTime?
 
-  transportSignedBy                  String?
+ 
   transportSignatory                 User? @relation("BsdasriTransportSignature", fields: [transportSignatoryId], references: [id])
   transportSignatoryId               String?
-  transportSignedAt                  DateTime?
+  transportSignatureDate             DateTime?
+  transportSignatureAuthor           String?
 
   // recipient
   recipientCompanyName               String?
@@ -622,16 +628,16 @@ model Bsdasri {
   processingOperation                String?
   processedAt                        DateTime?
 
-  receptionSignedBy                 String?
   receptionSignatory                User? @relation("BsdasriReceptionSignature", fields: [receptionSignatoryId], references: [id])
   receptionSignatoryId              String?
-  receptionSignedAt                 DateTime?
+  receptionSignatureDate            DateTime?
+  receptionSignatureAuthor          String?
 
-  operationSignedBy                  String?
+ 
   operationSignatory                 User? @relation("BsdasriOperationSignature", fields: [operationSignatoryId], references: [id])
   operationSignatoryId               String?
-  operationSignedAt                  DateTime?
-
+  operationSignatureDate             DateTime?
+  operationSignatureAuthor           String?
 
   regroupedBsdasris                 Bsdasri[]                  @relation("BsdasriToBsdasri")
   regroupedOnBsdasri                Bsdasri?                   @relation("BsdasriToBsdasri", fields: [regroupedOnBsdasriId], references: [id])

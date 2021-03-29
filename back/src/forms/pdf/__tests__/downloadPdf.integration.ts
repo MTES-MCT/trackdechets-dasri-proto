@@ -6,6 +6,7 @@ import {
 } from "../../../__tests__/factories";
 import { resetDatabase } from "../../../../integration-tests/helper";
 import prisma from "../../../prisma";
+import { hashToken } from "../../../utils";
 
 const request = supertest(app);
 
@@ -21,10 +22,11 @@ describe("downloadPdf", () => {
   afterAll(resetDatabase);
   it("should download a pdf", async () => {
     const { user, company } = await userWithCompanyFactory("MEMBER");
-    const { token } = await prisma.accessToken.create({
+    const clearToken = "token";
+    await prisma.accessToken.create({
       data: {
         user: { connect: { id: user.id } },
-        token: "token"
+        token: hashToken(clearToken)
       }
     });
     const form = await formFactory({
@@ -33,19 +35,15 @@ describe("downloadPdf", () => {
     });
     const formPdfResponse = await request
       .post("/")
-      .set("Authorization", `Bearer ${token}`)
+      .set("Authorization", `Bearer ${clearToken}`)
       .send({ query: formPdfQuery(form.id) });
+
     const downloadToken = formPdfResponse.body.data.formPdf.token;
     const res = await request.get(`/download?token=${downloadToken}`);
     expect(res.status).toBe(200);
     expect(res.header["content-type"]).toBe("application/pdf");
-    const date = new Date();
-    const fileNameSuffix = `${date.getDate()}-${
-      date.getMonth() + 1
-    }-${date.getFullYear()}`;
-
     expect(res.header["content-disposition"]).toBe(
-      `attachment;filename=BSD_${form.readableId}_${fileNameSuffix}.pdf`
+      `attachment;filename=${form.readableId}.pdf`
     );
-  });
+  }, 10000);
 });

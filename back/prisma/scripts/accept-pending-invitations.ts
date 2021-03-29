@@ -1,4 +1,3 @@
-
 import acceptPendingInvitations from "../../src/scripts/prisma/acceptPendingInvitations";
 import { registerUpdater, Updater } from "./helper/helper";
 

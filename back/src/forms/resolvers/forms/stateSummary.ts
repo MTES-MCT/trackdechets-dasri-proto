@@ -69,7 +69,7 @@ function getEmitter(
 function getLastActionOn(
   form: Form,
   temporaryStorageDetail: TemporaryStorageDetail
-): string {
+): Date {
   switch (form.status) {
     case "SENT":
       return form.sentAt;
@@ -81,9 +81,9 @@ function getLastActionOn(
     case "TEMP_STORED":
     case "TEMP_STORER_ACCEPTED":
     case "RESEALED":
-      return temporaryStorageDetail.tempStorerReceivedAt.toString();
+      return temporaryStorageDetail.tempStorerReceivedAt;
     case "RESENT":
-      return temporaryStorageDetail.signedAt.toString();
+      return temporaryStorageDetail.signedAt;
     default:
       return form.createdAt;
   }

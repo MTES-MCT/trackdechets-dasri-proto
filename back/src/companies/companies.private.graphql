@@ -41,6 +41,7 @@ type Mutation {
     transporterReceiptId: String
     "Identifiant d'un récépissé négociant"
     traderReceiptId: String
+ 
     "Agréments de l'éco-organisme"
     ecoOrganismeAgreements: [URL!]
   ): CompanyPrivate!
@@ -71,7 +72,7 @@ type Mutation {
 
   """
   USAGE INTERNE
-  Crée un récépissé transporteur
+  Crée un récépissé négociant
   """
   createTraderReceipt(input: CreateTraderReceiptInput!): TraderReceipt
 
@@ -85,8 +86,7 @@ type Mutation {
   USAGE INTERNE
   Supprime un récépissé négociant
   """
-  deleteTraderReceipt(input: DeleteTraderReceiptInput!): TransporterReceipt
-
+  deleteTraderReceipt(input: DeleteTraderReceiptInput!): TraderReceipt
   """
   USAGE INTERNE
   Rattache un établissement à l'utilisateur authentifié
@@ -151,7 +151,9 @@ type CompanyFavorite {
   traderReceipt: TraderReceipt
 }
 
-"Lien d'upload"
+"""
+Lien d'upload
+"""
 type UploadLink {
   "URL signé permettant d'uploader un fichier"
   signedUrl: String
@@ -170,7 +172,7 @@ input CreateTransporterReceiptInput {
   receiptNumber: String!
 
   """
-  Limite de validatié du récépissé
+  Limite de validité du récépissé
   """
   validityLimit: DateTime!
 
@@ -195,7 +197,7 @@ input UpdateTransporterReceiptInput {
   receiptNumber: String
 
   """
-  Limite de validatié du récépissé
+  Limite de validité du récépissé
   """
   validityLimit: DateTime
 
@@ -225,7 +227,7 @@ input CreateTraderReceiptInput {
   receiptNumber: String!
 
   """
-  Limite de validatié du récépissé
+  Limite de validité du récépissé
   """
   validityLimit: DateTime!
 
@@ -236,7 +238,7 @@ input CreateTraderReceiptInput {
 }
 
 """
-Payload d'édition d'un récépissé transporteur
+Payload d'édition d'un récépissé négociant
 """
 input UpdateTraderReceiptInput {
   """
@@ -245,12 +247,12 @@ input UpdateTraderReceiptInput {
   id: ID!
 
   """
-  Numéro de récépissé transporteur
+  Numéro de récépissé négociant
   """
   receiptNumber: String
 
   """
-  Limite de validatié du récépissé
+  Limite de validité du récépissé
   """
   validityLimit: DateTime
 
@@ -287,11 +289,11 @@ input PrivateCompanyInput {
   "Nom de l'établissement"
   companyName: String
 
-  """
-  Liste de documents permettant de démontrer l'appartenance
-  de l'utilisateur à l'établissement
-  """
-  documentKeys: [String]
+  "Nom d'usage de l'établissement"
+  givenName: String
+
+  "Adresse de l'établissement"
+  address: String
 
   """
   Récipissé transporteur (le cas échéant, pour les profils transporteur)
@@ -302,6 +304,8 @@ input PrivateCompanyInput {
   Récipissé négociant (le cas échéant, pour les profils négociant)
   """
   traderReceiptId: String
+
+ 
 
   """
   Liste des agréments de l'éco-organisme
