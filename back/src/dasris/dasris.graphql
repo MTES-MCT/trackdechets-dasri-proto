@@ -10,14 +10,11 @@ enum BsdasriRole {
 }
 
 enum BsdasriStatus {
-  "Bsdasri à l'état de brouillon"
-  DRAFT
-
-  "Bsdasri scellé (publié)"
-  SEALED
+  "Bsdasri dans son état initial"
+  INITIAL
 
   "Optionnel, Bsdasri signé par la PRED (émetteur)"
-  READY_FOR_TAKEOVER
+  SIGNED_BY_PRODUCER
 
   "Bsdasri envoyé vers l'établissement de destination"
   SENT
@@ -31,8 +28,6 @@ enum BsdasriStatus {
   "Déchet refusé"
   REFUSED
 }
-
- 
 
 "Type de packaging du déchet"
 enum BsdasriPackagings {
@@ -53,6 +48,11 @@ enum BsdasriPackagings {
 
   "Autre"
   AUTRE
+}
+
+type BsdasriSignature {
+  date: DateTime
+  author: String
 }
 
 "Émetteur du Bsdasri, Personne responsable de l'émimination des déchets (PRED)"
@@ -125,8 +125,7 @@ type BsdasriEmission {
   wasteCode: String
   wasteDetails: BsdasriWasteDetails
   handedOverAt: DateTime
-  signedBy: String
-  signedAt: DateTime
+  signature: BsdasriSignature
 }
 
 "Informations relatives à l'acceptation ou au refus du déchet (Bsdasri)"
@@ -142,8 +141,7 @@ type BsdasriTransport {
   wasteAcceptation: BsdasriWasteAcceptation
   handedOverAt: DateTime
   takenOverAt: DateTime
-  signedBy: String
-  signedAt: DateTime
+  signature: BsdasriSignature
 }
 
 "Informations relatives à la réception du Bsdasri"
@@ -151,26 +149,24 @@ type BsdasriReception {
   wasteDetails: BsdasriWasteDetails
   wasteAcceptation: BsdasriWasteAcceptation
   receivedAt: DateTime
-  signedBy: String
-  signedAt: DateTime
+  signature: BsdasriSignature
 }
 
 "Informations relatives au traitement du Bsdasri"
 type BsdasriOperation {
-  signedBy: String
-  signedAt: DateTime
   processingOperation: String
   processedAt: DateTime
+  signature: BsdasriSignature
 }
 
 "Bordereau Bsdasri"
 type Bsdasri {
   id: ID!
-  readableId: String!
   customId: String
   status: BsdasriStatus!
   createdAt: DateTime
   updatedAt: DateTime
+  isDraft: Boolean!
 
   emitter: BsdasriEmitter
   emission: BsdasriEmission
@@ -301,15 +297,15 @@ type Query {
     hasNextStep: Boolean
   ): [Bsdasri!]!
 
-  bsdasri(
-    "Identifiant opaque du BSD"
-    id: ID
-    "Identifiant lisible du BSD"
-    readableId: String
-  ): Bsdasri
+  bsdasri("Identifiant opaque du BSD" id: ID): Bsdasri
 }
 
 type Mutation {
+  "Crée un nouveau dasri en brouillon"
+  createDraftBsdasri(
+    "Payload de création d'un dasri brouillon"
+    bsdasriCreateInput: BsdasriCreateInput!
+  ): Bsdasri!
   "Crée un nouveau dasri"
   createBsdasri(
     "Payload de création d'un dasri"
@@ -325,19 +321,17 @@ type Mutation {
     bsdasriUpdateInput: BsdasriUpdateInput!
   ): Bsdasri!
 
-  "Marque un dasri brouillon comme prêt (SEALED)"
-  markAsReadyBsdasri("ID d'un Bsdasri" id: ID!): Bsdasri
+  "Marque un dasri brouillon comme publié (isDraft=false)"
+  publishBsdasri("ID d'un Bsdasri" id: ID!): Bsdasri
 
   """
   Appose une signature sur un Bsdasri, verrouille les cadres correspondant
-  
+
   Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
   Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport
 
-  Toutefois il existe un exception: le cadre emetteur peut être signé par le transporteur grâce au code de 
+  Toutefois il existe un exception: le cadre emetteur peut être signé par le transporteur grâce au code de
   sécurité de l'émetteur (BsdasriSignatureType: EMISSION_WITH_SECRET_CODE)
-  """ 
-
-  
-  signBsdasri(id: ID!, signatureInput: BsdasriSignatureInput! ): Bsdasri
+  """
+  signBsdasri(id: ID!, signatureInput: BsdasriSignatureInput!): Bsdasri
 }
