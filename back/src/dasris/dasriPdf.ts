@@ -23,10 +23,9 @@ const dasriPdfHandler = async (req, res) => {
     return res.status(404).send("Ce bordereau n'existe pas");
   }
   await checkCanReadBsdasri(user, bsdasri);
-  const qrcode =
-    bsdasri?.status !== "DRAFT"
-      ? await QRCode.toString(bsdasri.readableId, { type: "svg" })
-      : "";
+  const qrcode = !bsdasri.isDraft
+    ? await QRCode.toString(bsdasri.id, { type: "svg" })
+    : "";
 
   const tplPath = join(__dirname, "/templates/dasri.ejs");
 
