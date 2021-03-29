@@ -7,22 +7,21 @@ import { Prisma, Bsdasri } from "@prisma/client";
 import { BsdasriRole } from "../generated/graphql/types";
 import { FullBsdasri } from "./types";
 /**
- * Retrieves a dasri by id or readableId or throw a BsdasriNotFound error
+ * Retrieves a dasri by id or throw a BsdasriNotFound error
  */
 export async function getBsdasriOrNotFound({
-  id,
-  readableId
+  id
 }: Prisma.BsdasriWhereUniqueInput) {
-  if (!id && !readableId) {
-    throw new UserInputError("You should specify an id or a readableId");
+  if (!id) {
+    throw new UserInputError("You should specify an id");
   }
 
   const bsdasri = await prisma.bsdasri.findUnique({
-    where: id ? { id } : { readableId }
+    where: { id }
   });
 
   if (bsdasri == null || bsdasri.isDeleted == true) {
-    throw new BsdasriNotFound(id ? id.toString() : readableId);
+    throw new BsdasriNotFound(id.toString());
   }
   return bsdasri;
 }
@@ -66,37 +65,5 @@ export async function getFullBsdasri(bsdasri: Bsdasri): Promise<FullBsdasri> {
   return {
     ...bsdasri,
     owner
-  };
-}
-
-export function stringifyDates(obj: Bsdasri) {
-  if (!obj) {
-    return null;
-  }
-
-  return {
-    ...obj,
-    ...(obj?.createdAt && { createdAt: obj.createdAt.toISOString() }),
-    ...(obj?.updatedAt && { updatedAt: obj.updatedAt.toISOString() }),
-    ...(obj?.emissionSignedAt && {
-      emissionSignedAt: obj.emissionSignedAt.toISOString()
-    }),
-    ...(obj?.transporterTakenOverAt && {
-      transporterTakenOverAt: obj.transporterTakenOverAt.toISOString()
-    }),
-    ...(obj?.handedOverToRecipientAt && {
-      handedOverToRecipientAt: obj.handedOverToRecipientAt.toISOString()
-    }),
-    ...(obj?.transportSignedAt && {
-      transportSignedAt: obj.handedOverToRecipientAt.toISOString()
-    }),
-    ...(obj?.receivedAt && { receivedAt: obj.receivedAt.toISOString() }),
-    ...(obj?.receptionSignedAt && {
-      receptionSignedAt: obj.receptionSignedAt.toISOString()
-    }),
-    ...(obj?.processedAt && { processedAt: obj.processedAt.toISOString() }),
-    ...(obj?.operationSignedAt && {
-      operationSignedAt: obj.operationSignedAt.toISOString()
-    })
   };
 }

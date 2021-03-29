@@ -4,7 +4,7 @@ import { Prisma } from "@prisma/client";
 export enum BsdasriState {
   Draft = "DRAFT",
   Sealed = "SEALED", // we keep this terminology for now, although it is a bit confusing
-  ReadyForTakeover = "READY_FOR_TAKEOVER",
+  ReadyForTakeover = "SIGNED_BY_PRODUCER",
   Sent = "SENT",
   Received = "RECEIVED",
   Processed = "PROCESSED",

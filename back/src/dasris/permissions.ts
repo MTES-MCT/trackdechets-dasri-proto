@@ -1,4 +1,4 @@
-import { Company, User, Bsdasri } from "@prisma/client";
+import { Company, User, Bsdasri, BsdasriStatus } from "@prisma/client";
 
 import { getFullUser } from "../users/database";
 
@@ -6,6 +6,12 @@ import { BsdasriSirets } from "./types";
 
 import { NotFormContributor } from "../forms/errors";
 import { getFullBsdasri } from "./database";
+import { UserInputError } from "apollo-server-express";
+export class InvalidPublicationAttempt extends UserInputError {
+  constructor() {
+    super("Vous ne pouvez pas publier ce bordereau.");
+  }
+}
 
 function isDasriEmitter(user: { companies: Company[] }, dasri: BsdasriSirets) {
   if (!dasri.emitterCompanySiret) {
@@ -60,7 +66,12 @@ export async function checkIsBsdasriContributor(
 
   return true;
 }
-
+export async function checkIsBsdasriPublishable(user: User, dasri: Bsdasri) {
+  if (!dasri.isDraft || dasri.status !== BsdasriStatus.INITIAL) {
+    throw new InvalidPublicationAttempt();
+  }
+  return true;
+}
 export async function checkCanReadBsdasri(user: User, bsdasri: Bsdasri) {
   return checkIsBsdasriContributor(
     user,

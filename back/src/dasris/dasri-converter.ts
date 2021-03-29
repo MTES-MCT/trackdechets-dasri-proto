@@ -20,7 +20,8 @@ import {
   BsdasriTransportInput,
   BsdasriReceptionInput,
   BsdasriPackagingInfo,
-  BsdasriPackagingInfoInput
+  BsdasriPackagingInfoInput,
+  BsdasriSignature
 } from "../generated/graphql/types";
 import { chain, nullIfNoValues, safeInput } from "../forms/form-converter";
 import { Prisma, Bsdasri, BsdasriStatus, QuantityType } from "@prisma/client";
@@ -28,9 +29,8 @@ import { Prisma, Bsdasri, BsdasriStatus, QuantityType } from "@prisma/client";
 export function expandBsdasriFromDb(bsdasri: Bsdasri): GqlBsdasri {
   return {
     id: bsdasri.id,
-    readableId: bsdasri.readableId,
     customId: bsdasri.customId,
-
+    isDraft: bsdasri.isDraft,
     emitter: nullIfNoValues<BsdasriEmitter>({
       company: nullIfNoValues<FormCompany>({
         name: bsdasri.emitterCompanyName,
@@ -50,9 +50,12 @@ export function expandBsdasriFromDb(bsdasri: Bsdasri): GqlBsdasri {
     }),
     emission: nullIfNoValues<BsdasriEmission>({
       wasteCode: bsdasri.wasteDetailsCode,
-      handedOverAt: bsdasri.handedOverToTransporterAt?.toISOString(),
-      signedBy: bsdasri.emissionSignedBy,
-      signedAt: bsdasri.emissionSignedAt?.toISOString(),
+      handedOverAt: bsdasri.handedOverToTransporterAt,
+      signature: nullIfNoValues<BsdasriSignature>({
+        author: bsdasri.emissionSignatureAuthor,
+        date: bsdasri.emissionSignatureDate
+      }),
+
       wasteDetails: nullIfNoValues<BsdasriWasteDetails>({
         quantity: bsdasri.emitterWasteQuantity,
         quantityType: bsdasri.emitterWasteQuantityType as QuantityType,
@@ -73,7 +76,7 @@ export function expandBsdasriFromDb(bsdasri: Bsdasri): GqlBsdasri {
       customInfo: bsdasri.transporterCustomInfo,
       receipt: bsdasri.transporterReceipt,
       receiptDepartment: bsdasri.transporterReceiptDepartment,
-      receiptValidityLimit: bsdasri.transporterReceiptValidityLimit?.toISOString()
+      receiptValidityLimit: bsdasri.transporterReceiptValidityLimit
     }),
     transport: nullIfNoValues<BsdasriTransport>({
       wasteDetails: nullIfNoValues<BsdasriWasteDetails>({
@@ -88,10 +91,12 @@ export function expandBsdasriFromDb(bsdasri: Bsdasri): GqlBsdasri {
         refusalReason: bsdasri.transporterWasteRefusalReason,
         refusedQuantity: bsdasri.transporterWasteRefusedQuantity
       }),
-      takenOverAt: bsdasri.transporterTakenOverAt?.toISOString(),
-      handedOverAt: bsdasri.handedOverToRecipientAt?.toISOString(),
-      signedBy: bsdasri.transportSignedBy,
-      signedAt: bsdasri.transportSignedAt?.toISOString()
+      takenOverAt: bsdasri.transporterTakenOverAt,
+      handedOverAt: bsdasri.handedOverToRecipientAt,
+      signature: nullIfNoValues<BsdasriSignature>({
+        author: bsdasri.transportSignatureAuthor,
+        date: bsdasri.transportSignatureDate
+      })
     }),
     recipient: nullIfNoValues<BsdasriRecipient>({
       company: nullIfNoValues<FormCompany>({
@@ -116,18 +121,22 @@ export function expandBsdasriFromDb(bsdasri: Bsdasri): GqlBsdasri {
         refusalReason: bsdasri.recipientWasteRefusalReason,
         refusedQuantity: bsdasri.recipientWasteRefusedQuantity
       }),
-      receivedAt: bsdasri.receivedAt?.toISOString(),
-      signedBy: bsdasri.receptionSignedBy,
-      signedAt: bsdasri.receptionSignedAt?.toISOString()
+      receivedAt: bsdasri.receivedAt,
+      signature: nullIfNoValues<BsdasriSignature>({
+        author: bsdasri.receptionSignatureAuthor,
+        date: bsdasri.receptionSignatureDate
+      })
     }),
     operation: nullIfNoValues<BsdasriOperation>({
       processingOperation: bsdasri.processingOperation,
-      processedAt: bsdasri.processedAt?.toISOString(),
-      signedBy: bsdasri.operationSignedBy,
-      signedAt: bsdasri.operationSignedAt?.toISOString()
+      processedAt: bsdasri.processedAt,
+      signature: nullIfNoValues<BsdasriSignature>({
+        author: bsdasri.receptionSignatureAuthor,
+        date: bsdasri.receptionSignatureDate
+      })
     }),
-    createdAt: bsdasri.createdAt?.toISOString(),
-    updatedAt: bsdasri.updatedAt?.toISOString(),
+    createdAt: bsdasri.createdAt,
+    updatedAt: bsdasri.updatedAt,
     status: bsdasri.status as BsdasriStatus
   };
 }

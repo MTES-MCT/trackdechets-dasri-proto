@@ -8,8 +8,6 @@ export class BsdasriNotFound extends UserInputError {
 
 export class MissingIdOrReadableId extends UserInputError {
   constructor() {
-    super(
-      "L'id ou le readableId doit être fourni pour identifier le bordereau."
-    );
+    super("L'id doit être fourni pour identifier le bordereau.");
   }
 }
