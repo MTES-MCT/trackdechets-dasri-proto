@@ -24,6 +24,9 @@ generates:
       - typescript-operations
       - graphql-codegen-factories
     config:
+      namingConvention: 
+        enumValues: change-case#pascalCase
+        transformUnderscore: true
       avoidOptionals: true
       scalars:
         DateTime: string
