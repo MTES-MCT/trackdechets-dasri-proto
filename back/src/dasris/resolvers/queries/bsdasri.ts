@@ -1,5 +1,5 @@
 import { expandBsdasriFromDb } from "../../dasri-converter";
-import { UserInputError } from "apollo-server-express";
+
 import { MissingIdOrReadableId } from "../../errors";
 import { QueryResolvers } from "../../../generated/graphql/types";
 import { checkIsAuthenticated } from "../../../common/permissions";
@@ -7,14 +7,10 @@ import { getBsdasriOrNotFound } from "../../database";
 import { checkCanReadBsdasri } from "../../permissions";
 
 function validateArgs(args: any) {
-  if (args.id == null && args.readableId == null) {
+  if (args.id == null) {
     throw new MissingIdOrReadableId();
   }
-  if (args.id && args.readableId) {
-    throw new UserInputError(
-      "Vous devez préciser soit un id soit un readableId mais pas les deux"
-    );
-  }
+
   return args;
 }
 
