@@ -40,7 +40,7 @@ const createBsdasriResolver = async (
     const newDasri = await prisma.bsdasri.create({
       data: {
         ...flattenedInput,
-        readableId: await getReadableId(ReadableIdPrefix.DASRI),
+        id: await getReadableId(ReadableIdPrefix.DASRI),
         owner: { connect: { id: user.id } },
         regroupedBsdasris: { connect: regroupedBsdasris }
       }
