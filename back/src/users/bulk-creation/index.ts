@@ -3,7 +3,7 @@ import prisma from "../../prisma";
 import { loadCompanies, loadRoles } from "./loaders";
 import { validateCompany, validateRoleGenerator } from "./validations";
 import { sirenify } from "./sirene";
-import { hashPassword } from "../utils";
+import { hashPassword, generatePassword } from "../utils";
 import { randomNumber, getUIBaseURL } from "../../utils";
 import { groupBy } from "./utils";
 import { sendMail } from "../../mailer/mailing";
@@ -153,7 +153,7 @@ export async function bulkCreate(opts: Opts): Promise<void> {
 
     if (!user) {
       // No user matches this email. Creates a new one
-      const password = Math.random().toString(36).slice(-10);
+      const password = generatePassword();
 
       const hashedPassword = await hashPassword(password);
 
@@ -163,7 +163,8 @@ export async function bulkCreate(opts: Opts): Promise<void> {
           name: email,
           email,
           password: hashedPassword,
-          isActive: true
+          isActive: true,
+          activatedAt: new Date()
         }
       });
 
@@ -175,7 +176,18 @@ export async function bulkCreate(opts: Opts): Promise<void> {
     await Promise.all(
       usersWithRoles[email].map(async ({ role, siret }) => {
         try {
-          return await associateUserToCompany(user.id, siret, role);
+          const association = await associateUserToCompany(
+            user.id,
+            siret,
+            role
+          );
+          if (!user.firstAssociationDate) {
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { firstAssociationDate: new Date() }
+            });
+          }
+          return association;
         } catch (err) {
           if (err instanceof UserInputError) {
             // association already exist, return it
