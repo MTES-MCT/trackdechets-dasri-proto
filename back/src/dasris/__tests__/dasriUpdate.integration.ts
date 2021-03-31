@@ -10,7 +10,6 @@ const DASRI_UPDATE = `
 mutation DasriUpdate($input: BsdasriUpdateInput!) {
   updateBsdasri(bsdasriUpdateInput: $input) {
     id
-    readableId
     customId
     status
 
@@ -242,7 +241,7 @@ describe("Mutation.dasriUpdate", () => {
     const dasri = await dasriFactory({
       ownerId: user.id,
       opt: {
-        status: BsdasriStatus.READY_FOR_TAKEOVER,
+        status: BsdasriStatus.SIGNED_BY_PRODUCER,
         emitterCompanySiret: company.siret,
         emissionSignedBy: user.name,
         emissionSignatory: { connect: { id: user.id } },
@@ -281,7 +280,7 @@ describe("Mutation.dasriUpdate", () => {
     let dasri = await dasriFactory({
       ownerId: user.id,
       opt: {
-        status: BsdasriStatus.READY_FOR_TAKEOVER,
+        status: BsdasriStatus.SIGNED_BY_PRODUCER,
         emitterCompanySiret: company.siret,
         emissionSignedBy: user.name,
         emissionSignatory: { connect: { id: user.id } },

@@ -14,15 +14,7 @@ describe("getBsdasriOrNotFound", () => {
     expect(created.id).toEqual(retrieved.id);
   });
 
-  it("should get a dasri by readableId", async () => {
-    const user = await userFactory();
-    const created = await dasriFactory({ ownerId: user.id });
-
-    const retrieved = await getBsdasriOrNotFound({
-      readableId: created.readableId
-    });
-    expect(retrieved.id).toEqual(created.id);
-  });
+ 
 
   it("should throw BsdasriNotFound exception if dasri is deleted", async () => {
     expect.assertions(2);
@@ -54,16 +46,5 @@ describe("getBsdasriOrNotFound", () => {
     }
   });
 
-  it("should throw FormNotFound exception if readableId is not found", async () => {
-    expect.assertions(2);
-    const readableId = "inconnu";
-    try {
-      await getBsdasriOrNotFound({ readableId });
-    } catch (err) {
-      expect(err.extensions.code).toEqual(ErrorCode.BAD_USER_INPUT);
-      expect(err.message).toEqual(
-        `Le bordereau avec l'identifiant "${readableId}" n'existe pas.`
-      );
-    }
-  });
+ 
 });

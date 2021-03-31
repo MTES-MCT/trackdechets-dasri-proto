@@ -8,8 +8,9 @@ import {
   BsdasriSignatureType,
   MutationResolvers
 } from "../../../generated/graphql/types";
-import { ObjectSchema } from "yup";
+import { AnyObjectSchema } from "yup";
 import { UserInputError } from "apollo-server-express";
+import { InvalidTransition } from "../../../forms/errors";
 
 import { Bsdasri, BsdasriStatus } from "@prisma/client";
 import dasriTransition from "../../workflow/dasriTransition";
@@ -30,6 +31,10 @@ const dasriSign: MutationResolvers["signBsdasri"] = async (
 ) => {
   const user = checkIsAuthenticated(context);
   const bsdasri = await getBsdasriOrNotFound({ id });
+  if (bsdasri.isDraft) {
+    throw new InvalidTransition();
+  }
+
   const signatureParams = dasriSignatureMapping[signatureInput.type];
 
   // Which siret is involved in curent signature process ?
@@ -48,8 +53,8 @@ const dasriSign: MutationResolvers["signBsdasri"] = async (
   });
 
   const data = {
-    [signatureParams.by]: signatureInput.signedBy,
-    [signatureParams.at]: new Date(),
+    [signatureParams.author]: signatureInput.author,
+    [signatureParams.date]: new Date(),
     [signatureParams.signatoryField]: { connect: { id: user.id } },
     ...getFieldsUpdate({ bsdasri, signatureInput })
   };
@@ -89,16 +94,16 @@ const getFieldsUpdate: getFieldsUpdateFn = ({ bsdasri, signatureInput }) => {
 };
 
 type BsdasriSignatureInfos = {
-  by:
-    | "emissionSignedBy"
-    | "transportSignedBy"
-    | "receptionSignedBy"
-    | "operationSignedBy";
-  at:
-    | "emissionSignedAt"
-    | "transportSignedAt"
-    | "receptionSignedAt"
-    | "operationSignedAt";
+  author:
+    | "emissionSignatureAuthor"
+    | "transportSignatureAuthor"
+    | "receptionSignatureAuthor"
+    | "operationSignatureAuthor";
+  date:
+    | "emissionSignatureDate"
+    | "transportSignatureDate"
+    | "receptionSignatureDate"
+    | "operationSignatureDate";
   eventType: BsdasriEventType;
   authorizedSiret: (bsdasri: Bsdasri) => string;
   signatoryField:
@@ -106,7 +111,7 @@ type BsdasriSignatureInfos = {
     | "transportSignatory"
     | "receptionSignatory"
     | "operationSignatory";
-  validator: ObjectSchema;
+  validator: AnyObjectSchema;
 };
 
 const dasriSignatureMapping: Record<
@@ -114,24 +119,24 @@ const dasriSignatureMapping: Record<
   BsdasriSignatureInfos
 > = {
   EMISSION: {
-    by: "emissionSignedBy",
-    at: "emissionSignedAt",
+    author: "emissionSignatureAuthor",
+    date: "emissionSignatureDate",
     eventType: BsdasriEventType.SignEmission,
     validator: okForEmissionSignatureSchema,
     signatoryField: "emissionSignatory",
     authorizedSiret: bsdasri => bsdasri.emitterCompanySiret
   },
   EMISSION_WITH_SECRET_CODE: {
-    by: "emissionSignedBy",
-    at: "emissionSignedAt",
+    author: "emissionSignatureAuthor",
+    date: "emissionSignatureDate",
     eventType: BsdasriEventType.SignEmissionWithSecretCode,
     validator: okForEmissionSignatureSchema,
     signatoryField: "emissionSignatory",
     authorizedSiret: bsdasri => bsdasri.transporterCompanySiret // transporter can sign with emitter secret code (trs device)
   },
   TRANSPORT: {
-    by: "transportSignedBy",
-    at: "transportSignedAt",
+    author: "transportSignatureAuthor",
+    date: "transportSignatureDate",
     eventType: BsdasriEventType.SignTransport,
     validator: okForTransportSignatureSchema,
     signatoryField: "transportSignatory",
@@ -139,16 +144,16 @@ const dasriSignatureMapping: Record<
   },
 
   RECEPTION: {
-    by: "receptionSignedBy",
-    at: "receptionSignedAt",
+    author: "receptionSignatureAuthor",
+    date: "receptionSignatureDate",
     eventType: BsdasriEventType.SignReception,
     validator: okForReceptionSignatureSchema,
     signatoryField: "receptionSignatory",
     authorizedSiret: bsdasri => bsdasri.recipientCompanySiret
   },
   OPERATION: {
-    by: "operationSignedBy", // changeme
-    at: "operationSignedAt",
+    author: "operationSignatureAuthor", // changeme
+    date: "operationSignatureDate",
     eventType: BsdasriEventType.SignOperation,
     validator: okForProcessingSignatureSchema,
     signatoryField: "operationSignatory",
@@ -161,7 +166,7 @@ type checkEmitterAllowsDirectTakeOverFn = ({
   bsdasri: Bsdasri
 }) => Promise<void>;
 /**
- * Dasri can be taken over by transporter without signature if emitter explicitly allows this in company preferences
+ * Dasri can be taken over author transporter without signature if emitter explicitly allows this in company preferences
  * Checking this in mutation code needs less code than doing it in the state machine, hence this utils
  */
 const checkEmitterAllowsDirectTakeOver: checkEmitterAllowsDirectTakeOverFn = async ({
@@ -170,7 +175,7 @@ const checkEmitterAllowsDirectTakeOver: checkEmitterAllowsDirectTakeOverFn = asy
 }) => {
   if (
     signatureParams.eventType === BsdasriEventType.SignTransport &&
-    bsdasri.status === BsdasriStatus.SEALED
+    bsdasri.status === BsdasriStatus.INITIAL
   ) {
     const emitterCompany = await getCompanyOrCompanyNotFound({
       siret: bsdasri.emitterCompanySiret
@@ -201,7 +206,7 @@ const checkEmitterAllowsSignatureWithSecretCode: checkEmitterAllowsSignatureWith
 }) => {
   if (
     signatureParams.eventType !== BsdasriEventType.SignEmissionWithSecretCode ||
-    bsdasri.status !== BsdasriStatus.SEALED
+    bsdasri.status !== BsdasriStatus.INITIAL
   ) {
     return;
   }

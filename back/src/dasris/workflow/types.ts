@@ -2,9 +2,8 @@ import { Prisma } from "@prisma/client";
 
 // Xstate possible states
 export enum BsdasriState {
-  Draft = "DRAFT",
-  Sealed = "SEALED", // we keep this terminology for now, although it is a bit confusing
-  ReadyForTakeover = "SIGNED_BY_PRODUCER",
+  Initial = "INITIAL",
+  SignedByProducer = "SIGNED_BY_PRODUCER",
   Sent = "SENT",
   Received = "RECEIVED",
   Processed = "PROCESSED",
@@ -13,7 +12,6 @@ export enum BsdasriState {
 
 // Xstate event type
 export enum BsdasriEventType {
-  MarkAsReady = "MARK_AS_READY", // not very happy with the SENT naming
   SignEmission = "SIGN_EMISSION",
   SignEmissionWithSecretCode = "SIGN_EMISSION_WITH_SECRET_CODE",
   SignTransport = "SIGN_TRANSPORT",

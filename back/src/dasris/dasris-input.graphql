@@ -84,6 +84,7 @@ input BsdasriRecipientInput {
 input BsdasriReceptionInput {
   wasteDetails: BsdasriWasteDetailInput
   receivedAt: DateTime
+  wasteAcceptation: BsdasriWasteAcceptationInput
 }
 
 input BsdasriOperationInput {
@@ -160,6 +161,6 @@ enum BsdasriSignatureType {
 
 input BsdasriSignatureInput {
   type: BsdasriSignatureType!
-  signedBy: String!
+  author: String!
   securityCode: Int
 }

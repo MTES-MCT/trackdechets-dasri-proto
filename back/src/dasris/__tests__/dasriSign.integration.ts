@@ -151,7 +151,7 @@ describe("Mutation.dasriSign emission", () => {
     const readyTotakeOverDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
-    expect(readyTotakeOverDasri.status).toEqual("READY_FOR_TAKEOVER");
+    expect(readyTotakeOverDasri.status).toEqual("SIGNED_BY_PRODUCER");
     expect(readyTotakeOverDasri.emissionSignedBy).toEqual("Marcel");
     expect(readyTotakeOverDasri.emissionSignatoryId).toEqual(user.id);
   });
@@ -233,7 +233,7 @@ describe("Mutation.dasriSign emission with secret code", () => {
     const readyTotakeOverDasri = await prisma.bsdasri.findUnique({
       where: { id: dasri.id }
     });
-    expect(readyTotakeOverDasri.status).toEqual("READY_FOR_TAKEOVER");
+    expect(readyTotakeOverDasri.status).toEqual("SIGNED_BY_PRODUCER");
     expect(readyTotakeOverDasri.emissionSignedBy).toEqual("Marcel");
     expect(readyTotakeOverDasri.emissionSignatoryId).toEqual(transporter.id);
   });
@@ -242,7 +242,7 @@ describe("Mutation.dasriSign emission with secret code", () => {
 describe("Mutation.dasriSign transport", () => {
   afterEach(resetDatabase);
 
-  it("should put transport signature on a READY_FOR_TAKEOVER dasri", async () => {
+  it("should put transport signature on a SIGNED_BY_PRODUCER dasri", async () => {
     const {
       user: emitter,
       company: emitterCompany
@@ -257,7 +257,7 @@ describe("Mutation.dasriSign transport", () => {
       opt: {
         ...draftData(emitterCompany),
         ...readyToTakeOverData(transporterCompany),
-        status: BsdasriStatus.READY_FOR_TAKEOVER
+        status: BsdasriStatus.SIGNED_BY_PRODUCER
       }
     });
     const { mutate } = makeClient(transporter); // transporter
@@ -378,7 +378,7 @@ describe("Mutation.dasriSign transport", () => {
         transporterWasteAcceptationStatus: WasteAcceptationStatus.REFUSED,
         transporterWasteRefusalReason: "J'en veux pas",
         transporterWasteRefusedQuantity: 66,
-        status: BsdasriStatus.READY_FOR_TAKEOVER
+        status: BsdasriStatus.SIGNED_BY_PRODUCER
       }
     });
     const { mutate } = makeClient(transporter); // transporter

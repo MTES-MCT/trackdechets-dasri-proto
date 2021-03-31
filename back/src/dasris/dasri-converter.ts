@@ -325,7 +325,15 @@ function flattenReceptiontInput(input: { reception?: BsdasriReceptionInput }) {
     receivedAt: chain(input.reception, r =>
       r.receivedAt ? new Date(r.receivedAt) : r.receivedAt
     ),
-
+    recipientWasteAcceptationStatus: chain(input.reception, t =>
+      chain(t.wasteAcceptation, w => w.status)
+    ),
+    recipientWasteRefusedQuantity: chain(input.reception, t =>
+      chain(t.wasteAcceptation, w => w.refusedQuantity)
+    ),
+    recipientWasteRefusalReason: chain(input.reception, t =>
+      chain(t.wasteAcceptation, w => w.refusalReason)
+    ),
     recipientWastePackagingsInfo
   };
 }

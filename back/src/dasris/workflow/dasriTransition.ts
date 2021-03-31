@@ -3,7 +3,7 @@ import prisma from "../../prisma";
 import { BsdasriEvent } from "./types";
 import machine from "./machine";
 import { InvalidTransition } from "../../forms/errors";
-import { ObjectSchema } from "yup";
+
 
 /**
  * Transition a form from initial state (ex: DRAFT) to next state (ex: SEALED)
@@ -12,7 +12,7 @@ import { ObjectSchema } from "yup";
 export default async function dasriTransition(
   bsdasri: Bsdasri,
   event: BsdasriEvent,
-  validator?: ObjectSchema
+  validator?: any
 ) {
   const currentStatus = bsdasri.status;
 

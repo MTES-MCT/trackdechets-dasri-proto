@@ -11,8 +11,7 @@ export function convertWhereToDbFilter(
   }
 
   const { _or, _and, _not, ...filters } = where;
-  // const or_not_and = [..._or, ..._and, ..._not];
-  console.log(_or, _and, _not)
+ 
   // const hasNesting = or_not_and?.some(w => w._or || w._and || w._not);
   const hasOrNesting = _or?.some(w => w._or || w._and || w._not);
   const hasAndNesting = _and?.some(w => w._or || w._and || w._not);

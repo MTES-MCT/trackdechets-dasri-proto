@@ -10,7 +10,6 @@ const DASRI_MARK_AS_READY = `
 mutation DasriMarkAsReady($id: ID!){
   markAsReadyBsdasri(id: $id)  {
     id
-    readableId
     customId
     status
 

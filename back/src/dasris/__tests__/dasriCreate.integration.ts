@@ -7,7 +7,6 @@ const DASRI_CREATE = `
 mutation DasriCreate($input: BsdasriCreateInput!) {
   createBsdasri(bsdasriCreateInput: $input)  {
     id
-    readableId
     customId
     status
 

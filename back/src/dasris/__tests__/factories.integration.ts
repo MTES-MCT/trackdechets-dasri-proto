@@ -14,6 +14,6 @@ describe("Test Factories", () => {
     });
 
     expect(dasri.id).toBeTruthy();
-    expect(dasri.readableId).toBeTruthy();
+ 
   });
 });

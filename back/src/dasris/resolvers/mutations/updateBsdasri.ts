@@ -21,6 +21,7 @@ const fieldsAllowedForUpdateOnceReceived = [
   "processingOperation",
   "processedAt"
 ];
+
 const fieldsAllowedForUpdateOnceSent = fieldsAllowedForUpdateOnceReceived.concat(
   [
     "recipientCompanyName",
@@ -68,7 +69,7 @@ const fieldsAllowedForUpdateOnceSignedByEmitter = fieldsAllowedForUpdateOnceSent
 
 const getFieldsAllorwedForUpdate = (bsdasri: Bsdasri) => {
   const allowedFields = {
-    [BsdasriStatus.READY_FOR_TAKEOVER]: fieldsAllowedForUpdateOnceSignedByEmitter,
+    [BsdasriStatus.SIGNED_BY_PRODUCER]: fieldsAllowedForUpdateOnceSignedByEmitter,
     [BsdasriStatus.SENT]: fieldsAllowedForUpdateOnceSent,
     [BsdasriStatus.RECEIVED]: fieldsAllowedForUpdateOnceReceived,
     [BsdasriStatus.PROCESSED]: []
@@ -107,7 +108,7 @@ const dasriUpdateResolver = async (
   const flattenedFields = Object.keys(flattened);
 
   // except for draft and sealed status, update fields are whitelisted
-  if (!["DRAFT", "SEALED"].includes(existingDasri.status)) {
+  if (existingDasri.status !== "INITIAL") {
     const allowedFields = getFieldsAllorwedForUpdate(existingDasri);
 
     const diff = flattenedFields.filter(el => !allowedFields.includes(el));

@@ -7,28 +7,23 @@ import { WasteAcceptationStatus } from "@prisma/client";
 const machine = Machine<any, BsdasriEvent>(
   {
     id: "dasri-workflow-machine",
-    initial: BsdasriState.Draft,
+    initial: BsdasriState.Initial,
     states: {
-      [BsdasriState.Draft]: {
-        on: {
-          [BsdasriEventType.MarkAsReady]: [{ target: BsdasriState.Sealed }]
-        }
-      },
-      [BsdasriState.Sealed]: {
+      [BsdasriState.Initial]: {
         on: {
           [BsdasriEventType.SignEmission]: [
-            { target: BsdasriState.ReadyForTakeover, cond: "emissionNotSigned" }
+            { target: BsdasriState.SignedByProducer, cond: "emissionNotSigned" }
           ],
           [BsdasriEventType.SignTransport]: [
             { target: BsdasriState.Sent, cond: "acceptedByTransporter" },
             { target: BsdasriState.Refused, cond: "refusedByTransporter" }
           ],
           [BsdasriEventType.SignEmissionWithSecretCode]: [
-            { target: BsdasriState.ReadyForTakeover, cond: "emissionNotSigned" }
+            { target: BsdasriState.SignedByProducer, cond: "emissionNotSigned" }
           ]
         }
       },
-      [BsdasriState.ReadyForTakeover]: {
+      [BsdasriState.SignedByProducer]: {
         on: {
           [BsdasriEventType.SignTransport]: [
             { target: BsdasriState.Sent, cond: "acceptedByTransporter" },
