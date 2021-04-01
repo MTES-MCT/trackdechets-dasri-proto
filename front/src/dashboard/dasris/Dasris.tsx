@@ -5,11 +5,11 @@ import { DateTime } from "luxon";
 import { statusLabels } from "./constants";
 import Shorten from "common/components/Shorten";
 
-import { Bsdasri } from "generated/graphql/types";
+import { Bsdasri, BsdasriEdge } from "generated/graphql/types";
 import "./Dasris.scss";
 
 type Props = {
-  dasris: Bsdasri[];
+  dasris: BsdasriEdge[];
   siret: string;
   hiddenFields?: string[];
   dynamicActions?: boolean;
@@ -50,43 +50,43 @@ export default function Dasris({
           </tr>
         </thead>
         <tbody>
-          {dasris.map((s: Bsdasri) => (
-            <tr key={s.id} className="td-table__tr">
+          {dasris.map((s: BsdasriEdge) => (
+            <tr key={s.node.id} className="td-table__tr">
               {hiddenFields.indexOf("readableId") === -1 && (
                 <td>
-                  <div className="id">{s.id}</div>
+                  <div className="id">{s.node.id}</div>
                 </td>
               )}
               {hiddenFields.indexOf("sentAt") === -1 && (
                 <td>
-                  {!!s.transport?.takenOverAt &&
-                    DateTime.fromISO(s.transport.takenOverAt).toLocaleString()}
+                  {!!s.node.transport?.takenOverAt &&
+                    DateTime.fromISO(s.node.transport.takenOverAt).toLocaleString()}
                 </td>
               )}
 
               <td>
-                <Shorten content={s?.emitter?.company?.name || ""} />
+                <Shorten content={s?.node?.emitter?.company?.name || ""} />
               </td>
               <td>
-                <Shorten content={s?.recipient?.company?.name || ""} />
+                <Shorten content={s?.node?.recipient?.company?.name || ""} />
               </td>
               <td>
-                {s?.emission?.wasteCode && (
+                {s?.node?.emission?.wasteCode && (
                   <>
-                    <div>{s.emission.wasteCode}</div>
+                    <div>{s.node.emission.wasteCode}</div>
                   </>
                 )}
               </td>
               <td>
                 {" "}
-                {s?.emission?.wasteDetails?.volume && (
+                {s?.node?.emission?.wasteDetails?.volume && (
                   <>
-                    <div>{s?.emission?.wasteDetails?.volume} L</div>
+                    <div>{s.node.emission.wasteDetails?.volume} L</div>
                   </>
                 )}
               </td>
               {hiddenFields.indexOf("status") === -1 && (
-                <td>{statusLabels[s.status]}</td>
+                <td>{statusLabels[s.node.status]}</td>
               )}
 
               {dynamicActions && (
@@ -97,8 +97,8 @@ export default function Dasris({
               <td>
                 {" "}
                 <BsdasriActions
-                  bsdasriId={s.id}
-                  bsdStatus={s.status}
+                  bsdasriId={s.node.id}
+                  bsdStatus={s.node.status}
                   siret={siret}
                 />
               </td>

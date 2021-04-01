@@ -27,7 +27,7 @@ export default function FollowTab() {
 
   if (networkStatus === NetworkStatus.loading) return <Loader />;
   if (error) return <InlineError apolloError={error} />;
-  if (!data?.bsdasris?.length)
+  if (!data?.bsdasris?.edges.length)
     return (
       <EmptyTab bsdType={BsdTypes.DASRI}>
         <img src="/illu/illu_transfer.svg" alt="" />
@@ -51,7 +51,7 @@ export default function FollowTab() {
     >
       <Dasris
         siret={siret}
-        dasris={data.bsdasris}
+        dasris={data.bsdasris.edges}
         dynamicActions={true}
         refetch={refetch}
       />

@@ -1,17 +1,17 @@
 import { useQuery, NetworkStatus } from "@apollo/client";
 import React from "react";
 
-import { DuplicateFile } from "common/components/Icons";
-import { generatePath, Link, useParams } from "react-router-dom";
+
+import {   useParams } from "react-router-dom";
 import { InlineError } from "common/components/Error";
 import Loader from "common/components/Loaders";
 import { Query, QueryBsdasrisArgs } from "generated/graphql/types";
 import { DASRI_DRAFT_TAB } from "./queries";
 
 import TabContent from "./TabContent";
-import { COLORS } from "common/config";
+ 
 import Dasris from "../Dasris";
-import routes from "common/routes";
+ 
 import EmptyTab from "../../slips/tabs/EmptyTab";
 import { BsdTypes } from "common/bsdConstants";
 export default function DraftsTab() {
@@ -28,7 +28,7 @@ export default function DraftsTab() {
   if (networkStatus === NetworkStatus.loading) return <Loader />;
   if (error) return <InlineError apolloError={error} />;
 
-  if (!data?.bsdasris?.length)
+  if (!data?.bsdasris?.edges.length)
     return (
       <EmptyTab bsdType={BsdTypes.DASRI}>
         <img src="/illu/illu_empty.svg" alt="" />
@@ -58,7 +58,7 @@ export default function DraftsTab() {
     >
       <Dasris
         siret={siret}
-        dasris={data.bsdasris}
+        dasris={data.bsdasris.edges}
         hiddenFields={["status", "readableId", "sentAt"]}
         dynamicActions={true}
         refetch={refetch}

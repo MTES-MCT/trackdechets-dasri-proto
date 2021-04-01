@@ -117,7 +117,7 @@ export function TransportContent({ formType }) {
   };
 
   // filter forms by status and concatenate waste code and name to ease searching
-  const filteredForms = data ? data.bsdasris.filter(f => filtering(f)) : [];
+  const filteredForms = data ? data.bsdasris.edges.filter(e => filtering(e.node)) : [];
   return (
     <div>
       <div className={styles.headerContent}>

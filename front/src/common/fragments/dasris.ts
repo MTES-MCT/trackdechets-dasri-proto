@@ -60,9 +60,11 @@ export const transportFragment = gql`
       refusalReason
       refusedQuantity
     }
-    
-    signedBy
-    signedAt
+
+    signature {
+      author
+      date
+    }
   }
 `;
 
@@ -90,15 +92,16 @@ const emissionFragment = gql`
         volume
       }
     }
-    signedBy
-    signedAt
+    signature {
+      author
+      date
+    }
   }
 `;
 const recipientFragment = gql`
   fragment RecipientFragment on BsdasriRecipient {
     company {
       ...CompanyFragment
-      
     }
   }
   ${companyFragment}
@@ -122,22 +125,25 @@ const receptionFragment = gql`
       refusedQuantity
     }
     receivedAt
-    signedBy
-    signedAt
+    signature {
+      author
+      date
+    }
   }
 `;
 const operationFragment = gql`
   fragment OperationFragment on BsdasriOperation {
     processingOperation
     processedAt
-    signedBy
-    signedAt
+    signature {
+      author
+      date
+    }
   }
 `;
 const mutableDasriFieldsFragment = gql`
   fragment MutableDasriFieldsFragment on Bsdasri {
     id
-    readableId
     status
     emitter {
       ...EmitterFragment
