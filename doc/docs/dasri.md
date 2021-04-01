@@ -11,17 +11,24 @@ sidebar_label: Cycle de vie du Dasri
 
 ## Numéro de DASRI
 
-Chaque DASRI est associé à un identifiant opaque unique. Cet identifiant correspond au champ `id` et doit être utilisé lors des différentes requêtes. En plus de l'identifiant opaque, un identifiant "lisible" est généré (champ `readableId`). Cet identifiant apparait sur le bordereau dans la case "Bordereau n°". L'identifiant est sous la forme `DASRI-{YYYYMMDD}-{identifiant aléatoire}` (Ex: `"DASRI-20210118-RTAQRJA6P"`). Il peut être utiliser pour récupérer l'identifiant opaque unique via la query `dasri`.
+Chaque DASRI est associé à un identifiant lisible unique. Cet identifiant correspond au champ `id` et doit être utilisé lors des différentes requêtes. Cet identifiant apparait sur le bordereau dans la case "Bordereau n°". L'identifiant est sous la forme `DASRI-{YYYYMMDD}-{identifiant aléatoire}` (Ex: `"DASRI-20210118-RTAQRJA6P"`). Il peut être utiliser pour récupérer l'identifiant opaque unique via la query `dasri`.
 
 Vous pouvez également ajouter un identifiant qui vous est propre pour faire le lien avec votre SI. Il vous faut pour cela utiliser le champ `customId`.
 
 ## Concepts
 
-Le mode opératoire est sensiblement différents de celui des BSDD.
+Le mode opératoire diffère sensiblement de celui des BSDD.
+
+le champ `id` stocke un champ lisible (le `readableId` du bsdd). Il n'y a donc plus de champ `readableId`.
+Le `DRAFT` est sorti des statuts, c'est un boolean à part. Le passage par l'étape brouillon est facultative
+
 
 Pour donner plus de flexibilité et limiter les mutations, les principes suivants sont adoptés:
-- le nombre de mutation est reduit à 4: createBsdasri, updateBsdasri, markAsReadyBsdasri, signBsdasri
-- la mutation dasriUpdate permet de mettre à jour les dasri pendant leur cycle de vie
+- le nombre de mutations est reduit: createBsdasri/createDraftBsdasri, publishBsdasri,updateBsdasri, signBsdasri
+- createDraftBsdasri crée un dasri dans l'état `INITIAL`, `isDraft=true`. Cette muttaion est optionelle, on peut commencer avec `createBsdasri`
+- createBsdasri crée un dasri dans l'état `INITIAL`, `isDraft=false`
+- publishBsdasri passe le dasri de `isDraft=true` à `isDraft=false`
+- la mutation updateBsdasri permet de mettre à jour les dasri pendant leur cycle de vie
 - la mutation signBsdasri (EMISSION, TRANSPORT, RECPTION, OPERATION) appose une signature ssur le cadre correspondant
 - une fois qu'une signature est apposée, champs du cadre correspondant ne sont plus modifiables
 - signBsdasri (EMISSION) verrouille tous les champs emitter/emission
@@ -35,11 +42,11 @@ Pour donner plus de flexibilité et limiter les mutations, les principes suivant
 
 ## États du DASRI
 
-L'ensemble des champs du BSD numérique est décrit dans la [référence de l'API](api-reference.md#form). Au cours de son cycle de vie, un BSD numérique peut passer par différents états décrits [ici](api-reference.md#formstatus).
+L'ensemble des champs du BSD numérique est décrit dans la [référence de l'API](api-reference.md#bsdasri). Au cours de son cycle de vie, un BSD numérique peut passer par différents états décrits [ici](api-reference.md#bsdasristatus).
 
-- `DRAFT` (brouillon): État initial à la création d'un DASRI.
-- `SEALED` (finalisé): DASRI scellé (publié). Les données sont validées et un numéro de BSD `readableId` est affecté.
-- `READY_FOR_TAKEOVER` (prêt à être emporté) : Dasri signé par l'émetteur
+ 
+- `INITIAL` (initial): C'est l'état dans lequel le dasri est créé. `readableId` est affecté.
+- `SIGNED_BY_PRODUCER` (prêt à être emporté) : Dasri signé par l'émetteur
 - `SENT` (envoyé): DASRI en transit vers l'installation de destination, d'entreposage ou de reconditionnement
 - `RECEIVED` (reçu): DASRI reçu sur l'installation de destination, d'entreposage ou de reconditionnement
 - `ACCEPTED` (accepté): DASRI accepté sur l'installation de destination, d'entreposage ou de reconditionnement
@@ -53,14 +60,15 @@ Le diagramme ci dessous retrace le cycle de vie d'un DASRI dans Trackdéchets:
 
 <div class="mermaid">
 graph TD
-AO(NO STATE) -->|createBsdasri| A
+AO(NO STATE) -->|createDraftBsdasri| A
+AO(NO STATE) -->|createBsdasri| B
 A -->|"updateBsdasri (tous les champs)"| A
 B -->|"updateBsdasri (tous les champs)"| B
 C-->|"updateBsdasri (sauf champs signés)"| C
 D-->|"updateBsdasri (sauf champs signés)"| D
 E-->|"updateBsdasri (sauf champs signés)"| E
-A[DRAFT] -->|markAsReadyBsdasri| B(SEALED)
-B -->|"signBsdasri (EMISSION / EMISSION_WITH_SECRET_CODE)"| C(READY_FOR_TAKEOVER)
+A["INITIAL (isDraft=true)"] -->|publishBsdasri| B("INITIAL (isDraft=false)")
+B -->|"signBsdasri (EMISSION / EMISSION_WITH_SECRET_CODE)"| C(SIGNED_BY_PRODUCER)
 B -->|"signBsdasri (TRANSPORT) - si autorisé par émetteur" | D(SENT)
 C -->|"signBsdasri (TRANSPORT)"| D(SENT)
 D -->|"signBsdasri (RECEPTION)"| E(RECEIVED)

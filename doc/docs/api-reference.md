@@ -58,17 +58,8 @@ Identifiant opaque du BSD
 </td>
 </tr>
 <tr>
-<td colspan="2" align="right" valign="top">readableId</td>
-<td valign="top"><a href="#string">String</a></td>
-<td>
-
-Identifiant lisible du BSD
-
-</td>
-</tr>
-<tr>
 <td colspan="2" valign="top"><strong>bsdasris</strong></td>
-<td valign="top">[<a href="#bsdasri">Bsdasri</a>!]!</td>
+<td valign="top"><a href="#bsdasriconnection">BsdasriConnection</a>!</td>
 <td>
 
 Renvoie les Bsdasri de l'établissement sélectionné.
@@ -170,57 +161,8 @@ Par défaut vide, aucun filtre n'est appliqué
 </td>
 </tr>
 <tr>
-<td colspan="2" align="right" valign="top">status</td>
-<td valign="top">[<a href="#bsdasristatus">BsdasriStatus</a>!]</td>
-<td>
-
-(Optionnel) Filtre sur les statuts des Bsdasri
-Si aucun filtre n'est passé, les Bsdasri seront retournés quel que soit leur statut
-Défaut à vide.
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">siretPresentOnForm</td>
-<td valign="top"><a href="#string">String</a></td>
-<td>
-
-(Optionnel) Siret d'une autre entreprise présente sur le Bsdasri
-Vous n'avez pas besoin d'être membre de cette entreprise.
-Seuls les Bsdasri où cette entreprise apparait (dans n'importe quel cadre) seront retournés.
-Défaut à vide.
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">wasteCode</td>
-<td valign="top"><a href="#string">String</a></td>
-<td>
-
-(Optionnel) Code déchet pour affiner la recherche
-18 01 03* (DASRI d'origine humaine) ou 18 02 02* (DASRI d'origine animale)
-Défaut à vide.
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">roles</td>
-<td valign="top">[<a href="#bsdasrirole">BsdasriRole</a>!]</td>
-<td>
-
-(Optionnel) Filtre sur le role de demandeur dans le dasri
-Par exemple:
- - `roles: [TRANSPORTER]` renverra les Bsdasri pour lesquels je suis transporteur
- - `roles: [EMITTER, RECIPIENT]` renverra les Bsdasri dont je suis l'émetteur ou le destinataire final
-Voir `DasriRole` pour la liste des roles sur lesquels il est possible de filtrer.
-Si aucune filtre n'est passé, les Bsdasri seront retournés quel que soit votre role dessus.
-Défaut à vide.
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">hasNextStep</td>
-<td valign="top"><a href="#boolean">Boolean</a></td>
+<td colspan="2" align="right" valign="top">where</td>
+<td valign="top"><a href="#bsdasriwhere">BsdasriWhere</a></td>
 <td>
 
 (Optionnel) Permet de filtrer sur les dasris en attente d'une action de votre part
@@ -262,7 +204,7 @@ Renvoie la liste des éco-organismes
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>form</strong></td>
-<td valign="top"><a href="#form">Form</a></td>
+<td valign="top"><a href="#form">Form</a>!</td>
 <td>
 
 Renvoie un BSD sélectionné par son ID (opaque ou lisible, l'un des deux doit être fourni)
@@ -749,6 +691,24 @@ Payload de création d'un dasri
 </td>
 </tr>
 <tr>
+<td colspan="2" valign="top"><strong>createDraftBsdasri</strong></td>
+<td valign="top"><a href="#bsdasri">Bsdasri</a>!</td>
+<td>
+
+Crée un nouveau dasri en brouillon
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">bsdasriCreateInput</td>
+<td valign="top"><a href="#bsdasricreateinput">BsdasriCreateInput</a>!</td>
+<td>
+
+Payload de création d'un dasri brouillon
+
+</td>
+</tr>
+<tr>
 <td colspan="2" valign="top"><strong>createForm</strong></td>
 <td valign="top"><a href="#form">Form</a>!</td>
 <td>
@@ -917,24 +877,6 @@ ID d'un BSD
 <td>
 
 Informations liées au traitement
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>markAsReadyBsdasri</strong></td>
-<td valign="top"><a href="#bsdasri">Bsdasri</a></td>
-<td>
-
-Marque un dasri brouillon comme prêt (SEALED)
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">id</td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td>
-
-ID d'un Bsdasri
 
 </td>
 </tr>
@@ -1189,6 +1131,24 @@ Prépare un nouveau segment de transport multimodal
 <td></td>
 </tr>
 <tr>
+<td colspan="2" valign="top"><strong>publishBsdasri</strong></td>
+<td valign="top"><a href="#bsdasri">Bsdasri</a></td>
+<td>
+
+Marque un dasri brouillon comme publié (isDraft=false)
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">id</td>
+<td valign="top"><a href="#id">ID</a>!</td>
+<td>
+
+ID d'un Bsdasri
+
+</td>
+</tr>
+<tr>
 <td colspan="2" valign="top"><strong>saveForm</strong> ⚠️</td>
 <td valign="top"><a href="#form">Form</a></td>
 <td>
@@ -1239,7 +1199,7 @@ Appose une signature sur un Bsdasri, verrouille les cadres correspondant
 Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
 Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport
 
-Toutefois il existe un exception: le cadre emetteur peut être signé par le transporteur grâce au code de 
+Toutefois il existe un exception: le cadre emetteur peut être signé par le transporteur grâce au code de
 sécurité de l'émetteur (BsdasriSignatureType: EMISSION_WITH_SECRET_CODE)
 
 </td>
@@ -1443,11 +1403,6 @@ Bordereau Bsdasri
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>readableId</strong></td>
-<td valign="top"><a href="#string">String</a>!</td>
-<td></td>
-</tr>
-<tr>
 <td colspan="2" valign="top"><strong>customId</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
@@ -1465,6 +1420,11 @@ Bordereau Bsdasri
 <tr>
 <td colspan="2" valign="top"><strong>updatedAt</strong></td>
 <td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>isDraft</strong></td>
+<td valign="top"><a href="#boolean">Boolean</a>!</td>
 <td></td>
 </tr>
 <tr>
@@ -1514,6 +1474,61 @@ Bordereaux regroupés
 </tbody>
 </table>
 
+### BsdasriConnection
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>totalCount</strong></td>
+<td valign="top"><a href="#int">Int</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>pageInfo</strong></td>
+<td valign="top"><a href="#pageinfo">PageInfo</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>edges</strong></td>
+<td valign="top">[<a href="#bsdasriedge">BsdasriEdge</a>!]!</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### BsdasriEdge
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>cursor</strong></td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>node</strong></td>
+<td valign="top"><a href="#bsdasri">Bsdasri</a>!</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
 ### BsdasriEmission
 
 Informations relatives au déchet émis
@@ -1544,13 +1559,8 @@ Informations relatives au déchet émis
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>signedBy</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>signedAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
+<td colspan="2" valign="top"><strong>signature</strong></td>
+<td valign="top"><a href="#bsdasrisignature">BsdasriSignature</a></td>
 <td></td>
 </tr>
 </tbody>
@@ -1624,16 +1634,6 @@ Informations relatives au traitement du Bsdasri
 </thead>
 <tbody>
 <tr>
-<td colspan="2" valign="top"><strong>signedBy</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>signedAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-<tr>
 <td colspan="2" valign="top"><strong>processingOperation</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
@@ -1641,6 +1641,11 @@ Informations relatives au traitement du Bsdasri
 <tr>
 <td colspan="2" valign="top"><strong>processedAt</strong></td>
 <td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signature</strong></td>
+<td valign="top"><a href="#bsdasrisignature">BsdasriSignature</a></td>
 <td></td>
 </tr>
 </tbody>
@@ -1725,13 +1730,8 @@ Informations relatives à la réception du Bsdasri
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>signedBy</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>signedAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
+<td colspan="2" valign="top"><strong>signature</strong></td>
+<td valign="top"><a href="#bsdasrisignature">BsdasriSignature</a></td>
 <td></td>
 </tr>
 </tbody>
@@ -1772,6 +1772,31 @@ Champ libre
 </tbody>
 </table>
 
+### BsdasriSignature
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>date</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>author</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
 ### BsdasriTransport
 
 Informations relatives au transport du Bsdasri
@@ -1807,13 +1832,8 @@ Informations relatives au transport du Bsdasri
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>signedBy</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>signedAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
+<td colspan="2" valign="top"><strong>signature</strong></td>
+<td valign="top"><a href="#bsdasrisignature">BsdasriSignature</a></td>
 <td></td>
 </tr>
 </tbody>
@@ -2209,7 +2229,7 @@ Récépissé transporteur (le cas échéant, pour les profils transporteur)
 <td valign="top"><a href="#traderreceipt">TraderReceipt</a></td>
 <td>
 
-Récépissé négociant (le cas échéant, pour les profils transporteur)
+Récépissé négociant (le cas échéant, pour les profils négociant)
 
 </td>
 </tr>
@@ -2340,6 +2360,17 @@ Si oui on non cet établissement est inscrit sur la plateforme Trackdéchets
 </td>
 </tr>
 <tr>
+<td colspan="2" valign="top"><strong>companyTypes</strong></td>
+<td valign="top">[<a href="#companytype">CompanyType</a>!]!</td>
+<td>
+
+Profil de l'établissement sur Trackdéchets
+ayant pour valeur un tableau vide quand l'établissement
+n'est pas inscrit sur la plateforme `isRegistered=false`
+
+</td>
+</tr>
+<tr>
 <td colspan="2" valign="top"><strong>transporterReceipt</strong></td>
 <td valign="top"><a href="#transporterreceipt">TransporterReceipt</a></td>
 <td>
@@ -2425,15 +2456,6 @@ Code commune de l'établissement
 <td>
 
 Nom de l'établissement
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>companyTypes</strong></td>
-<td valign="top">[<a href="#companytype">CompanyType</a>]</td>
-<td>
-
-Profil de l'établissement
 
 </td>
 </tr>
@@ -2805,6 +2827,8 @@ Identifiant unique du bordereau.
 Identifiant lisible utilisé comme numéro sur le CERFA (case "Bordereau n°****").
 Il est possible de l'utiliser pour récupérer l'identifiant unique du bordereau via la query form,
 utilisé pour le reste des opérations.
+Cet identifiant possède le format BSD-{yyyyMMdd}-{XXXXXXXX} où yyyyMMdd est la date du jour
+et XXXXXXXXX une chaine de 9 caractères alphanumériques. Ex: BSD-20210101-HY87F54D1
 
 </td>
 </tr>
@@ -2842,7 +2866,7 @@ bordereau signé papier via la mutation `importPaperForm`
 <td valign="top"><a href="#recipient">Recipient</a></td>
 <td>
 
-Établissement qui reçoit le déchet (case 2)
+Installation de destination ou d’entreposage ou de reconditionnement prévue (case 2)
 
 </td>
 </tr>
@@ -3459,6 +3483,41 @@ Description du conditionnement dans le cas où le type de conditionnement est `A
 Nombre de colis associés à ce conditionnement
 
 </td>
+</tr>
+</tbody>
+</table>
+
+### PageInfo
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>startCursor</strong></td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>endCursor</strong></td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>hasNextPage</strong></td>
+<td valign="top"><a href="#boolean">Boolean</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>hasPreviousPage</strong></td>
+<td valign="top"><a href="#boolean">Boolean</a>!</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -4159,7 +4218,7 @@ Numéro de récépissé négociant
 <td valign="top"><a href="#datetime">DateTime</a>!</td>
 <td>
 
-Limite de validatié du récépissé
+Limite de validité du récépissé
 
 </td>
 </tr>
@@ -4371,7 +4430,7 @@ Numéro de récépissé transporteur
 <td valign="top"><a href="#datetime">DateTime</a>!</td>
 <td>
 
-Limite de validatié du récépissé
+Limite de validité du récépissé
 
 </td>
 </tr>
@@ -4794,6 +4853,25 @@ Le readableId permet de le récupérer via la query form.
 </tbody>
 </table>
 
+### BsdasriCompanyWhere
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>siret</strong></td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
 ### BsdasriCreateInput
 
 <table>
@@ -4874,11 +4952,6 @@ Identifiant custom
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>wasteDetailsOnuCode</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
 <td colspan="2" valign="top"><strong>wasteDetails</strong></td>
 <td valign="top"><a href="#bsdasriwastedetailinput">BsdasriWasteDetailInput</a></td>
 <td></td>
@@ -4924,6 +4997,30 @@ Identifiant custom
 Champ libre émetteur
 
 </td>
+</tr>
+</tbody>
+</table>
+
+### BsdasriEmitterWhere
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#bsdasricompanywhere">BsdasriCompanyWhere</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signature</strong></td>
+<td valign="top"><a href="#bsdasrisignaturewhere">BsdasriSignatureWhere</a></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -5077,6 +5174,11 @@ Nombre de colis associés à ce conditionnement
 <td valign="top"><a href="#datetime">DateTime</a></td>
 <td></td>
 </tr>
+<tr>
+<td colspan="2" valign="top"><strong>wasteAcceptation</strong></td>
+<td valign="top"><a href="#bsdasriwasteacceptationinput">BsdasriWasteAcceptationInput</a></td>
+<td></td>
+</tr>
 </tbody>
 </table>
 
@@ -5136,6 +5238,30 @@ Champ libre transporteur
 </tbody>
 </table>
 
+### BsdasriRecipientWhere
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#bsdasricompanywhere">BsdasriCompanyWhere</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signature</strong></td>
+<td valign="top"><a href="#bsdasrisignaturewhere">BsdasriSignatureWhere</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
 ### BsdasriSignatureInput
 
 <table>
@@ -5153,13 +5279,32 @@ Champ libre transporteur
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>signedBy</strong></td>
+<td colspan="2" valign="top"><strong>author</strong></td>
 <td valign="top"><a href="#string">String</a>!</td>
 <td></td>
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>securityCode</strong></td>
 <td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### BsdasriSignatureWhere
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>date</strong></td>
+<td valign="top"><a href="#datefilter">DateFilter</a>!</td>
 <td></td>
 </tr>
 </tbody>
@@ -5254,6 +5399,30 @@ Limite de validité du récipissé
 Champ libre transporteur
 
 </td>
+</tr>
+</tbody>
+</table>
+
+### BsdasriTransporterWhere
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#bsdasricompanywhere">BsdasriCompanyWhere</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>signature</strong></td>
+<td valign="top"><a href="#bsdasrisignaturewhere">BsdasriSignatureWhere</a></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -5393,6 +5562,80 @@ Identifiant custom
 </tbody>
 </table>
 
+### BsdasriWhere
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>isDraft</strong></td>
+<td valign="top"><a href="#boolean">Boolean</a></td>
+<td>
+
+(Optionnel) Permet de récupérer uniquement les bordereaux en brouillon
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>status</strong></td>
+<td valign="top"><a href="#bsdasristatus">BsdasriStatus</a></td>
+<td>
+
+(Optionnel) Filtre sur le statut des bordereaux
+Si aucun filtre n'est passé, les bordereaux seront retournés quel que soit leur statut
+Défaut à vide.
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>createdAt</strong></td>
+<td valign="top"><a href="#datefilter">DateFilter</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>updatedAt</strong></td>
+<td valign="top"><a href="#datefilter">DateFilter</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emitter</strong></td>
+<td valign="top"><a href="#bsdasriemitterwhere">BsdasriEmitterWhere</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>transporter</strong></td>
+<td valign="top"><a href="#bsdasritransporterwhere">BsdasriTransporterWhere</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>recipient</strong></td>
+<td valign="top"><a href="#bsdasrirecipientwhere">BsdasriRecipientWhere</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>_and</strong></td>
+<td valign="top">[<a href="#bsdasriwhere">BsdasriWhere</a>!]</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>_or</strong></td>
+<td valign="top">[<a href="#bsdasriwhere">BsdasriWhere</a>!]</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>_not</strong></td>
+<td valign="top">[<a href="#bsdasriwhere">BsdasriWhere</a>!]</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
 ### CompanyInput
 
 Payload d'un établissement
@@ -5500,7 +5743,9 @@ objet un système d'information tierce
 <td valign="top"><a href="#recipientinput">RecipientInput</a></td>
 <td>
 
-Établissement qui reçoit le déchet (case 2)
+Installation de destination ou d’entreposage ou de reconditionnement prévue (case 2)
+L'établissement renseigné doit être inscrit sur Trackdéchets en tant qu'installation
+de traitement ou de tri, transit, regroupement.
 
 </td>
 </tr>
@@ -5533,7 +5778,7 @@ Négociant (case 7)
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>appendix2Forms</strong></td>
-<td valign="top">[<a href="#appendixforminput">AppendixFormInput</a>]</td>
+<td valign="top">[<a href="#appendixforminput">AppendixFormInput</a>!]</td>
 <td>
 
 Annexe 2
@@ -5548,6 +5793,45 @@ Annexe 2
 <tr>
 <td colspan="2" valign="top"><strong>temporaryStorageDetail</strong></td>
 <td valign="top"><a href="#temporarystoragedetailinput">TemporaryStorageDetailInput</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### DateFilter
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>_gte</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>_gt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>_lte</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>_lt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>_eq</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
 <td></td>
 </tr>
 </tbody>
@@ -5569,7 +5853,9 @@ Annexe 2
 <td valign="top"><a href="#companyinput">CompanyInput</a></td>
 <td>
 
-Installation de destination prévue
+Installation de destination prévue (case 14)
+L'établissement renseigné doit être inscrit sur Trackdéchets en tant qu'installation
+de traitement ou de tri, transit, regroupement.
 
 </td>
 </tr>
@@ -5718,7 +6004,9 @@ objet un système d'information tierce
 <td valign="top"><a href="#recipientinput">RecipientInput</a></td>
 <td>
 
-Établissement qui reçoit le déchet (case 2)
+Installation de destination ou d’entreposage ou de reconditionnement prévue (case 2)
+L'établissement renseigné doit être inscrit sur Trackdéchets en tant qu'installation
+de traitement ou de tri, transit, regroupement.
 
 </td>
 </tr>
@@ -5751,7 +6039,7 @@ Négociant (case 7)
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>appendix2Forms</strong></td>
-<td valign="top">[<a href="#appendixforminput">AppendixFormInput</a>]</td>
+<td valign="top">[<a href="#appendixforminput">AppendixFormInput</a>!]</td>
 <td>
 
 Annexe 2
@@ -5819,7 +6107,9 @@ pas été émis initialement dans Trackdéchets.
 <td valign="top"><a href="#recipientinput">RecipientInput</a></td>
 <td>
 
-Établissement qui reçoit le déchet (case 2)
+Installation de destination ou d’entreposage ou de reconditionnement prévue (case 2)
+L'établissement renseigné doit être inscrit sur Trackdéchets en tant qu'installation
+de traitement ou de tri, transit, regroupement.
 
 </td>
 </tr>
@@ -6937,7 +7227,9 @@ objet un système d'information tierce
 <td valign="top"><a href="#recipientinput">RecipientInput</a></td>
 <td>
 
-Établissement qui reçoit le déchet (case 2)
+Installation de destination ou d’entreposage ou de reconditionnement prévue (case 2)
+L'établissement renseigné doit être inscrit sur Trackdéchets en tant qu'installation
+de traitement ou de tri, transit, regroupement.
 
 </td>
 </tr>
@@ -6970,7 +7262,7 @@ Négociant (case 7)
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>appendix2Forms</strong></td>
-<td valign="top">[<a href="#appendixforminput">AppendixFormInput</a>]</td>
+<td valign="top">[<a href="#appendixforminput">AppendixFormInput</a>!]</td>
 <td>
 
 Annexe 2
@@ -7206,7 +7498,7 @@ Grand emballage
 </td>
 </tr>
 <tr>
-<td valign="top"><strong>VRAC</strong></td>
+<td valign="top"><strong>GRV</strong></td>
 <td>
 
 Grand récipient pour vrac
@@ -7319,23 +7611,15 @@ Signature du traitement du déchet
 </thead>
 <tbody>
 <tr>
-<td valign="top"><strong>DRAFT</strong></td>
+<td valign="top"><strong>INITIAL</strong></td>
 <td>
 
-Bsdasri à l'état de brouillon
+Bsdasri dans son état initial
 
 </td>
 </tr>
 <tr>
-<td valign="top"><strong>SEALED</strong></td>
-<td>
-
-Bsdasri scellé (publié)
-
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>READY_FOR_TAKEOVER</strong></td>
+<td valign="top"><strong>SIGNED_BY_PRODUCER</strong></td>
 <td>
 
 Optionnel, Bsdasri signé par la PRED (émetteur)
@@ -7811,6 +8095,14 @@ Art 4: Les négociants tiennent à jour un registre chronologique des déchets d
 
 </td>
 </tr>
+<tr>
+<td valign="top"><strong>BROKERED</strong></td>
+<td>
+
+Registre courtier
+
+</td>
+</tr>
 </tbody>
 </table>
 
@@ -8121,7 +8413,8 @@ The `Boolean` scalar type represents `true` or `false`.
 
 ### DateTime
 
-The `DateTime` scalar expects a date-formatted string matching one of the following formats:
+Le scalaire `DateTime` accepte des chaines de caractères
+formattées selon le standard ISO 8601. Exemples:
 - "yyyy-MM-dd" (eg. 2020-11-23)
 - "yyyy-MM-ddTHH:mm:ss" (eg. 2020-11-23T13:34:55)
 - "yyyy-MM-ddTHH:mm:ssX" (eg. 2020-11-23T13:34:55Z)
