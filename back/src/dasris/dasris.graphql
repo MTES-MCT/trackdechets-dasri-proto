@@ -44,7 +44,7 @@ enum BsdasriPackagings {
   GRAND_EMBALLAGE
 
   "Grand récipient pour vrac"
-  VRAC
+  GRV
 
   "Autre"
   AUTRE

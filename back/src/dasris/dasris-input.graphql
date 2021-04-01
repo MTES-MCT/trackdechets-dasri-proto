@@ -45,7 +45,6 @@ input BsdasriWasteAcceptationInput {
 }
 input BsdasriEmissionInput {
   wasteCode: String
-  wasteDetailsOnuCode: String
   wasteDetails: BsdasriWasteDetailInput
   handedOverAt: DateTime
 }

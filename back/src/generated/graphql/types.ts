@@ -138,7 +138,6 @@ export type BsdasriEmission = {
 
 export type BsdasriEmissionInput = {
   wasteCode?: Maybe<Scalars["String"]>;
-  wasteDetailsOnuCode?: Maybe<Scalars["String"]>;
   wasteDetails?: Maybe<BsdasriWasteDetailInput>;
   handedOverAt?: Maybe<Scalars["DateTime"]>;
 };
@@ -227,7 +226,7 @@ export type BsdasriPackagings =
   /** Grand emballage */
   | "GRAND_EMBALLAGE"
   /** Grand récipient pour vrac */
-  | "VRAC"
+  | "GRV"
   /** Autre */
   | "AUTRE";
 
@@ -5170,7 +5169,6 @@ export function createBsdasriEmissionInputMock(
 ): BsdasriEmissionInput {
   return {
     wasteCode: null,
-    wasteDetailsOnuCode: null,
     wasteDetails: null,
     handedOverAt: null,
     ...props

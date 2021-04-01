@@ -155,7 +155,7 @@ const packagingsTypes: BsdasriPackagings[] = [
   "FUT",
   "BOITE_PERFORANTS",
   "GRAND_EMBALLAGE",
-  "VRAC",
+  "GRV",
   "AUTRE"
 ];
 export const packagingInfo: FactorySchemaOf<
