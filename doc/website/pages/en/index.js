@@ -18,9 +18,9 @@ class HomeSplash extends React.Component {
     const { baseUrl, docsUrl } = siteConfig;
     const docsPart = `${docsUrl ? `${docsUrl}/` : ""}`;
     const langPart = `${language ? `${language}/` : ""}`;
-    const docUrl = doc => `${baseUrl}${docsPart}${langPart}${doc}`;
+    const docUrl = (doc) => `${baseUrl}${docsPart}${langPart}${doc}`;
 
-    const SplashContainer = props => (
+    const SplashContainer = (props) => (
       <div className="homeContainer lightBackground">
         <div className="homeSplashFade">
           <div className="wrapper homeWrapper">{props.children}</div>
@@ -28,17 +28,17 @@ class HomeSplash extends React.Component {
       </div>
     );
 
-    const Logo = props => (
+    const Logo = (props) => (
       <div className="projectLogo">
         <img src={props.img_src} alt="Project Logo" />
       </div>
     );
 
-    const ProjectTitle = props => (
+    const ProjectTitle = (props) => (
       <h2 className="projectTitle">{props.tagline}</h2>
     );
 
-    const Button = props => (
+    const Button = (props) => (
       <div className="pluginWrapper buttonWrapper">
         <a
           className="button largeButton"
@@ -67,7 +67,7 @@ class Index extends React.Component {
     const { config: siteConfig, language = "" } = this.props;
     const { baseUrl } = siteConfig;
 
-    const Block = props => (
+    const Block = (props) => (
       <Container
         padding={["bottom", "top"]}
         id={props.id}
@@ -80,7 +80,25 @@ class Index extends React.Component {
         />
       </Container>
     );
+    const DasriWarning = () => (
+      <Block id="dasriWarning" background="dark">
+        {[
+          {
+            content:
+              "Cette documentation comporte des informations spécifiques au bordereaux dasris." +
+              "<br>" +
+              "L'implémentation des dasris est encore expérimentale." +
+              "<br/> " +
+              "Les dasris sont uniquement disponibles à des fins d'éxpérimentation sur: https://api.dasris.trackdechets.beta.gouv.fr/" +
+              "<br/> " +
+              "Dasn un futur proche, une fois l'api stabilisée, l'implémentation sera disponible sur la sanbox et la production Trackdéchets" +
+              "<br/> ",
 
+            title: "Avertissement - Dasris",
+          },
+        ]}
+      </Block>
+    );
     const WhatIsTrackdechets = () => (
       <Block id="whatistd">
         {[
@@ -99,8 +117,8 @@ class Index extends React.Component {
               "</ul>",
             image: `${baseUrl}img/undraw_factory.svg`,
             imageAlign: "right",
-            title: "La mission de Trackdéchets ?"
-          }
+            title: "La mission de Trackdéchets ?",
+          },
         ]}
       </Block>
     );
@@ -125,8 +143,8 @@ class Index extends React.Component {
               "</ul>",
             image: `${baseUrl}img/undraw_instant_information.svg`,
             imageAlign: "left",
-            title: "Pourquoi se connecter à Trackdéchets ?"
-          }
+            title: "Pourquoi se connecter à Trackdéchets ?",
+          },
         ]}
       </Block>
     );
@@ -144,8 +162,8 @@ class Index extends React.Component {
               "de la chaîne de traçabilité du BSD.",
             image: `${baseUrl}img/undraw_online_transactions.svg`,
             imageAlign: "right",
-            title: "Comment ça marche ?"
-          }
+            title: "Comment ça marche ?",
+          },
         ]}
       </Block>
     );
@@ -156,8 +174,8 @@ class Index extends React.Component {
       }
 
       const showcase = siteConfig.users
-        .filter(user => user.pinned)
-        .map(user => (
+        .filter((user) => user.pinned)
+        .map((user) => (
           <img
             key={user.caption}
             src={user.image}
@@ -179,6 +197,7 @@ class Index extends React.Component {
       <div>
         <HomeSplash siteConfig={siteConfig} language={language} />
         <div className="mainContainer">
+          <DasriWarning />
           <WhatIsTrackdechets />
           <WhyTrackdechets />
           <HowDoesItWork />
