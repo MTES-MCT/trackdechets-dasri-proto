@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "BsdasriStatus" AS ENUM ('INITIAL', 'SIGNED_BY_PRODUCER', 'SENT', 'RECEIVED', 'REFUSED_BY_RECIPIENT','PROCESSED', 'REFUSED');
+CREATE TYPE "default$default"."BsdasriStatus" AS ENUM ('INITIAL', 'SIGNED_BY_PRODUCER', 'SENT', 'RECEIVED', 'REFUSED_BY_RECIPIENT','PROCESSED', 'REFUSED');
 
 
 
@@ -11,8 +11,8 @@ CREATE TABLE "default$default"."Bsdasri" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "ownerId" TEXT NOT NULL,
-    "isDeleted" BOOLEAN DEFAULT false,
-    "isDraft" BOOLEAN DEFAULT false;
+    "isDeleted" BOOLEAN DEFAULT FALSE,
+    "isDraft" BOOLEAN DEFAULT FALSE,
     "emitterCompanyName" TEXT,
     "emitterCompanySiret" TEXT,
     "emitterCompanyAddress" TEXT,
@@ -66,7 +66,7 @@ CREATE TABLE "default$default"."Bsdasri" (
     "recipientWasteRefusalReason" TEXT,
     "recipientWasteRefusedQuantity" INTEGER,
     "recipientWasteQuantity" INTEGER,
-    "recipientWasteQuantity" "default$default"."QuantityType",
+    "recipientWasteQuantityType" "default$default"."QuantityType",
     "recipientWasteVolume" INTEGER,
     "recipientCustomInfo" TEXT,
     "receivedAt" TIMESTAMP(3),
