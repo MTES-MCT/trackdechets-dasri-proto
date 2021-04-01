@@ -15,7 +15,6 @@ export default function SlipDetail() {
   >(DASRI_GET, {
     variables: {
       id: formId,
-      readableId: null,
     },
     skip: !formId,
     fetchPolicy: "network-only",

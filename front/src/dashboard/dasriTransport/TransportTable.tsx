@@ -46,7 +46,7 @@ export const TransportTable = ({ forms, userSiret, refetchQuery }) => {
         {sortedForms.map(form => (
           <tr key={form.id} className="td-table__tr">
             <td>
-              <div className={styles.readableId}>{form.readableId}</div>
+              <div className={styles.readableId}>{form.id}</div>
             </td>
             <td>
               <Shorten content={form.emitter?.company?.name || ""} />

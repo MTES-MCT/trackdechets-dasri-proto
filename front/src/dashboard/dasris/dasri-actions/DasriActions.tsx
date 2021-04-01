@@ -191,7 +191,7 @@ const buttons = {
     icon: PaperWriteIcon,
     component: Sealed,
   },
-  READY_FOR_TAKEOVER: {
+  SIGNED_BY_PRODUCER: {
     title: "Signature producteur",
     icon: PaperWriteIcon,
     component: DasriSignature,

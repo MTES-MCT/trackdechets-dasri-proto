@@ -185,7 +185,7 @@ export default function TransportSignature({
 
                 <div className="form__row">
                   <span className={styles.label}>Bordereau</span>
-                  <span> {form.readableId}</span>
+                  <span> {form.id}</span>
                 </div>
                 <div className="form__row">
                   <span id="collect-address-trs" className={styles.label}>
@@ -320,7 +320,7 @@ export default function TransportSignature({
                   <h3>Déchets</h3>
                   <div className="form__row">
                     <span className={styles.label}>Bordereau numéro:</span>
-                    {form.readableId}
+                    {form.id}
                   </div>
                   <div className="form__row">
                     <span className={styles.label}>Appellation du déchet:</span>

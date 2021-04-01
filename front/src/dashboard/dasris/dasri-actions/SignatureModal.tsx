@@ -20,11 +20,11 @@ import { gql } from "@apollo/client";
 import { fullDasriFragment } from "common/fragments/dasris";
 
 const signatureTypes = {
-  [BsdasriStatus.Sealed]: {
+  [BsdasriStatus.Initial]: {
     type: BsdasriSignatureType.Emission,
     name: "Producteur",
   },
-  [BsdasriStatus.ReadyForTakeover]: {
+  [BsdasriStatus.SignedByProducer]: {
     type: BsdasriSignatureType.Transport,
     name: "Transporteur",
   },
@@ -61,7 +61,7 @@ export default function DasriSignModal({ dasri, isOpen, onClose }: Props) {
       ariaLabel="Signer le bordereau VHU"
     >
       <h2 className="td-modal-title">Signature {signature?.name}</h2>
-      <p>{dasri.readableId}</p>
+      <p>{dasri.id}</p>
       {/* {additionnalForm && (
         <>
           <h3>Champs obligatoires</h3>

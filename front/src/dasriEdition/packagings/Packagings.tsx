@@ -29,7 +29,7 @@ export default function Packagings({
   if (!value) {
     return null;
   }
-  console.log(value)
+
   return (
     <div>
       {!value.length && <span>Le conditionnement doit être défini</span>}

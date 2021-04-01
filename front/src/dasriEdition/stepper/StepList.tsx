@@ -47,7 +47,7 @@ export default function StepList(props: IProps) {
   >(DASRI_GET, {
     variables: {
       id: props.bsdId!,
-      readableId: null,
+     
     },
     skip: !props.bsdId,
     fetchPolicy: "network-only",

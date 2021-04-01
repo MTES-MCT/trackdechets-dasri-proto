@@ -14,7 +14,7 @@ export const TransportCards = ({ forms, userSiret, refetchQuery }) => {
         <li key={form.id} className={styles.transportCard}>
           <div className={styles.detailRow}>
             <dt>Bordereau</dt>
-            <dd>{form.readableId}</dd>
+            <dd>{form.id}</dd>
           </div>
           <div className={styles.detailRow}>
             <dt>PRED</dt>

@@ -54,7 +54,7 @@ export default function Dasris({
             <tr key={s.id} className="td-table__tr">
               {hiddenFields.indexOf("readableId") === -1 && (
                 <td>
-                  <div className="id">{s.readableId}</div>
+                  <div className="id">{s.id}</div>
                 </td>
               )}
               {hiddenFields.indexOf("sentAt") === -1 && (

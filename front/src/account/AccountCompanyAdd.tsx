@@ -9,11 +9,11 @@ import RedErrorMessage from "../common/components/RedErrorMessage";
 import CompanyType from "../login/CompanyType";
 import AccountCompanyAddTransporterReceipt from "./accountCompanyAdd/AccountCompanyAddTransporterReceipt";
 import AccountCompanyAddTraderReceipt from "./accountCompanyAdd/AccountCompanyAddTraderReceipt";
+
 import AccountCompanyAddSiret from "./accountCompanyAdd/AccountCompanyAddSiret";
 import AccountCompanyAddEcoOrganisme from "./accountCompanyAdd/AccountCompanyAddEcoOrganisme";
 import AccountCompanyAddMembershipRequest from "./accountCompanyAdd/AccountCompanyAddMembershipRequest";
 import styles from "./AccountCompanyAdd.module.scss";
-import { FaHourglassHalf } from "react-icons/fa";
 import {
   Mutation,
   MutationCreateCompanyArgs,
@@ -21,6 +21,7 @@ import {
   CompanyType as _CompanyType,
   CompanyPublic,
 } from "generated/graphql/types";
+import Tooltip from "common/components/Tooltip";
 
 const CREATE_COMPANY = gql`
   mutation CreateCompany($companyInput: PrivateCompanyInput!) {
@@ -30,15 +31,6 @@ const CREATE_COMPANY = gql`
       givenName
       siret
       companyTypes
-    }
-  }
-`;
-
-const CREATE_UPLOAD_LINK = gql`
-  mutation CreateUploadLink($fileName: String!, $fileType: String!) {
-    createUploadLink(fileName: $fileName, fileType: $fileType) {
-      signedUrl
-      key
     }
   }
 `;
@@ -59,14 +51,22 @@ const CREATE_TRADER_RECEIPT = gql`
   }
 `;
 
+const CREATE_BROKER_RECEIPT = gql`
+  mutation CreateBrokerReceipt($input: CreateBrokerReceiptInput!) {
+    createBrokerReceipt(input: $input) {
+      id
+    }
+  }
+`;
+
 interface Values extends FormikValues {
   siret: string;
   companyName: string;
+  givenName: string;
   address: string;
   companyTypes: _CompanyType[];
   gerepId: string;
   codeNaf: string;
-  document: File | null;
   isAllowed: boolean;
   transporterReceiptNumber: string;
   transporterReceiptValidity: string;
@@ -75,6 +75,9 @@ interface Values extends FormikValues {
   traderReceiptNumber: string;
   traderReceiptValidity: string;
   traderReceiptDepartment: string;
+  brokerReceiptNumber: string;
+  brokerReceiptValidity: string;
+  brokerReceiptDepartment: string;
 }
 
 /**
@@ -103,14 +106,14 @@ export default function AccountCompanyAdd() {
         }
         const { me } = getMeQuery;
 
-        const companies = me.companies || [];
-        companies.push(createCompany);
-
-        me.companies = companies;
-
         cache.writeQuery({
           query: GET_ME,
-          data: { me },
+          data: {
+            me: {
+              ...me,
+              companies: [...me.companies, createCompany],
+            },
+          },
         });
       }
     },
@@ -126,9 +129,10 @@ export default function AccountCompanyAdd() {
     { error: createTraderReceiptError },
   ] = useMutation(CREATE_TRADER_RECEIPT);
 
-  const [createUploadLink, { error: uploadError }] = useMutation<{
-    createUploadLink: { signedUrl: string; key: string };
-  }>(CREATE_UPLOAD_LINK);
+  const [
+    createBrokerReceipt,
+    { error: createBrokerReceiptError },
+  ] = useMutation(CREATE_BROKER_RECEIPT);
 
   function isTransporter(companyTypes: _CompanyType[]) {
     return companyTypes.includes(_CompanyType.Transporter);
@@ -148,46 +152,19 @@ export default function AccountCompanyAdd() {
    */
   async function onSubmit(values: Values) {
     const {
-      address,
       isAllowed,
-      document,
       transporterReceiptNumber,
       transporterReceiptValidity,
       transporterReceiptDepartment,
       traderReceiptNumber,
       traderReceiptValidity,
       traderReceiptDepartment,
+      brokerReceiptNumber,
+      brokerReceiptValidity,
+      brokerReceiptDepartment,
       ecoOrganismeAgreements,
       ...companyInput
     } = values;
-
-    let documentKeys = [] as string[];
-
-    if (document) {
-      // upload files if any
-
-      const { name: fileName, type: fileType } = document;
-
-      // Retrieves a signed URL
-
-      const { data } = await createUploadLink({
-        variables: { fileName, fileType },
-      });
-
-      if (data) {
-        // upload file to signed URL
-        const uploadLink = data.createUploadLink;
-        await fetch(uploadLink.signedUrl, {
-          method: "PUT",
-          body: document,
-          headers: {
-            "Content-Type": fileType,
-            "x-amz-acl": "private",
-          },
-        });
-        documentKeys = [uploadLink.key];
-      }
-    }
 
     let transporterReceiptId: string | null = null;
 
@@ -243,9 +220,9 @@ export default function AccountCompanyAdd() {
       variables: {
         companyInput: {
           ...companyInput,
-          documentKeys,
           transporterReceiptId,
           traderReceiptId,
+
           // Filter out empty agreements
           ecoOrganismeAgreements: ecoOrganismeAgreements.filter(Boolean),
         },
@@ -271,7 +248,6 @@ export default function AccountCompanyAdd() {
     }
     return [];
   }
-
   return (
     <div className="panel">
       <h5 className={styles.subtitle}>Identification</h5>
@@ -288,11 +264,11 @@ export default function AccountCompanyAdd() {
           initialValues={{
             siret: companyInfos?.siret ?? "",
             companyName: companyInfos?.name ?? "",
+            givenName: "",
             address: companyInfos?.address ?? "",
             companyTypes: getCompanyTypes(companyInfos),
             gerepId: companyInfos?.installation?.codeS3ic ?? "",
             codeNaf: companyInfos?.naf ?? "",
-            document: null,
             isAllowed: false,
             transporterReceiptNumber: "",
             transporterReceiptValidity: "",
@@ -300,6 +276,9 @@ export default function AccountCompanyAdd() {
             traderReceiptNumber: "",
             traderReceiptValidity: "",
             traderReceiptDepartment: "",
+            brokerReceiptNumber: "",
+            brokerReceiptValidity: "",
+            brokerReceiptDepartment: "",
             ecoOrganismeAgreements: [],
           }}
           validate={values => {
@@ -311,13 +290,19 @@ export default function AccountCompanyAdd() {
 
             const isTransporter_ = isTransporter(values.companyTypes);
 
-            // whether or not one of the transporter receipt field is set
+            // whether or not one of the trader receipt field is set
             const anyTraderReceipField =
               !!values.traderReceiptNumber ||
               !!values.traderReceiptValidity ||
               !!values.traderReceiptDepartment;
 
             const isTrader_ = isTrader(values.companyTypes);
+
+            // whether or not one of the broker receipt field is set
+            const anyBrokerReceipField =
+              !!values.brokerReceiptNumber ||
+              !!values.brokerReceiptValidity ||
+              !!values.brokerReceiptDepartment;
 
             return {
               ...(values.companyTypes.length === 0 && {
@@ -360,6 +345,7 @@ export default function AccountCompanyAdd() {
                 !values.traderReceiptDepartment && {
                   traderReceiptDepartment: "Champ obligatoire",
                 }),
+
               ...(isEcoOrganisme(values.companyTypes) &&
                 values.ecoOrganismeAgreements.length < 1 && {
                   ecoOrganismeAgreements: "Champ obligatoire",
@@ -372,12 +358,30 @@ export default function AccountCompanyAdd() {
             <Form className={styles.companyAddForm}>
               <div className={styles.field}>
                 <label className={`text-right ${styles.bold}`}>
-                  Nom de l'entreprise
+                  Raison sociale
+                </label>
+
+                <div className={styles.field__value}>
+                  {companyInfos?.name || (
+                    <Field
+                      type="text"
+                      name="companyName"
+                      className={`td-input ${styles.textField}`}
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div className={styles.field}>
+                <label className={`text-right ${styles.bold}`}>
+                  Nom usuel{" "}
+                  <Tooltip msg="Nom usuel de l'établissement qui permet de différencier plusieurs établissements ayant la même raison sociale" />
+                  (optionnel)
                 </label>
                 <div className={styles.field__value}>
                   <Field
                     type="text"
-                    name="companyName"
+                    name="givenName"
                     className={`td-input ${styles.textField}`}
                   />
                 </div>
@@ -386,48 +390,29 @@ export default function AccountCompanyAdd() {
               <div className={styles.field}>
                 <label className={`text-right ${styles.bold}`}>Code NAF</label>
                 <div className={styles.field__value}>
-                  <Field
-                    type="text"
-                    name="codeNaf"
-                    className={`td-input ${styles.textField}`}
-                  />
+                  {companyInfos?.naf ? (
+                    `${companyInfos?.naf} - ${companyInfos?.libelleNaf}`
+                  ) : (
+                    <Field
+                      type="text"
+                      name="codeNaf"
+                      className={`td-input ${styles.textField}`}
+                    />
+                  )}
                 </div>
               </div>
 
               <div className={styles.field}>
                 <label className={`text-right ${styles.bold}`}>Adresse</label>
                 <div className={styles.field__value}>
-                  <Field
-                    type="text"
-                    name="address"
-                    className={`td-input ${styles.textField}`}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.field}>
-                <label className={`text-right ${styles.bold}`}>
-                  Justificatif (optionnel)
-                </label>
-
-                <div className={styles.field__value}>
-                  <input
-                    type="file"
-                    className={`button ${styles.textField}`}
-                    accept="image/png, image/jpeg, image/gif, application/pdf "
-                    onChange={async event => {
-                      const file = event.currentTarget.files?.item(0);
-                      if (!!file) {
-                        setFieldValue("document", file);
-                      }
-                    }}
-                  />
-                  <div className={styles.smaller}>
-                    KBIS, justificatif du siège social de l'entreprise... Ce
-                    document est suceptible d'être vérifié par l'équipe
-                    Trackdéchets afin de lutter contre la fraude. Formats
-                    acceptés: jpeg, png, pdf.
-                  </div>
+                  {companyInfos?.address || (
+                    <Field
+                      type="text"
+                      name="address"
+                      className={`td-input ${styles.textField}`}
+                      disabled={!!companyInfos?.address}
+                    />
+                  )}
                 </div>
               </div>
 
@@ -509,11 +494,10 @@ export default function AccountCompanyAdd() {
                   type="submit"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? <FaHourglassHalf /> : "Créer"}
+                  {isSubmitting ? "Création..." : "Créer"}
                 </button>
               </div>
               {/* // ERRORS */}
-              {uploadError && <NotificationError apolloError={uploadError} />}
               {createTransporterReceiptError && (
                 <NotificationError
                   apolloError={createTransporterReceiptError}
@@ -521,6 +505,9 @@ export default function AccountCompanyAdd() {
               )}
               {createTraderReceiptError && (
                 <NotificationError apolloError={createTraderReceiptError} />
+              )}
+              {createBrokerReceiptError && (
+                <NotificationError apolloError={createBrokerReceiptError} />
               )}
               {savingError && <NotificationError apolloError={savingError} />}
             </Form>

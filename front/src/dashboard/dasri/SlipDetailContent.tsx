@@ -7,7 +7,7 @@ import React from "react";
 // import Edit from "dashboard/slips/slips-actions/Edit";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { Bsdasri, FormCompany } from "generated/graphql/types";
-import {  statusLabels } from "../constants";
+import { statusLabels } from "../constants";
 import {
   WarehouseDeliveryIcon,
   WarehouseStorageIcon,
@@ -63,11 +63,11 @@ const Recipient = ({ form }: { form: Bsdasri }) => {
         {/* <DetailRow value={form.receivedBy} label="Reçu par" /> */}
 
         <DetailRow
-          value={form.reception?.signedBy}
+          value={form.reception?.signature?.author}
           label="Réception signée par"
         />
         <DateRow
-          value={form.reception?.signedAt}
+          value={form.reception?.signature?.date}
           label="Réception signée  le"
         />
 
@@ -91,8 +91,14 @@ const Recipient = ({ form }: { form: Bsdasri }) => {
           label="Traitement effectué le"
         />
 
-        <DetailRow value={operation?.signedBy} label="Traitement signé par" />
-        <DateRow value={operation?.signedAt} label="Traitement signé le" />
+        <DetailRow
+          value={operation?.signature?.author}
+          label="Traitement signé par"
+        />
+        <DateRow
+          value={operation?.signature?.date}
+          label="Traitement signé le"
+        />
       </div>
     </>
   );
@@ -116,7 +122,7 @@ export default function SlipDetailContent({
           <span className={styles.detailStatus}>
             [{statusLabels[form.status]}]
           </span>
-          {form.status !== "DRAFT" && <span>{form.readableId}</span>}
+          {!form.isDraft && <span>{form.id}</span>}
 
           {!!form.customId && (
             <span className="tw-ml-auto">Numéro libre: {form.customId}</span>
@@ -125,9 +131,9 @@ export default function SlipDetailContent({
 
         <div className={styles.detailContent}>
           <div className={`${styles.detailQRCodeIcon}`}>
-            {form.status !== "DRAFT" && (
+            {!form.isDraft && (
               <div className={styles.detailQRCode}>
-                <QRCodeIcon value={form.readableId} size={96} />
+                <QRCodeIcon value={form.id} size={96} />
                 <span>Ce QR code contient le numéro du bordereau </span>
               </div>
             )}
@@ -203,8 +209,8 @@ export default function SlipDetailContent({
                   value={form.emission?.handedOverAt}
                   label="Envoyé le"
                 />
-                <DetailRow value={form.emission?.signedAt} label="Signé par" />
-                <DateRow value={form.emission?.signedAt} label="Signé le" />
+                <DetailRow value={form.emission?.signature?.author} label="Signé par" />
+                <DateRow value={form.emission?.signature?.date} label="Signé le" />
               </div>
             </div>
           </TabPanel>
@@ -231,22 +237,21 @@ export default function SlipDetailContent({
                 value={form?.transporter?.receiptValidityLimit}
                 label="Date de validité"
               />
-
               {/* <YesNoRow
                 value={form.signedByTransporter}
                 label="Signé par le transporteur"
               /> */}
               {/* <DateRow value={form.sentAt} label="Date de prise en charge" /> */}
               <dt>Quantité</dt>{" "}
-                <dd>{form.transport?.wasteDetails?.quantity} tonnes</dd>
-                <DetailRow
-                  value={getVerboseQuantityType(
-                    form.transport?.wasteDetails?.quantityType
-                  )}
-                  label="Quantité"
-                />
-              <DetailRow value={form.transport?.signedAt} label="Signé par" />
-              <DateRow value={form.transport?.signedAt} label="Signé le" />
+              <dd>{form.transport?.wasteDetails?.quantity} tonnes</dd>
+              <DetailRow
+                value={getVerboseQuantityType(
+                  form.transport?.wasteDetails?.quantityType
+                )}
+                label="Quantité"
+              />
+              <DetailRow value={form.transport?.signature?.author} label="Signé par" />
+              <DateRow value={form.transport?.signature?.date} label="Signé le" />
             </div>
           </TabPanel>
 
@@ -259,23 +264,7 @@ export default function SlipDetailContent({
         </div>
       </Tabs>
       <div className={styles.detailActions}>
-        {/* <Duplicate formId={form.id} small={false} redirectToDashboard={true} /> */}
-        {form.status === "DRAFT" ? (
-          <>
-            <p></p>
-            {/* <Delete formId={form.id} small={false} redirectToDashboard={true} />
-            <Edit formId={form.id} small={false} /> */}
-          </>
-        ) : (
-          <p></p>
-          // <DownloadPdf formId={form.id} small={false} />
-        )}
-        {/* {statusesWithDynamicActions.includes(form.status) && ( */}
-
-        {/* <DynamicActions siret={siret} form={form} refetch={refetch} /> */}
-        {/* )} */}
-        {/* {children}
-      </div> */}
+   
       </div>
     </div>
   );

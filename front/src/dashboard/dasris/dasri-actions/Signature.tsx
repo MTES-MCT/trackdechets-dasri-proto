@@ -21,11 +21,11 @@ import { fullDasriFragment } from "common/fragments/dasris";
 import { BsdActionProps } from "./DasriActions";
 
 const signatureTypes = {
-  [BsdasriStatus.Sealed]: {
+  [BsdasriStatus.Initial]: {
     type: BsdasriSignatureType.Emission,
     name: "Producteur",
   },
-  [BsdasriStatus.ReadyForTakeover]: {
+  [BsdasriStatus.SignedByProducer]: {
     type: BsdasriSignatureType.Transport,
     name: "Transporteur",
   },
@@ -59,7 +59,7 @@ export default function DasriSignature({
 
   return (
     <div>
-       <h3>Bordereau {dasri.readableId}</h3>
+       <h3>Bordereau {dasri.id}</h3>
 
       {error && <NotificationError apolloError={error} />}
 

@@ -8,7 +8,7 @@ export default function Sealed(props: BsdActionProps) {
       .onSubmit({})
       .then(() =>
         cogoToast.success(
-          `Le numéro #${props.dasri.readableId} a été affecté au bordereau`
+          `Le numéro #${props.dasri.id} a été affecté au bordereau`
         )
       );
   }

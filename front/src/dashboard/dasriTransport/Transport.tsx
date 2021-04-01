@@ -81,8 +81,8 @@ export function TransportContent({ formType }) {
       siret: siret,
       roles: [BsdasriRole.Transporter],
       status: [
-        BsdasriStatus.Sealed,
-        BsdasriStatus.ReadyForTakeover,
+        BsdasriStatus.Initial,
+        BsdasriStatus.SignedByProducer,
         BsdasriStatus.Sent,
       ],
     },
@@ -106,7 +106,7 @@ export function TransportContent({ formType }) {
 
   const filtering = (form: Bsdasri): boolean => {
     const statuses = {
-      TO_TAKE_OVER: ["SEALED", "READY_FOR_TAKEOVER"],
+      TO_TAKE_OVER: ["SEALED", "SIGNED_BY_PRODUCER"],
       TAKEN_OVER: ["SENT"],
     }[formType];
 

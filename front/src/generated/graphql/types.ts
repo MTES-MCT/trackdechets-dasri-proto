@@ -1,7 +1,11 @@
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -10,7 +14,8 @@ export type Scalars = {
   Int: number;
   Float: number;
   /**
-   * The `DateTime` scalar expects a date-formatted string matching one of the following formats:
+   * Le scalaire `DateTime` accepte des chaines de caractères
+   * formattées selon le standard ISO 8601. Exemples:
    * - "yyyy-MM-dd" (eg. 2020-11-23)
    * - "yyyy-MM-ddTHH:mm:ss" (eg. 2020-11-23T13:34:55)
    * - "yyyy-MM-ddTHH:mm:ssX" (eg. 2020-11-23T13:34:55Z)
@@ -27,50 +32,50 @@ export type AcceptedFormInput = {
   /** Statut d'acceptation du déchet (case 10) */
   wasteAcceptationStatus: WasteAcceptationStatusInput;
   /** Raison du refus (case 10) */
-  wasteRefusalReason: Maybe<Scalars['String']>;
+  wasteRefusalReason: Maybe<Scalars["String"]>;
   /** Date à laquelle le déchet a été accepté ou refusé (case 10) */
-  signedAt: Scalars['DateTime'];
+  signedAt: Scalars["DateTime"];
   /** Nom de la personne en charge de l'acceptation' du déchet (case 10) */
-  signedBy: Scalars['String'];
+  signedBy: Scalars["String"];
   /** Quantité réelle présentée (case 10) */
-  quantityReceived: Scalars['Float'];
+  quantityReceived: Scalars["Float"];
 };
 
 /** Payload de création d'une annexe 2 */
 export type AppendixFormInput = {
   /** Identifiant unique du bordereau */
-  id: Maybe<Scalars['ID']>;
+  id: Maybe<Scalars["ID"]>;
   /**
    * N° de bordereau
-   * 
+   *
    * Déprécié : L'id du bordereau doit être utilisé comme identifiant (paramètre id).
    * Le readableId permet de le récupérer via la query form.
    */
-  readableId: Maybe<Scalars['ID']>;
+  readableId: Maybe<Scalars["ID"]>;
 };
 
 /** Cet objet est renvoyé par la mutation login qui est dépréciée */
 export type AuthPayload = {
-  __typename?: 'AuthPayload';
+  __typename?: "AuthPayload";
   /**
    * Bearer token à durée illimité permettant de s'authentifier
    * à l'API Trackdéchets. Pour ce faire, il doit être passé dans le
    * header d'autorisation `Authorization: Bearer ******`
    */
-  token: Scalars['String'];
+  token: Scalars["String"];
   /** Utilisateur lié au token */
   user: User;
 };
 
 /** Bordereau Bsdasri */
 export type Bsdasri = {
-  __typename?: 'Bsdasri';
-  id: Scalars['ID'];
-  readableId: Scalars['String'];
-  customId: Maybe<Scalars['String']>;
+  __typename?: "Bsdasri";
+  id: Scalars["ID"];
+  customId: Maybe<Scalars["String"]>;
   status: BsdasriStatus;
-  createdAt: Maybe<Scalars['DateTime']>;
-  updatedAt: Maybe<Scalars['DateTime']>;
+  createdAt: Maybe<Scalars["DateTime"]>;
+  updatedAt: Maybe<Scalars["DateTime"]>;
+  isDraft: Scalars["Boolean"];
   emitter: Maybe<BsdasriEmitter>;
   emission: Maybe<BsdasriEmission>;
   transporter: Maybe<BsdasriTransporter>;
@@ -82,9 +87,20 @@ export type Bsdasri = {
   regroupedBsdasris: Maybe<Array<Bsdasri>>;
 };
 
+export type BsdasriCompanyWhere = {
+  siret: Scalars["String"];
+};
+
+export type BsdasriConnection = {
+  __typename?: "BsdasriConnection";
+  totalCount: Scalars["Int"];
+  pageInfo: PageInfo;
+  edges: Array<BsdasriEdge>;
+};
+
 export type BsdasriCreateInput = {
   /** Identifiant custom */
-  customId: Maybe<Scalars['String']>;
+  customId: Maybe<Scalars["String"]>;
   emitter: Maybe<BsdasriEmitterInput>;
   emission: Maybe<BsdasriEmissionInput>;
   transporter: Maybe<BsdasriTransporterInput>;
@@ -95,34 +111,38 @@ export type BsdasriCreateInput = {
   regroupedBsdasris: Maybe<Array<Maybe<RegroupedBsdasriInput>>>;
 };
 
+export type BsdasriEdge = {
+  __typename?: "BsdasriEdge";
+  cursor: Scalars["String"];
+  node: Bsdasri;
+};
+
 /** Informations relatives au déchet émis */
 export type BsdasriEmission = {
-  __typename?: 'BsdasriEmission';
-  wasteCode: Maybe<Scalars['String']>;
+  __typename?: "BsdasriEmission";
+  wasteCode: Maybe<Scalars["String"]>;
   wasteDetails: Maybe<BsdasriWasteDetails>;
-  handedOverAt: Maybe<Scalars['DateTime']>;
-  signedBy: Maybe<Scalars['String']>;
-  signedAt: Maybe<Scalars['DateTime']>;
+  handedOverAt: Maybe<Scalars["DateTime"]>;
+  signature: Maybe<BsdasriSignature>;
 };
 
 export type BsdasriEmissionInput = {
-  wasteCode: Maybe<Scalars['String']>;
-  wasteDetailsOnuCode: Maybe<Scalars['String']>;
+  wasteCode: Maybe<Scalars["String"]>;
   wasteDetails: Maybe<BsdasriWasteDetailInput>;
-  handedOverAt: Maybe<Scalars['DateTime']>;
+  handedOverAt: Maybe<Scalars["DateTime"]>;
 };
 
 /** Émetteur du Bsdasri, Personne responsable de l'émimination des déchets (PRED) */
 export type BsdasriEmitter = {
-  __typename?: 'BsdasriEmitter';
+  __typename?: "BsdasriEmitter";
   /** Établissement émetteur */
   company: Maybe<FormCompany>;
   /** Site d'emport du déceht, si différent de celle de l'émetteur */
   workSite: Maybe<WorkSite>;
   /** Date de remise au tranporteur */
-  handOverToTransporterAt: Maybe<Scalars['DateTime']>;
+  handOverToTransporterAt: Maybe<Scalars["DateTime"]>;
   /** Champ libre */
-  customInfo: Maybe<Scalars['String']>;
+  customInfo: Maybe<Scalars["String"]>;
 };
 
 export type BsdasriEmitterInput = {
@@ -130,11 +150,16 @@ export type BsdasriEmitterInput = {
   company: Maybe<CompanyInput>;
   workSite: Maybe<WorkSiteInput>;
   /** Champ libre émetteur */
-  customInfo: Maybe<Scalars['String']>;
+  customInfo: Maybe<Scalars["String"]>;
+};
+
+export type BsdasriEmitterWhere = {
+  company: Maybe<BsdasriCompanyWhere>;
+  signature: Maybe<BsdasriSignatureWhere>;
 };
 
 export type BsdasriInput = {
-  customId: Maybe<Scalars['String']>;
+  customId: Maybe<Scalars["String"]>;
   emitter: Maybe<BsdasriEmitterInput>;
   emission: Maybe<BsdasriEmissionInput>;
   transporter: Maybe<BsdasriTransporterInput>;
@@ -146,189 +171,205 @@ export type BsdasriInput = {
 
 /** Informations relatives au traitement du Bsdasri */
 export type BsdasriOperation = {
-  __typename?: 'BsdasriOperation';
-  signedBy: Maybe<Scalars['String']>;
-  signedAt: Maybe<Scalars['DateTime']>;
-  processingOperation: Maybe<Scalars['String']>;
-  processedAt: Maybe<Scalars['DateTime']>;
+  __typename?: "BsdasriOperation";
+  processingOperation: Maybe<Scalars["String"]>;
+  processedAt: Maybe<Scalars["DateTime"]>;
+  signature: Maybe<BsdasriSignature>;
 };
 
 export type BsdasriOperationInput = {
-  processingOperation: Maybe<Scalars['String']>;
-  processedAt: Maybe<Scalars['DateTime']>;
+  processingOperation: Maybe<Scalars["String"]>;
+  processedAt: Maybe<Scalars["DateTime"]>;
 };
 
 /** Informations sur le conditionnement Bsdasri */
 export type BsdasriPackagingInfo = {
-  __typename?: 'BsdasriPackagingInfo';
+  __typename?: "BsdasriPackagingInfo";
   /** Type de conditionnement */
   type: BsdasriPackagings;
   /** Description du conditionnement dans le cas où le type de conditionnement est `AUTRE` */
-  other: Maybe<Scalars['String']>;
+  other: Maybe<Scalars["String"]>;
   /** Nombre de colis associés à ce conditionnement */
-  quantity: Scalars['Int'];
-  volume: Scalars['Int'];
+  quantity: Scalars["Int"];
+  volume: Scalars["Int"];
 };
 
 export type BsdasriPackagingInfoInput = {
   /** Type de conditionnement */
   type: BsdasriPackagings;
   /** Description du conditionnement dans le cas où le type de conditionnement est `AUTRE` */
-  other: Maybe<Scalars['String']>;
+  other: Maybe<Scalars["String"]>;
   /** Nombre de colis associés à ce conditionnement */
-  volume: Scalars['Int'];
+  volume: Scalars["Int"];
   /** Nombre de colis associés à ce conditionnement */
-  quantity: Scalars['Int'];
+  quantity: Scalars["Int"];
 };
 
 /** Type de packaging du déchet */
 export enum BsdasriPackagings {
   /** Caisse en carton avec sac en plastique */
-  BoiteCarton = 'BOITE_CARTON',
+  BoiteCarton = "BOITE_CARTON",
   /** Fûts ou jerrican à usage unique */
-  Fut = 'FUT',
+  Fut = "FUT",
   /** Boîtes et Mini-collecteurs pour déchets perforants */
-  BoitePerforants = 'BOITE_PERFORANTS',
+  BoitePerforants = "BOITE_PERFORANTS",
   /** Grand emballage */
-  GrandEmballage = 'GRAND_EMBALLAGE',
+  GrandEmballage = "GRAND_EMBALLAGE",
   /** Grand récipient pour vrac */
-  Vrac = 'VRAC',
+  Grv = "GRV",
   /** Autre */
-  Autre = 'AUTRE'
+  Autre = "AUTRE"
 }
 
 /** Informations relatives à la réception du Bsdasri */
 export type BsdasriReception = {
-  __typename?: 'BsdasriReception';
+  __typename?: "BsdasriReception";
   wasteDetails: Maybe<BsdasriWasteDetails>;
   wasteAcceptation: Maybe<BsdasriWasteAcceptation>;
-  receivedAt: Maybe<Scalars['DateTime']>;
-  signedBy: Maybe<Scalars['String']>;
-  signedAt: Maybe<Scalars['DateTime']>;
+  receivedAt: Maybe<Scalars["DateTime"]>;
+  signature: Maybe<BsdasriSignature>;
 };
 
 export type BsdasriReceptionInput = {
   wasteDetails: Maybe<BsdasriWasteDetailInput>;
-  receivedAt: Maybe<Scalars['DateTime']>;
+  receivedAt: Maybe<Scalars["DateTime"]>;
+  wasteAcceptation: Maybe<BsdasriWasteAcceptationInput>;
 };
 
 /** Destinataire du Bsdasri */
 export type BsdasriRecipient = {
-  __typename?: 'BsdasriRecipient';
+  __typename?: "BsdasriRecipient";
   /** Installation destinataire */
   company: Maybe<FormCompany>;
   /** Champ libre */
-  customInfo: Maybe<Scalars['String']>;
+  customInfo: Maybe<Scalars["String"]>;
 };
 
 export type BsdasriRecipientInput = {
   /** Établissement émetteur */
   company: Maybe<CompanyInput>;
   /** Champ libre transporteur */
-  customInfo: Maybe<Scalars['String']>;
+  customInfo: Maybe<Scalars["String"]>;
 };
 
 export type BsdasriRecipientWasteDetailInput = {
-  quantity: Maybe<Scalars['Int']>;
-  volume: Maybe<Scalars['Int']>;
+  quantity: Maybe<Scalars["Int"]>;
+  volume: Maybe<Scalars["Int"]>;
+};
+
+export type BsdasriRecipientWhere = {
+  company: Maybe<BsdasriCompanyWhere>;
+  signature: Maybe<BsdasriSignatureWhere>;
 };
 
 export enum BsdasriRole {
   /** Les Bsdasri dont je suis transporteur */
-  Transporter = 'TRANSPORTER',
+  Transporter = "TRANSPORTER",
   /** Les Bsdasri dont je suis la destination de traitement */
-  Recipient = 'RECIPIENT',
+  Recipient = "RECIPIENT",
   /** Les Bsdasri dont je suis l'émetteur */
-  Emitter = 'EMITTER'
+  Emitter = "EMITTER"
 }
+
+export type BsdasriSignature = {
+  __typename?: "BsdasriSignature";
+  date: Maybe<Scalars["DateTime"]>;
+  author: Maybe<Scalars["String"]>;
+};
 
 export type BsdasriSignatureInput = {
   type: BsdasriSignatureType;
-  signedBy: Scalars['String'];
-  securityCode: Maybe<Scalars['Int']>;
+  author: Scalars["String"];
+  securityCode: Maybe<Scalars["Int"]>;
 };
 
 export enum BsdasriSignatureType {
   /** Signature du cadre émetteur (PRED) */
-  Emission = 'EMISSION',
+  Emission = "EMISSION",
   /** Signature du cadre émetteur (PRED) par le transporteur, grâce au code de sécurité de l'émetteur */
-  EmissionWithSecretCode = 'EMISSION_WITH_SECRET_CODE',
+  EmissionWithSecretCode = "EMISSION_WITH_SECRET_CODE",
   /** Signature du cadre collecteur transporteur */
-  Transport = 'TRANSPORT',
+  Transport = "TRANSPORT",
   /** Signature de la réception du déchet */
-  Reception = 'RECEPTION',
+  Reception = "RECEPTION",
   /** Signature du traitement du déchet */
-  Operation = 'OPERATION'
+  Operation = "OPERATION"
 }
 
+export type BsdasriSignatureWhere = {
+  date: DateFilter;
+};
+
 export enum BsdasriStatus {
-  /** Bsdasri à l'état de brouillon */
-  Draft = 'DRAFT',
-  /** Bsdasri scellé (publié) */
-  Sealed = 'SEALED',
+  /** Bsdasri dans son état initial */
+  Initial = "INITIAL",
   /** Optionnel, Bsdasri signé par la PRED (émetteur) */
-  ReadyForTakeover = 'READY_FOR_TAKEOVER',
+  SignedByProducer = "SIGNED_BY_PRODUCER",
   /** Bsdasri envoyé vers l'établissement de destination */
-  Sent = 'SENT',
+  Sent = "SENT",
   /** Bsdasri reçu par l'établissement de destination */
-  Received = 'RECEIVED',
+  Received = "RECEIVED",
   /** Bsdasri dont les déchets ont été traités */
-  Processed = 'PROCESSED',
+  Processed = "PROCESSED",
   /** Déchet refusé */
-  Refused = 'REFUSED'
+  Refused = "REFUSED"
 }
 
 /** Informations relatives au transport du Bsdasri */
 export type BsdasriTransport = {
-  __typename?: 'BsdasriTransport';
+  __typename?: "BsdasriTransport";
   wasteDetails: Maybe<BsdasriWasteDetails>;
   wasteAcceptation: Maybe<BsdasriWasteAcceptation>;
-  handedOverAt: Maybe<Scalars['DateTime']>;
-  takenOverAt: Maybe<Scalars['DateTime']>;
-  signedBy: Maybe<Scalars['String']>;
-  signedAt: Maybe<Scalars['DateTime']>;
+  handedOverAt: Maybe<Scalars["DateTime"]>;
+  takenOverAt: Maybe<Scalars["DateTime"]>;
+  signature: Maybe<BsdasriSignature>;
 };
 
 /** Collecteur transporteur */
 export type BsdasriTransporter = {
-  __typename?: 'BsdasriTransporter';
+  __typename?: "BsdasriTransporter";
   /** Établissement de destination */
   company: Maybe<FormCompany>;
   /** N° de récipissé */
-  receipt: Maybe<Scalars['String']>;
+  receipt: Maybe<Scalars["String"]>;
   /** Département */
-  receiptDepartment: Maybe<Scalars['String']>;
+  receiptDepartment: Maybe<Scalars["String"]>;
   /** Limite de validité du récipissé */
-  receiptValidityLimit: Maybe<Scalars['DateTime']>;
+  receiptValidityLimit: Maybe<Scalars["DateTime"]>;
   /** Champ libre */
-  customInfo: Maybe<Scalars['String']>;
+  customInfo: Maybe<Scalars["String"]>;
 };
 
 export type BsdasriTransporterInput = {
   /** Établissement collecteur - transporteur */
   company: Maybe<CompanyInput>;
   /** N° de récipissé */
-  receipt: Maybe<Scalars['String']>;
+  receipt: Maybe<Scalars["String"]>;
   /** Département */
-  receiptDepartment: Maybe<Scalars['String']>;
+  receiptDepartment: Maybe<Scalars["String"]>;
   /** Limite de validité du récipissé */
-  receiptValidityLimit: Maybe<Scalars['DateTime']>;
+  receiptValidityLimit: Maybe<Scalars["DateTime"]>;
   /** Champ libre transporteur */
-  customInfo: Maybe<Scalars['String']>;
+  customInfo: Maybe<Scalars["String"]>;
+};
+
+export type BsdasriTransporterWhere = {
+  company: Maybe<BsdasriCompanyWhere>;
+  signature: Maybe<BsdasriSignatureWhere>;
 };
 
 export type BsdasriTransportInput = {
   wasteDetails: Maybe<BsdasriWasteDetailInput>;
-  takenOverAt: Maybe<Scalars['DateTime']>;
-  handedOverAt: Maybe<Scalars['DateTime']>;
+  takenOverAt: Maybe<Scalars["DateTime"]>;
+  handedOverAt: Maybe<Scalars["DateTime"]>;
   wasteAcceptation: Maybe<BsdasriWasteAcceptationInput>;
 };
 
 export type BsdasriUpdateInput = {
   /** Identifiant opaque */
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   /** Identifiant custom */
-  customId: Maybe<Scalars['String']>;
+  customId: Maybe<Scalars["String"]>;
   emitter: Maybe<BsdasriEmitterInput>;
   emission: Maybe<BsdasriEmissionInput>;
   transporter: Maybe<BsdasriTransporterInput>;
@@ -341,33 +382,52 @@ export type BsdasriUpdateInput = {
 
 /** Informations relatives à l'acceptation ou au refus du déchet (Bsdasri) */
 export type BsdasriWasteAcceptation = {
-  __typename?: 'BsdasriWasteAcceptation';
-  status: Maybe<Scalars['String']>;
-  refusalReason: Maybe<Scalars['String']>;
-  refusedQuantity: Maybe<Scalars['Int']>;
+  __typename?: "BsdasriWasteAcceptation";
+  status: Maybe<Scalars["String"]>;
+  refusalReason: Maybe<Scalars["String"]>;
+  refusedQuantity: Maybe<Scalars["Int"]>;
 };
 
 export type BsdasriWasteAcceptationInput = {
   status: Maybe<WasteAcceptationStatusInput>;
-  refusalReason: Maybe<Scalars['String']>;
-  refusedQuantity: Maybe<Scalars['Int']>;
+  refusalReason: Maybe<Scalars["String"]>;
+  refusedQuantity: Maybe<Scalars["Int"]>;
 };
 
 export type BsdasriWasteDetailInput = {
-  quantity: Maybe<Scalars['Int']>;
+  quantity: Maybe<Scalars["Int"]>;
   quantityType: Maybe<QuantityType>;
   packagingInfos: Maybe<Array<BsdasriPackagingInfoInput>>;
-  onuCode: Maybe<Scalars['String']>;
+  onuCode: Maybe<Scalars["String"]>;
 };
 
 /** Détail sur le déchet proprement dit du Bsdasri */
 export type BsdasriWasteDetails = {
-  __typename?: 'BsdasriWasteDetails';
-  quantity: Maybe<Scalars['Int']>;
+  __typename?: "BsdasriWasteDetails";
+  quantity: Maybe<Scalars["Int"]>;
   quantityType: Maybe<QuantityType>;
-  volume: Maybe<Scalars['Int']>;
+  volume: Maybe<Scalars["Int"]>;
   packagingInfos: Maybe<Array<BsdasriPackagingInfo>>;
-  onuCode: Maybe<Scalars['String']>;
+  onuCode: Maybe<Scalars["String"]>;
+};
+
+export type BsdasriWhere = {
+  /** (Optionnel) Permet de récupérer uniquement les bordereaux en brouillon */
+  isDraft: Maybe<Scalars["Boolean"]>;
+  /**
+   * (Optionnel) Filtre sur le statut des bordereaux
+   * Si aucun filtre n'est passé, les bordereaux seront retournés quel que soit leur statut
+   * Défaut à vide.
+   */
+  status: Maybe<BsdasriStatus>;
+  createdAt: Maybe<DateFilter>;
+  updatedAt: Maybe<DateFilter>;
+  emitter: Maybe<BsdasriEmitterWhere>;
+  transporter: Maybe<BsdasriTransporterWhere>;
+  recipient: Maybe<BsdasriRecipientWhere>;
+  _and: Maybe<Array<BsdasriWhere>>;
+  _or: Maybe<Array<BsdasriWhere>>;
+  _not: Maybe<Array<BsdasriWhere>>;
 };
 
 /**
@@ -376,19 +436,19 @@ export type BsdasriWasteDetails = {
  * BSD édités
  */
 export type CompanyFavorite = {
-  __typename?: 'CompanyFavorite';
+  __typename?: "CompanyFavorite";
   /** Nom de l'établissement */
-  name: Maybe<Scalars['String']>;
+  name: Maybe<Scalars["String"]>;
   /** SIRET de l'établissement */
-  siret: Maybe<Scalars['String']>;
+  siret: Maybe<Scalars["String"]>;
   /** Adresse de l'établissement */
-  address: Maybe<Scalars['String']>;
+  address: Maybe<Scalars["String"]>;
   /** Nom du contact */
-  contact: Maybe<Scalars['String']>;
+  contact: Maybe<Scalars["String"]>;
   /** Numéro de téléphone */
-  phone: Maybe<Scalars['String']>;
+  phone: Maybe<Scalars["String"]>;
   /** Email de contact */
-  mail: Maybe<Scalars['String']>;
+  mail: Maybe<Scalars["String"]>;
   /** Récépissé transporteur associé à cet établissement (le cas échéant) */
   transporterReceipt: Maybe<TransporterReceipt>;
   /** Récépissé négociant associé à cet établissement (le cas échant) */
@@ -398,55 +458,55 @@ export type CompanyFavorite = {
 /** Payload d'un établissement */
 export type CompanyInput = {
   /** SIRET de l'établissement */
-  siret: Maybe<Scalars['String']>;
+  siret: Maybe<Scalars["String"]>;
   /** Nom de l'établissement */
-  name: Maybe<Scalars['String']>;
+  name: Maybe<Scalars["String"]>;
   /** Adresse de l'établissement */
-  address: Maybe<Scalars['String']>;
+  address: Maybe<Scalars["String"]>;
   /** Nom du contact dans l'établissement */
-  contact: Maybe<Scalars['String']>;
+  contact: Maybe<Scalars["String"]>;
   /** Email du contact dans l'établissement */
-  mail: Maybe<Scalars['String']>;
+  mail: Maybe<Scalars["String"]>;
   /** Numéro de téléphone de contact dans l'établissement */
-  phone: Maybe<Scalars['String']>;
+  phone: Maybe<Scalars["String"]>;
 };
 
 /** Information sur utilisateur au sein d'un établissement */
 export type CompanyMember = {
-  __typename?: 'CompanyMember';
+  __typename?: "CompanyMember";
   /** Identifiant opaque */
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   /** Email */
-  email: Scalars['String'];
+  email: Scalars["String"];
   /** Nom de l'utilisateur */
-  name: Maybe<Scalars['String']>;
+  name: Maybe<Scalars["String"]>;
   /** Rôle de l'utilisateur dans l'établissement (admin ou membre) */
   role: Maybe<UserRole>;
   /** Si oui ou non l'email de l'utilisateur a été confirmé */
-  isActive: Maybe<Scalars['Boolean']>;
+  isActive: Maybe<Scalars["Boolean"]>;
   /** Si oui ou non une une invitation à joindre l'établissement est en attente */
-  isPendingInvitation: Maybe<Scalars['Boolean']>;
+  isPendingInvitation: Maybe<Scalars["Boolean"]>;
   /** Si oui ou non cet utilisateur correspond à l'utilisateur authentifié */
-  isMe: Maybe<Scalars['Boolean']>;
+  isMe: Maybe<Scalars["Boolean"]>;
 };
 
 /** Information sur un établissement accessible par un utilisateur membre */
 export type CompanyPrivate = {
-  __typename?: 'CompanyPrivate';
+  __typename?: "CompanyPrivate";
   /** Identifiant opaque */
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   /** Profil de l'établissement */
   companyTypes: Array<CompanyType>;
   /** Identifiant GEREP */
-  gerepId: Maybe<Scalars['String']>;
+  gerepId: Maybe<Scalars["String"]>;
   /** Code de signature permettant de signer les BSD */
-  securityCode: Scalars['Int'];
+  securityCode: Scalars["Int"];
   /** Email de contact (visible sur la fiche entreprise) */
-  contactEmail: Maybe<Scalars['String']>;
+  contactEmail: Maybe<Scalars["String"]>;
   /** Numéro de téléphone de contact (visible sur la fiche entreprise) */
-  contactPhone: Maybe<Scalars['String']>;
+  contactPhone: Maybe<Scalars["String"]>;
   /** Site web (visible sur la fiche entreprise) */
-  website: Maybe<Scalars['String']>;
+  website: Maybe<Scalars["String"]>;
   /** Liste des utilisateurs appartenant à cet établissement */
   users: Maybe<Array<CompanyMember>>;
   /** Rôle de l'utilisateur authentifié cau sein de cet établissement */
@@ -455,17 +515,17 @@ export type CompanyPrivate = {
    * Nom d'usage de l'entreprise qui permet de différencier
    * différents établissements ayant le même nom
    */
-  givenName: Maybe<Scalars['String']>;
+  givenName: Maybe<Scalars["String"]>;
   /** SIRET de l'établissement */
-  siret: Scalars['String'];
+  siret: Scalars["String"];
   /** Adresse de l'établissement */
-  address: Maybe<Scalars['String']>;
+  address: Maybe<Scalars["String"]>;
   /** Nom de l'établissement */
-  name: Maybe<Scalars['String']>;
+  name: Maybe<Scalars["String"]>;
   /** Code NAF de l'établissement */
-  naf: Maybe<Scalars['String']>;
+  naf: Maybe<Scalars["String"]>;
   /** Libellé NAF de l'établissement */
-  libelleNaf: Maybe<Scalars['String']>;
+  libelleNaf: Maybe<Scalars["String"]>;
   /**
    * Installation classée pour la protection de l'environnement (ICPE)
    * associé à cet établissement (le cas échéant)
@@ -473,67 +533,71 @@ export type CompanyPrivate = {
   installation: Maybe<Installation>;
   /** Récépissé transporteur (le cas échéant, pour les profils transporteur) */
   transporterReceipt: Maybe<TransporterReceipt>;
-  /** Récépissé négociant (le cas échéant, pour les profils transporteur) */
+  /** Récépissé négociant (le cas échéant, pour les profils négociant) */
   traderReceipt: Maybe<TraderReceipt>;
   /** Liste des agréments de l'éco-organisme */
-  ecoOrganismeAgreements: Array<Scalars['URL']>;
+  ecoOrganismeAgreements: Array<Scalars["URL"]>;
 };
 
 /** Information sur un établissement accessible publiquement */
 export type CompanyPublic = {
-  __typename?: 'CompanyPublic';
+  __typename?: "CompanyPublic";
   /** Email de contact */
-  contactEmail: Maybe<Scalars['String']>;
+  contactEmail: Maybe<Scalars["String"]>;
   /** Numéro de téléphone de contact */
-  contactPhone: Maybe<Scalars['String']>;
+  contactPhone: Maybe<Scalars["String"]>;
   /** Site web */
-  website: Maybe<Scalars['String']>;
+  website: Maybe<Scalars["String"]>;
   /** SIRET de l'établissement */
-  siret: Maybe<Scalars['String']>;
+  siret: Maybe<Scalars["String"]>;
   /** État administratif de l'établissement. A = Actif, F = Fermé */
-  etatAdministratif: Maybe<Scalars['String']>;
+  etatAdministratif: Maybe<Scalars["String"]>;
   /** Adresse de l'établissement */
-  address: Maybe<Scalars['String']>;
+  address: Maybe<Scalars["String"]>;
   /** Nom de l'établissement */
-  name: Maybe<Scalars['String']>;
+  name: Maybe<Scalars["String"]>;
   /** Code NAF */
-  naf: Maybe<Scalars['String']>;
+  naf: Maybe<Scalars["String"]>;
   /** Libellé NAF */
-  libelleNaf: Maybe<Scalars['String']>;
+  libelleNaf: Maybe<Scalars["String"]>;
   /**
    * Installation classée pour la protection de l'environnement (ICPE)
    * associé à cet établissement
    */
   installation: Maybe<Installation>;
   /** Si oui on non cet établissement est inscrit sur la plateforme Trackdéchets */
-  isRegistered: Maybe<Scalars['Boolean']>;
+  isRegistered: Maybe<Scalars["Boolean"]>;
+  /**
+   * Profil de l'établissement sur Trackdéchets
+   * ayant pour valeur un tableau vide quand l'établissement
+   * n'est pas inscrit sur la plateforme `isRegistered=false`
+   */
+  companyTypes: Array<CompanyType>;
   /** Récépissé transporteur associé à cet établissement (le cas échéant) */
   transporterReceipt: Maybe<TransporterReceipt>;
   /** Récépissé négociant associé à cet établissement (le cas échant) */
   traderReceipt: Maybe<TraderReceipt>;
   /** Liste des agréments de l'éco-organisme */
-  ecoOrganismeAgreements: Array<Scalars['URL']>;
+  ecoOrganismeAgreements: Array<Scalars["URL"]>;
 };
 
 /** Information sur un établissement accessible publiquement en recherche */
 export type CompanySearchResult = {
-  __typename?: 'CompanySearchResult';
+  __typename?: "CompanySearchResult";
   /** SIRET de l'établissement */
-  siret: Maybe<Scalars['String']>;
+  siret: Maybe<Scalars["String"]>;
   /** État administratif de l'établissement. A = Actif, F = Fermé */
-  etatAdministratif: Maybe<Scalars['String']>;
+  etatAdministratif: Maybe<Scalars["String"]>;
   /** Adresse de l'établissement */
-  address: Maybe<Scalars['String']>;
+  address: Maybe<Scalars["String"]>;
   /** Code commune de l'établissement */
-  codeCommune: Maybe<Scalars['String']>;
+  codeCommune: Maybe<Scalars["String"]>;
   /** Nom de l'établissement */
-  name: Maybe<Scalars['String']>;
-  /** Profil de l'établissement */
-  companyTypes: Maybe<Array<Maybe<CompanyType>>>;
+  name: Maybe<Scalars["String"]>;
   /** Code NAF */
-  naf: Maybe<Scalars['String']>;
+  naf: Maybe<Scalars["String"]>;
   /** Libellé NAF */
-  libelleNaf: Maybe<Scalars['String']>;
+  libelleNaf: Maybe<Scalars["String"]>;
   /**
    * Installation classée pour la protection de l'environnement (ICPE)
    * associé à cet établissement
@@ -547,7 +611,7 @@ export type CompanySearchResult = {
 
 /** Statistiques d'un établissement */
 export type CompanyStat = {
-  __typename?: 'CompanyStat';
+  __typename?: "CompanyStat";
   /** Établissement */
   company: Maybe<FormCompany>;
   /** Liste des statistiques */
@@ -557,33 +621,33 @@ export type CompanyStat = {
 /** Profil entreprise */
 export enum CompanyType {
   /** Producteur de déchet */
-  Producer = 'PRODUCER',
+  Producer = "PRODUCER",
   /** Installation de Transit, regroupement ou tri de déchets */
-  Collector = 'COLLECTOR',
+  Collector = "COLLECTOR",
   /** Installation de traitement */
-  Wasteprocessor = 'WASTEPROCESSOR',
+  Wasteprocessor = "WASTEPROCESSOR",
   /** Transporteur */
-  Transporter = 'TRANSPORTER',
+  Transporter = "TRANSPORTER",
   /** Installation d'entreposage, dépollution, démontage, découpage de VHU */
-  WasteVehicles = 'WASTE_VEHICLES',
+  WasteVehicles = "WASTE_VEHICLES",
   /** Installation de collecte de déchets apportés par le producteur initial */
-  WasteCenter = 'WASTE_CENTER',
+  WasteCenter = "WASTE_CENTER",
   /** Négociant */
-  Trader = 'TRADER',
+  Trader = "TRADER",
   /** Éco-organisme */
-  EcoOrganisme = 'ECO_ORGANISME'
+  EcoOrganisme = "ECO_ORGANISME"
 }
 
 /** Consistance du déchet */
 export enum Consistence {
   /** Solide */
-  Solid = 'SOLID',
+  Solid = "SOLID",
   /** Liquide */
-  Liquid = 'LIQUID',
+  Liquid = "LIQUID",
   /** Gazeux */
-  Gaseous = 'GASEOUS',
+  Gaseous = "GASEOUS",
   /** Pâteux */
-  Doughy = 'DOUGHY'
+  Doughy = "DOUGHY"
 }
 
 /** Payload de création d'un bordereau */
@@ -592,10 +656,14 @@ export type CreateFormInput = {
    * Identifiant personnalisé permettant de faire le lien avec un
    * objet un système d'information tierce
    */
-  customId: Maybe<Scalars['String']>;
+  customId: Maybe<Scalars["String"]>;
   /** Établissement émetteur/producteur du déchet (case 1) */
   emitter: Maybe<EmitterInput>;
-  /** Établissement qui reçoit le déchet (case 2) */
+  /**
+   * Installation de destination ou d’entreposage ou de reconditionnement prévue (case 2)
+   * L'établissement renseigné doit être inscrit sur Trackdéchets en tant qu'installation
+   * de traitement ou de tri, transit, regroupement.
+   */
   recipient: Maybe<RecipientInput>;
   /** Transporteur du déchet (case 8) */
   transporter: Maybe<TransporterInput>;
@@ -604,7 +672,7 @@ export type CreateFormInput = {
   /** Négociant (case 7) */
   trader: Maybe<TraderInput>;
   /** Annexe 2 */
-  appendix2Forms: Maybe<Array<Maybe<AppendixFormInput>>>;
+  appendix2Forms: Maybe<Array<AppendixFormInput>>;
   ecoOrganisme: Maybe<EcoOrganismeInput>;
   temporaryStorageDetail: Maybe<TemporaryStorageDetailInput>;
 };
@@ -612,33 +680,40 @@ export type CreateFormInput = {
 /** Payload de création d'un récépissé négociant */
 export type CreateTraderReceiptInput = {
   /** Numéro de récépissé négociant */
-  receiptNumber: Scalars['String'];
-  /** Limite de validatié du récépissé */
-  validityLimit: Scalars['DateTime'];
+  receiptNumber: Scalars["String"];
+  /** Limite de validité du récépissé */
+  validityLimit: Scalars["DateTime"];
   /** Département ayant enregistré la déclaration */
-  department: Scalars['String'];
+  department: Scalars["String"];
 };
 
 /** Payload de création d'un récépissé transporteur */
 export type CreateTransporterReceiptInput = {
   /** Numéro de récépissé transporteur */
-  receiptNumber: Scalars['String'];
-  /** Limite de validatié du récépissé */
-  validityLimit: Scalars['DateTime'];
+  receiptNumber: Scalars["String"];
+  /** Limite de validité du récépissé */
+  validityLimit: Scalars["DateTime"];
   /** Département ayant enregistré la déclaration */
-  department: Scalars['String'];
+  department: Scalars["String"];
 };
 
+export type DateFilter = {
+  _gte: Maybe<Scalars["DateTime"]>;
+  _gt: Maybe<Scalars["DateTime"]>;
+  _lte: Maybe<Scalars["DateTime"]>;
+  _lt: Maybe<Scalars["DateTime"]>;
+  _eq: Maybe<Scalars["DateTime"]>;
+};
 
 /** Représente une ligne dans une déclaration GEREP */
 export type Declaration = {
-  __typename?: 'Declaration';
+  __typename?: "Declaration";
   /** Année de la déclaration */
-  annee: Maybe<Scalars['String']>;
+  annee: Maybe<Scalars["String"]>;
   /** Code du déchet */
-  codeDechet: Maybe<Scalars['String']>;
+  codeDechet: Maybe<Scalars["String"]>;
   /** Description du déchet */
-  libDechet: Maybe<Scalars['String']>;
+  libDechet: Maybe<Scalars["String"]>;
   /** Type de déclaration GEREP: producteur ou traiteur */
   gerepType: Maybe<GerepType>;
 };
@@ -646,34 +721,38 @@ export type Declaration = {
 /** Payload de suppression d'un récépissé négociant */
 export type DeleteTraderReceiptInput = {
   /** The id of the trader receipt to delete */
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
 
 /** Payload de suppression d'un récépissé transporteur */
 export type DeleteTransporterReceiptInput = {
   /** The id of the transporter receipt to delete */
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
 
 export type Destination = {
-  __typename?: 'Destination';
+  __typename?: "Destination";
   /** N° de CAP (le cas échéant) */
-  cap: Maybe<Scalars['String']>;
+  cap: Maybe<Scalars["String"]>;
   /** Opération d'élimination / valorisation prévue (code D/R) */
-  processingOperation: Maybe<Scalars['String']>;
+  processingOperation: Maybe<Scalars["String"]>;
   /** Établissement de destination */
   company: Maybe<FormCompany>;
   /** Indique si l'information a été saisie par l'émetteur du bordereau ou l'installation d'entreposage */
-  isFilledByEmitter: Maybe<Scalars['Boolean']>;
+  isFilledByEmitter: Maybe<Scalars["Boolean"]>;
 };
 
 export type DestinationInput = {
-  /** Installation de destination prévue */
+  /**
+   * Installation de destination prévue (case 14)
+   * L'établissement renseigné doit être inscrit sur Trackdéchets en tant qu'installation
+   * de traitement ou de tri, transit, regroupement.
+   */
   company: Maybe<CompanyInput>;
   /** N° de CAP prévu (le cas échéant) */
-  cap: Maybe<Scalars['String']>;
+  cap: Maybe<Scalars["String"]>;
   /** Opération d'élimination / valorisation prévue (code D/R) */
-  processingOperation: Maybe<Scalars['String']>;
+  processingOperation: Maybe<Scalars["String"]>;
 };
 
 /**
@@ -684,25 +763,25 @@ export type DestinationInput = {
  * Seul un éco-organisme enregistré dans Trackdéchet peut être associé.
  */
 export type EcoOrganisme = {
-  __typename?: 'EcoOrganisme';
-  id: Scalars['ID'];
+  __typename?: "EcoOrganisme";
+  id: Scalars["ID"];
   /** Nom de l'éco-organisme */
-  name: Scalars['String'];
+  name: Scalars["String"];
   /** Siret de l'éco-organisme */
-  siret: Scalars['String'];
+  siret: Scalars["String"];
   /** Adresse de l'éco-organisme */
-  address: Scalars['String'];
+  address: Scalars["String"];
 };
 
 /** Payload de liason d'un BSD à un eco-organisme */
 export type EcoOrganismeInput = {
-  name: Scalars['String'];
-  siret: Scalars['String'];
+  name: Scalars["String"];
+  siret: Scalars["String"];
 };
 
 /** Émetteur du BSD (case 1) */
 export type Emitter = {
-  __typename?: 'Emitter';
+  __typename?: "Emitter";
   /** Type d'émetteur */
   type: Maybe<EmitterType>;
   /** Adresse du chantier */
@@ -711,7 +790,7 @@ export type Emitter = {
    * DEPRECATED - Ancienne adresse chantier
    * @deprecated Migration vers `workSite` obligatoire
    */
-  pickupSite: Maybe<Scalars['String']>;
+  pickupSite: Maybe<Scalars["String"]>;
   /** Établissement émetteur */
   company: Maybe<FormCompany>;
 };
@@ -723,7 +802,7 @@ export type EmitterInput = {
   /** Adresse du chantier */
   workSite: Maybe<WorkSiteInput>;
   /** DEPRECATED - Ancienne adresse chantier */
-  pickupSite: Maybe<Scalars['String']>;
+  pickupSite: Maybe<Scalars["String"]>;
   /** Établissement émetteur */
   company: Maybe<CompanyInput>;
 };
@@ -731,24 +810,24 @@ export type EmitterInput = {
 /** Types d'émetteur de déchet (choix multiple de la case 1) */
 export enum EmitterType {
   /** Producetur de déchet */
-  Producer = 'PRODUCER',
+  Producer = "PRODUCER",
   /** Autre détenteur */
-  Other = 'OTHER',
+  Other = "OTHER",
   /** Collecteur de petites quantités de déchets relevant de la même rubrique */
-  Appendix1 = 'APPENDIX1',
+  Appendix1 = "APPENDIX1",
   /** Personne ayant transformé ou réalisé un traitement dont la provenance des déchets reste identifiable */
-  Appendix2 = 'APPENDIX2'
+  Appendix2 = "APPENDIX2"
 }
 
 /** Type d'établissement favoris */
 export enum FavoriteType {
-  Emitter = 'EMITTER',
-  Transporter = 'TRANSPORTER',
-  Recipient = 'RECIPIENT',
-  Trader = 'TRADER',
-  NextDestination = 'NEXT_DESTINATION',
-  TemporaryStorageDetail = 'TEMPORARY_STORAGE_DETAIL',
-  Destination = 'DESTINATION'
+  Emitter = "EMITTER",
+  Transporter = "TRANSPORTER",
+  Recipient = "RECIPIENT",
+  Trader = "TRADER",
+  NextDestination = "NEXT_DESTINATION",
+  TemporaryStorageDetail = "TEMPORARY_STORAGE_DETAIL",
+  Destination = "DESTINATION"
 }
 
 /**
@@ -756,11 +835,11 @@ export enum FavoriteType {
  * permettant de valider le téléchargement.
  */
 export type FileDownload = {
-  __typename?: 'FileDownload';
+  __typename?: "FileDownload";
   /** Token ayant une durée de validité de 10s */
-  token: Maybe<Scalars['String']>;
+  token: Maybe<Scalars["String"]>;
   /** Lien de téléchargement */
-  downloadLink: Maybe<Scalars['String']>;
+  downloadLink: Maybe<Scalars["String"]>;
 };
 
 /**
@@ -768,28 +847,30 @@ export type FileDownload = {
  * Version dématérialisée du [CERFA n°12571*01](https://www.service-public.fr/professionnels-entreprises/vosdroits/R14334)
  */
 export type Form = {
-  __typename?: 'Form';
+  __typename?: "Form";
   /** Identifiant unique du bordereau. */
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   /**
    * Identifiant lisible utilisé comme numéro sur le CERFA (case "Bordereau n°****").
    * Il est possible de l'utiliser pour récupérer l'identifiant unique du bordereau via la query form,
    * utilisé pour le reste des opérations.
+   * Cet identifiant possède le format BSD-{yyyyMMdd}-{XXXXXXXX} où yyyyMMdd est la date du jour
+   * et XXXXXXXXX une chaine de 9 caractères alphanumériques. Ex: BSD-20210101-HY87F54D1
    */
-  readableId: Scalars['String'];
+  readableId: Scalars["String"];
   /**
    * Identifiant personnalisé permettant de faire le lien avec un
    * objet un système d'information tierce
    */
-  customId: Maybe<Scalars['String']>;
+  customId: Maybe<Scalars["String"]>;
   /**
    * Permet de savoir si les données du BSD ont été importées depuis un
    * bordereau signé papier via la mutation `importPaperForm`
    */
-  isImportedFromPaper: Scalars['Boolean'];
+  isImportedFromPaper: Scalars["Boolean"];
   /** Établissement émetteur/producteur du déchet (case 1) */
   emitter: Maybe<Emitter>;
-  /** Établissement qui reçoit le déchet (case 2) */
+  /** Installation de destination ou d’entreposage ou de reconditionnement prévue (case 2) */
   recipient: Maybe<Recipient>;
   /** Transporteur du déchet (case 8) */
   transporter: Maybe<Transporter>;
@@ -798,46 +879,46 @@ export type Form = {
   /** Négociant (case 7) */
   trader: Maybe<Trader>;
   /** Date de création du BSD */
-  createdAt: Maybe<Scalars['DateTime']>;
+  createdAt: Maybe<Scalars["DateTime"]>;
   /** Date de la dernière modification du BSD */
-  updatedAt: Maybe<Scalars['DateTime']>;
+  updatedAt: Maybe<Scalars["DateTime"]>;
   /** Statut du BSD (brouillon, envoyé, reçu, traité, etc) */
   status: FormStatus;
   /** Si oui ou non le BSD a été signé par un transporteur */
-  signedByTransporter: Maybe<Scalars['Boolean']>;
+  signedByTransporter: Maybe<Scalars["Boolean"]>;
   /** Date de l'envoi du déchet par l'émetteur (case 9) */
-  sentAt: Maybe<Scalars['DateTime']>;
+  sentAt: Maybe<Scalars["DateTime"]>;
   /** Nom de la personne responsable de l'envoi du déchet (case 9) */
-  sentBy: Maybe<Scalars['String']>;
+  sentBy: Maybe<Scalars["String"]>;
   /** Statut d'acceptation du déchet (case 10) */
-  wasteAcceptationStatus: Maybe<Scalars['String']>;
+  wasteAcceptationStatus: Maybe<Scalars["String"]>;
   /** Raison du refus (case 10) */
-  wasteRefusalReason: Maybe<Scalars['String']>;
+  wasteRefusalReason: Maybe<Scalars["String"]>;
   /** Nom de la personne en charge de la réception du déchet (case 10) */
-  receivedBy: Maybe<Scalars['String']>;
+  receivedBy: Maybe<Scalars["String"]>;
   /** Date à laquelle le déchet a été reçu (case 10) */
-  receivedAt: Maybe<Scalars['DateTime']>;
+  receivedAt: Maybe<Scalars["DateTime"]>;
   /** Date à laquelle le déchet a été accepté ou refusé (case 10) */
-  signedAt: Maybe<Scalars['DateTime']>;
+  signedAt: Maybe<Scalars["DateTime"]>;
   /** Quantité réelle présentée (case 10) */
-  quantityReceived: Maybe<Scalars['Float']>;
+  quantityReceived: Maybe<Scalars["Float"]>;
   /**
    * Quantité actuellement connue en tonnes.
    * Elle est calculée en fonction des autres champs pour renvoyer la dernière quantité connue.
    * Elle renvoi ainsi soit la quantité envoyée estimée, soit la quantitée recue
    * sur le site d'entreposage, soit la quantitée réelle recue.
    */
-  actualQuantity: Maybe<Scalars['Float']>;
+  actualQuantity: Maybe<Scalars["Float"]>;
   /** Traitement réalisé (code D/R) */
-  processingOperationDone: Maybe<Scalars['String']>;
+  processingOperationDone: Maybe<Scalars["String"]>;
   /** Description de l'opération d’élimination / valorisation (case 11) */
-  processingOperationDescription: Maybe<Scalars['String']>;
+  processingOperationDescription: Maybe<Scalars["String"]>;
   /** Personne en charge du traitement */
-  processedBy: Maybe<Scalars['String']>;
+  processedBy: Maybe<Scalars["String"]>;
   /** Date à laquelle le déchet a été traité */
-  processedAt: Maybe<Scalars['DateTime']>;
+  processedAt: Maybe<Scalars["DateTime"]>;
   /** Si oui ou non il y a eu perte de traçabalité */
-  noTraceability: Maybe<Scalars['Boolean']>;
+  noTraceability: Maybe<Scalars["Boolean"]>;
   /** Destination ultérieure prévue (case 12) */
   nextDestination: Maybe<NextDestination>;
   /** Annexe 2 */
@@ -848,53 +929,57 @@ export type Form = {
   /** Résumé des valeurs clés du bordereau à l'instant T */
   stateSummary: Maybe<StateSummary>;
   transportSegments: Maybe<Array<TransportSegment>>;
-  currentTransporterSiret: Maybe<Scalars['String']>;
-  nextTransporterSiret: Maybe<Scalars['String']>;
+  currentTransporterSiret: Maybe<Scalars["String"]>;
+  nextTransporterSiret: Maybe<Scalars["String"]>;
 };
 
 /** Information sur un établissement dans un BSD */
 export type FormCompany = {
-  __typename?: 'FormCompany';
+  __typename?: "FormCompany";
   /** Nom de l'établissement */
-  name: Maybe<Scalars['String']>;
+  name: Maybe<Scalars["String"]>;
   /** SIRET de l'établissement */
-  siret: Maybe<Scalars['String']>;
+  siret: Maybe<Scalars["String"]>;
   /** Adresse de l'établissement */
-  address: Maybe<Scalars['String']>;
+  address: Maybe<Scalars["String"]>;
   /**
    * Code ISO 3166-1 alpha-2 du pays d'origine de l'entreprise :
    * https://fr.wikipedia.org/wiki/ISO_3166-1_alpha-2
-   * 
+   *
    * Seul la destination ultérieure case 12 (`form.nextDestination.company`) peut être à l'étranger.
    */
-  country: Maybe<Scalars['String']>;
+  country: Maybe<Scalars["String"]>;
   /** Nom du contact dans l'établissement */
-  contact: Maybe<Scalars['String']>;
+  contact: Maybe<Scalars["String"]>;
   /** Numéro de téléphone de contact dans l'établissement */
-  phone: Maybe<Scalars['String']>;
+  phone: Maybe<Scalars["String"]>;
   /** Email du contact dans l'établissement */
-  mail: Maybe<Scalars['String']>;
+  mail: Maybe<Scalars["String"]>;
 };
 
 /** Information sur l'éco-organisme responsable du BSD */
 export type FormEcoOrganisme = {
-  __typename?: 'FormEcoOrganisme';
-  name: Scalars['String'];
-  siret: Scalars['String'];
+  __typename?: "FormEcoOrganisme";
+  name: Scalars["String"];
+  siret: Scalars["String"];
 };
 
 /** Payload de création d'un BSD */
 export type FormInput = {
   /** Identifiant opaque */
-  id: Maybe<Scalars['ID']>;
+  id: Maybe<Scalars["ID"]>;
   /**
    * Identifiant personnalisé permettant de faire le lien avec un
    * objet un système d'information tierce
    */
-  customId: Maybe<Scalars['String']>;
+  customId: Maybe<Scalars["String"]>;
   /** Établissement émetteur/producteur du déchet (case 1) */
   emitter: Maybe<EmitterInput>;
-  /** Établissement qui reçoit le déchet (case 2) */
+  /**
+   * Installation de destination ou d’entreposage ou de reconditionnement prévue (case 2)
+   * L'établissement renseigné doit être inscrit sur Trackdéchets en tant qu'installation
+   * de traitement ou de tri, transit, regroupement.
+   */
   recipient: Maybe<RecipientInput>;
   /** Transporteur du déchet (case 8) */
   transporter: Maybe<TransporterInput>;
@@ -903,47 +988,47 @@ export type FormInput = {
   /** Négociant (case 7) */
   trader: Maybe<TraderInput>;
   /** Annexe 2 */
-  appendix2Forms: Maybe<Array<Maybe<AppendixFormInput>>>;
+  appendix2Forms: Maybe<Array<AppendixFormInput>>;
   ecoOrganisme: Maybe<EcoOrganismeInput>;
   temporaryStorageDetail: Maybe<TemporaryStorageDetailInput>;
 };
 
 export enum FormRole {
   /** Les BSD's dont je suis transporteur */
-  Transporter = 'TRANSPORTER',
+  Transporter = "TRANSPORTER",
   /** Les BSD's dont je suis la destination de traitement */
-  Recipient = 'RECIPIENT',
+  Recipient = "RECIPIENT",
   /** Les BSD's dont je suis l'émetteur */
-  Emitter = 'EMITTER',
+  Emitter = "EMITTER",
   /** Les BSD's dont je suis le négociant */
-  Trader = 'TRADER',
+  Trader = "TRADER",
   /** Les BSD's dont je suis éco-organisme */
-  EcoOrganisme = 'ECO_ORGANISME'
+  EcoOrganisme = "ECO_ORGANISME"
 }
 
 /** Informations du cycle de vie des bordereaux */
 export type FormsLifeCycleData = {
-  __typename?: 'formsLifeCycleData';
+  __typename?: "formsLifeCycleData";
   /** Liste des changements de statuts */
   statusLogs: Array<StatusLog>;
   /** pagination, indique si d'autres pages existent après */
-  hasNextPage: Maybe<Scalars['Boolean']>;
+  hasNextPage: Maybe<Scalars["Boolean"]>;
   /** pagination, indique si d'autres pages existent avant */
-  hasPreviousPage: Maybe<Scalars['Boolean']>;
+  hasPreviousPage: Maybe<Scalars["Boolean"]>;
   /** Premier id de la page, à passer dans cursorAfter ou cursorBefore de la query formsLifeCycle */
-  startCursor: Maybe<Scalars['ID']>;
+  startCursor: Maybe<Scalars["ID"]>;
   /** Dernier ID de la page, à passer dans cursorAfter ou cursorBefore de la query formsLifeCycle */
-  endCursor: Maybe<Scalars['ID']>;
+  endCursor: Maybe<Scalars["ID"]>;
   /** Nombre de changements de statuts renvoyés */
-  count: Maybe<Scalars['Int']>;
+  count: Maybe<Scalars["Int"]>;
 };
 
 /** Format de l'export du registre */
 export enum FormsRegisterExportFormat {
   /** Fichier csv */
-  Csv = 'CSV',
+  Csv = "CSV",
   /** Fichier Excel */
-  Xlsx = 'XLSX'
+  Xlsx = "XLSX"
 }
 
 /**
@@ -953,31 +1038,33 @@ export enum FormsRegisterExportFormat {
  */
 export enum FormsRegisterExportType {
   /** Registre exhaustif, déchets entrants et sortants */
-  All = 'ALL',
+  All = "ALL",
   /**
    * Registre producteur, déchets sortants
    * Art 1: Les exploitants des établissements produisant ou expédiant des déchets tiennent à jour
    * un registre chronologique où sont consignés tous les déchets sortants.
    */
-  Outgoing = 'OUTGOING',
+  Outgoing = "OUTGOING",
   /**
    * Registre traiteur, TTR
    * Art 2: Les exploitants des installations de transit, de regroupement ou de traitement de déchets,
    * notamment de tri, établissent et tiennent à jour un registre chronologique où sont consignés
    * tous les déchets entrants.
    */
-  Incoming = 'INCOMING',
+  Incoming = "INCOMING",
   /**
    * Registre transporteur
    * Art 3: Les transporteurs et les collecteurs de déchets tiennent à jour un registre chronologique
    * des déchets transportés ou collectés.
    */
-  Transported = 'TRANSPORTED',
+  Transported = "TRANSPORTED",
   /**
    * Registre négociants
    * Art 4: Les négociants tiennent à jour un registre chronologique des déchets détenus.
    */
-  Traded = 'TRADED'
+  Traded = "TRADED",
+  /** Registre courtier */
+  Brokered = "BROKERED"
 }
 
 /** Différents statuts d'un BSD au cours de son cycle de vie */
@@ -986,59 +1073,59 @@ export enum FormStatus {
    * BSD à l'état de brouillon
    * Des champs obligatoires peuvent manquer
    */
-  Draft = 'DRAFT',
+  Draft = "DRAFT",
   /**
    * BSD finalisé
    * Les champs sont validés pour détecter des valeurs manquantes ou erronnées
    */
-  Sealed = 'SEALED',
+  Sealed = "SEALED",
   /** BSD envoyé vers l'établissement de destination */
-  Sent = 'SENT',
+  Sent = "SENT",
   /** BSD reçu par l'établissement de destination */
-  Received = 'RECEIVED',
+  Received = "RECEIVED",
   /** BSD accepté par l'établissement de destination */
-  Accepted = 'ACCEPTED',
+  Accepted = "ACCEPTED",
   /** BSD dont les déchets ont été traités */
-  Processed = 'PROCESSED',
+  Processed = "PROCESSED",
   /** BSD en attente de regroupement */
-  AwaitingGroup = 'AWAITING_GROUP',
+  AwaitingGroup = "AWAITING_GROUP",
   /** Regroupement effectué */
-  Grouped = 'GROUPED',
+  Grouped = "GROUPED",
   /** Perte de traçabalité */
-  NoTraceability = 'NO_TRACEABILITY',
+  NoTraceability = "NO_TRACEABILITY",
   /** Déchet refusé */
-  Refused = 'REFUSED',
+  Refused = "REFUSED",
   /** Déchet arrivé sur le site d'entreposage ou reconditionnement */
-  TempStored = 'TEMP_STORED',
+  TempStored = "TEMP_STORED",
   /** Déchet accepté par le site d'entreposage ou reconditionnement */
-  TempStorerAccepted = 'TEMP_STORER_ACCEPTED',
+  TempStorerAccepted = "TEMP_STORER_ACCEPTED",
   /** Déchet avec les cadres 14-19 complétées (si besoin), prêt à partir du site d'entreposage ou reconditionnement */
-  Resealed = 'RESEALED',
+  Resealed = "RESEALED",
   /** Déchet envoyé du site d'entreposage ou reconditionnement vers sa destination de traitement */
-  Resent = 'RESENT'
+  Resent = "RESENT"
 }
 
 /**
  * DEPRECATED - Privilégier l'utilisation d'un polling régulier sur la query `formsLifeCycle`
- * 
+ *
  * Mise à jour d'un BSD
  */
 export type FormSubscription = {
-  __typename?: 'FormSubscription';
+  __typename?: "FormSubscription";
   /** Type de mutation */
-  mutation: Maybe<Scalars['String']>;
+  mutation: Maybe<Scalars["String"]>;
   /** BSD concerné */
   node: Maybe<Form>;
   /** Liste des champs mis à jour */
-  updatedFields: Maybe<Array<Maybe<Scalars['String']>>>;
+  updatedFields: Maybe<Array<Maybe<Scalars["String"]>>>;
   /** Ancienne valeurs */
   previousValues: Maybe<Form>;
 };
 
 /** Type d'une déclaration GEREP */
 export enum GerepType {
-  Producteur = 'Producteur',
-  Traiteur = 'Traiteur'
+  Producteur = "Producteur",
+  Traiteur = "Traiteur"
 }
 
 /** Payload d'import d'un BSD papier */
@@ -1047,16 +1134,20 @@ export type ImportPaperFormInput = {
    * Numéro de BSD Trackdéchets (uniquement dans le cas d'une mise à jour d'un
    * bordereau émis initialement dans Trackdéchets)
    */
-  id: Maybe<Scalars['ID']>;
+  id: Maybe<Scalars["ID"]>;
   /**
    * Identifiant libre qui peut éventuellement servir à faire le lien dans Trackdéchets
    * entre le BSD papier et le BSD numérique dans le cas de l'import d'un BSD n'ayant
    * pas été émis initialement dans Trackdéchets.
    */
-  customId: Maybe<Scalars['String']>;
+  customId: Maybe<Scalars["String"]>;
   /** Établissement émetteur/producteur du déchet (case 1) */
   emitter: Maybe<EmitterInput>;
-  /** Établissement qui reçoit le déchet (case 2) */
+  /**
+   * Installation de destination ou d’entreposage ou de reconditionnement prévue (case 2)
+   * L'établissement renseigné doit être inscrit sur Trackdéchets en tant qu'installation
+   * de traitement ou de tri, transit, regroupement.
+   */
   recipient: Maybe<RecipientInput>;
   /** Transporteur du déchet (case 8) */
   transporter: Maybe<TransporterInput>;
@@ -1076,11 +1167,11 @@ export type ImportPaperFormInput = {
 
 /** Installation pour la protection de l'environnement (ICPE) */
 export type Installation = {
-  __typename?: 'Installation';
+  __typename?: "Installation";
   /** Identifiant S3IC */
-  codeS3ic: Maybe<Scalars['String']>;
+  codeS3ic: Maybe<Scalars["String"]>;
   /** URL de la fiche ICPE sur Géorisques */
-  urlFiche: Maybe<Scalars['String']>;
+  urlFiche: Maybe<Scalars["String"]>;
   /** Liste des rubriques associées */
   rubriques: Maybe<Array<Rubrique>>;
   /** Liste des déclarations GEREP */
@@ -1093,24 +1184,24 @@ export type Installation = {
  */
 export type InternationalCompanyInput = {
   /** SIRET de l'établissement, optionnel dans le cas d'un établissement à l'étranger */
-  siret: Maybe<Scalars['String']>;
+  siret: Maybe<Scalars["String"]>;
   /** Nom de l'établissement */
-  name: Maybe<Scalars['String']>;
+  name: Maybe<Scalars["String"]>;
   /** Adresse de l'établissement */
-  address: Maybe<Scalars['String']>;
+  address: Maybe<Scalars["String"]>;
   /**
    * Code ISO 3166-1 alpha-2 du pays d'origine de l'entreprise :
    * https://fr.wikipedia.org/wiki/ISO_3166-1_alpha-2
-   * 
+   *
    * En l'absence de code, l'entreprise est considérée comme résidant en France.
    */
-  country: Maybe<Scalars['String']>;
+  country: Maybe<Scalars["String"]>;
   /** Nom du contact dans l'établissement */
-  contact: Maybe<Scalars['String']>;
+  contact: Maybe<Scalars["String"]>;
   /** Email du contact dans l'établissement */
-  mail: Maybe<Scalars['String']>;
+  mail: Maybe<Scalars["String"]>;
   /** Numéro de téléphone de contact dans l'établissement */
-  phone: Maybe<Scalars['String']>;
+  phone: Maybe<Scalars["String"]>;
 };
 
 /**
@@ -1119,35 +1210,34 @@ export type InternationalCompanyInput = {
  * sur Trackdéchets
  */
 export type Invitation = {
-  __typename?: 'Invitation';
+  __typename?: "Invitation";
   /** Identifiant unique */
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   /** Email de l'utilisateur invité */
-  email: Scalars['String'];
+  email: Scalars["String"];
   /** Siret de l'entreprise à laquelle l'utilisateur est invité */
-  companySiret: Scalars['String'];
+  companySiret: Scalars["String"];
   /** Hash unique inclus dans le lien d'invitation envoyé par email */
-  hash: Scalars['String'];
+  hash: Scalars["String"];
   /** Rôle de l'utilisateur au sein de l'entreprise */
   role: UserRole;
   /** Date when the invitation was accepted and the user joined */
-  acceptedAt: Maybe<Scalars['DateTime']>;
+  acceptedAt: Maybe<Scalars["DateTime"]>;
 };
-
 
 /**
  * Demande de rattachement à un établissement effectué par
  * un utilisateur.
  */
 export type MembershipRequest = {
-  __typename?: 'MembershipRequest';
-  id: Scalars['ID'];
+  __typename?: "MembershipRequest";
+  id: Scalars["ID"];
   /** Email de l'utilisateur faisant la demande */
-  email: Scalars['String'];
+  email: Scalars["String"];
   /** SIRET de l'établissement */
-  siret: Scalars['String'];
+  siret: Scalars["String"];
   /** Nom de l'établissement */
-  name: Scalars['String'];
+  name: Scalars["String"];
   /** Statut de la demande de rattachement */
   status: MembershipRequestStatus;
   /**
@@ -1155,7 +1245,7 @@ export type MembershipRequest = {
    * de rattachement a été envoyée. Les adresses emails sont partiellement masquées de la
    * façon suivante j********w@trackdechets.fr
    */
-  sentTo: Array<Scalars['String']>;
+  sentTo: Array<Scalars["String"]>;
 };
 
 /**
@@ -1163,13 +1253,13 @@ export type MembershipRequest = {
  * à un établissement
  */
 export enum MembershipRequestStatus {
-  Pending = 'PENDING',
-  Accepted = 'ACCEPTED',
-  Refused = 'REFUSED'
+  Pending = "PENDING",
+  Accepted = "ACCEPTED",
+  Refused = "REFUSED"
 }
 
 export type Mutation = {
-  __typename?: 'Mutation';
+  __typename?: "Mutation";
   /**
    * USAGE INTERNE
    * Accepte une demande de rattachement à un établissement
@@ -1188,11 +1278,13 @@ export type Mutation = {
    * Rattache un établissement à l'utilisateur authentifié
    */
   createCompany: CompanyPrivate;
+  /** Crée un nouveau dasri en brouillon */
+  createDraftBsdasri: Bsdasri;
   /** Crée un nouveau bordereau */
   createForm: Form;
   /**
    * USAGE INTERNE
-   * Crée un récépissé transporteur
+   * Crée un récépissé négociant
    */
   createTraderReceipt: Maybe<TraderReceipt>;
   /**
@@ -1216,7 +1308,7 @@ export type Mutation = {
    * USAGE INTERNE
    * Supprime un récépissé négociant
    */
-  deleteTraderReceipt: Maybe<TransporterReceipt>;
+  deleteTraderReceipt: Maybe<TraderReceipt>;
   /**
    * USAGE INTERNE
    * Supprime un récépissé transporteur
@@ -1251,7 +1343,7 @@ export type Mutation = {
   /**
    * DEPRECATED - La récupération de token pour le compte de tiers
    * doit s'effectuer avec le protocole OAuth2
-   * 
+   *
    * Récupére un token à partir de l'email et du mot de passe
    * d'un utilisateur.
    */
@@ -1260,8 +1352,6 @@ export type Mutation = {
   markAsAccepted: Maybe<Form>;
   /** Valide le traitement d'un BSD */
   markAsProcessed: Maybe<Form>;
-  /** Marque un dasri brouillon comme prêt (SEALED) */
-  markAsReadyBsdasri: Maybe<Bsdasri>;
   /** Valide la réception d'un BSD */
   markAsReceived: Maybe<Form>;
   /** Valide la complétion des cadres 14 à 19 lors d'un entreposage provisoire ou reconditionnement */
@@ -1275,7 +1365,7 @@ export type Mutation = {
    * Finalise un BSD
    * Les champs suivants sont obligatoires pour pouvoir finaliser un bordereau et
    * doivent avoir été renseignés au préalable
-   * 
+   *
    * ```
    * emitter: {
    *   type
@@ -1340,6 +1430,8 @@ export type Mutation = {
   markSegmentAsReadyToTakeOver: Maybe<TransportSegment>;
   /** Prépare un nouveau segment de transport multimodal */
   prepareSegment: Maybe<TransportSegment>;
+  /** Marque un dasri brouillon comme publié (isDraft=false) */
+  publishBsdasri: Maybe<Bsdasri>;
   /**
    * USAGE INTERNE
    * Refuse une demande de rattachement à un un établissement
@@ -1359,12 +1451,12 @@ export type Mutation = {
    * USAGE INTERNE
    * Renvoie l'email d'invitation à un établissement
    */
-  resendInvitation: Scalars['Boolean'];
+  resendInvitation: Scalars["Boolean"];
   /**
    * USAGE INTERNE
    * Envoie un email pour la réinitialisation du mot de passe
    */
-  resetPassword: Scalars['Boolean'];
+  resetPassword: Scalars["Boolean"];
   /**
    * DEPRECATED - Sauvegarde un BSD (création ou modification, si `FormInput` contient un ID)
    * @deprecated Utiliser createForm / updateForm selon le besoin
@@ -1379,11 +1471,11 @@ export type Mutation = {
   sendMembershipRequest: Maybe<MembershipRequest>;
   /**
    * Appose une signature sur un Bsdasri, verrouille les cadres correspondant
-   * 
+   *
    * Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
    * Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport
-   * 
-   * Toutefois il existe un exception: le cadre emetteur peut être signé par le transporteur grâce au code de 
+   *
+   * Toutefois il existe un exception: le cadre emetteur peut être signé par le transporteur grâce au code de
    * sécurité de l'émetteur (BsdasriSignatureType: EMISSION_WITH_SECRET_CODE)
    */
   signBsdasri: Maybe<Bsdasri>;
@@ -1436,280 +1528,236 @@ export type Mutation = {
   updateTransporterReceipt: Maybe<TransporterReceipt>;
 };
 
-
 export type MutationAcceptMembershipRequestArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   role: UserRole;
 };
 
-
 export type MutationChangePasswordArgs = {
-  oldPassword: Scalars['String'];
-  newPassword: Scalars['String'];
+  oldPassword: Scalars["String"];
+  newPassword: Scalars["String"];
 };
-
 
 export type MutationCreateBsdasriArgs = {
   bsdasriCreateInput: BsdasriCreateInput;
 };
 
-
 export type MutationCreateCompanyArgs = {
   companyInput: PrivateCompanyInput;
 };
 
+export type MutationCreateDraftBsdasriArgs = {
+  bsdasriCreateInput: BsdasriCreateInput;
+};
 
 export type MutationCreateFormArgs = {
   createFormInput: CreateFormInput;
 };
 
-
 export type MutationCreateTraderReceiptArgs = {
   input: CreateTraderReceiptInput;
 };
-
 
 export type MutationCreateTransporterReceiptArgs = {
   input: CreateTransporterReceiptInput;
 };
 
-
 export type MutationCreateUploadLinkArgs = {
-  fileName: Scalars['String'];
-  fileType: Scalars['String'];
+  fileName: Scalars["String"];
+  fileType: Scalars["String"];
 };
-
 
 export type MutationDeleteFormArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
-
 
 export type MutationDeleteInvitationArgs = {
-  email: Scalars['String'];
-  siret: Scalars['String'];
+  email: Scalars["String"];
+  siret: Scalars["String"];
 };
-
 
 export type MutationDeleteTraderReceiptArgs = {
   input: DeleteTraderReceiptInput;
 };
 
-
 export type MutationDeleteTransporterReceiptArgs = {
   input: DeleteTransporterReceiptInput;
 };
 
-
 export type MutationDuplicateFormArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
-
 
 export type MutationEditProfileArgs = {
-  name: Maybe<Scalars['String']>;
-  phone: Maybe<Scalars['String']>;
-  email: Maybe<Scalars['String']>;
+  name: Maybe<Scalars["String"]>;
+  phone: Maybe<Scalars["String"]>;
+  email: Maybe<Scalars["String"]>;
 };
-
 
 export type MutationEditSegmentArgs = {
-  id: Scalars['ID'];
-  siret: Scalars['String'];
+  id: Scalars["ID"];
+  siret: Scalars["String"];
   nextSegmentInfo: NextSegmentInfoInput;
 };
-
 
 export type MutationImportPaperFormArgs = {
   input: ImportPaperFormInput;
 };
 
-
 export type MutationInviteUserToCompanyArgs = {
-  email: Scalars['String'];
-  siret: Scalars['String'];
+  email: Scalars["String"];
+  siret: Scalars["String"];
   role: UserRole;
 };
 
-
 export type MutationJoinWithInviteArgs = {
-  inviteHash: Scalars['String'];
-  name: Scalars['String'];
-  password: Scalars['String'];
+  inviteHash: Scalars["String"];
+  name: Scalars["String"];
+  password: Scalars["String"];
 };
-
 
 export type MutationLoginArgs = {
-  email: Scalars['String'];
-  password: Scalars['String'];
+  email: Scalars["String"];
+  password: Scalars["String"];
 };
 
-
 export type MutationMarkAsAcceptedArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   acceptedInfo: AcceptedFormInput;
 };
 
-
 export type MutationMarkAsProcessedArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   processedInfo: ProcessedFormInput;
 };
 
-
-export type MutationMarkAsReadyBsdasriArgs = {
-  id: Scalars['ID'];
-};
-
-
 export type MutationMarkAsReceivedArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   receivedInfo: ReceivedFormInput;
 };
 
-
 export type MutationMarkAsResealedArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   resealedInfos: ResealedFormInput;
 };
 
-
 export type MutationMarkAsResentArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   resentInfos: ResentFormInput;
 };
 
-
 export type MutationMarkAsSealedArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
 
-
 export type MutationMarkAsSentArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   sentInfo: SentFormInput;
 };
 
-
 export type MutationMarkAsTempStoredArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   tempStoredInfos: TempStoredFormInput;
 };
 
-
 export type MutationMarkAsTempStorerAcceptedArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   tempStorerAcceptedInfo: TempStorerAcceptedFormInput;
 };
 
-
 export type MutationMarkSegmentAsReadyToTakeOverArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
 
-
 export type MutationPrepareSegmentArgs = {
-  id: Scalars['ID'];
-  siret: Scalars['String'];
+  id: Scalars["ID"];
+  siret: Scalars["String"];
   nextSegmentInfo: NextSegmentInfoInput;
 };
 
+export type MutationPublishBsdasriArgs = {
+  id: Scalars["ID"];
+};
 
 export type MutationRefuseMembershipRequestArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
-
 
 export type MutationRemoveUserFromCompanyArgs = {
-  userId: Scalars['ID'];
-  siret: Scalars['String'];
+  userId: Scalars["ID"];
+  siret: Scalars["String"];
 };
-
 
 export type MutationRenewSecurityCodeArgs = {
-  siret: Scalars['String'];
+  siret: Scalars["String"];
 };
-
 
 export type MutationResendInvitationArgs = {
-  email: Scalars['String'];
-  siret: Scalars['String'];
+  email: Scalars["String"];
+  siret: Scalars["String"];
 };
-
 
 export type MutationResetPasswordArgs = {
-  email: Scalars['String'];
+  email: Scalars["String"];
 };
-
 
 export type MutationSaveFormArgs = {
   formInput: FormInput;
 };
 
-
 export type MutationSendMembershipRequestArgs = {
-  siret: Scalars['String'];
+  siret: Scalars["String"];
 };
 
-
 export type MutationSignBsdasriArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   signatureInput: BsdasriSignatureInput;
 };
 
-
 export type MutationSignedByTransporterArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   signingInfo: TransporterSignatureFormInput;
 };
-
 
 export type MutationSignupArgs = {
   userInfos: SignupInput;
 };
 
-
 export type MutationTakeOverSegmentArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   takeOverInfo: TakeOverInput;
 };
-
 
 export type MutationUpdateBsdasriArgs = {
   bsdasriUpdateInput: BsdasriUpdateInput;
 };
 
-
 export type MutationUpdateCompanyArgs = {
-  siret: Scalars['String'];
-  gerepId: Maybe<Scalars['String']>;
-  contactEmail: Maybe<Scalars['String']>;
-  contactPhone: Maybe<Scalars['String']>;
-  website: Maybe<Scalars['String']>;
+  siret: Scalars["String"];
+  gerepId: Maybe<Scalars["String"]>;
+  contactEmail: Maybe<Scalars["String"]>;
+  contactPhone: Maybe<Scalars["String"]>;
+  website: Maybe<Scalars["String"]>;
   companyTypes: Maybe<Array<Maybe<CompanyType>>>;
-  givenName: Maybe<Scalars['String']>;
-  transporterReceiptId: Maybe<Scalars['String']>;
-  traderReceiptId: Maybe<Scalars['String']>;
-  ecoOrganismeAgreements: Maybe<Array<Scalars['URL']>>;
+  givenName: Maybe<Scalars["String"]>;
+  transporterReceiptId: Maybe<Scalars["String"]>;
+  traderReceiptId: Maybe<Scalars["String"]>;
+  ecoOrganismeAgreements: Maybe<Array<Scalars["URL"]>>;
 };
-
 
 export type MutationUpdateFormArgs = {
   updateFormInput: UpdateFormInput;
 };
 
-
 export type MutationUpdateTraderReceiptArgs = {
   input: UpdateTraderReceiptInput;
 };
 
-
 export type MutationUpdateTransporterFieldsArgs = {
-  id: Scalars['ID'];
-  transporterNumberPlate: Maybe<Scalars['String']>;
-  transporterCustomInfo: Maybe<Scalars['String']>;
+  id: Scalars["ID"];
+  transporterNumberPlate: Maybe<Scalars["String"]>;
+  transporterCustomInfo: Maybe<Scalars["String"]>;
 };
-
 
 export type MutationUpdateTransporterReceiptArgs = {
   input: UpdateTransporterReceiptInput;
@@ -1717,16 +1765,16 @@ export type MutationUpdateTransporterReceiptArgs = {
 
 /** Destination ultérieure prévue (case 12) */
 export type NextDestination = {
-  __typename?: 'NextDestination';
+  __typename?: "NextDestination";
   /** Traitement prévue (code D/R) */
-  processingOperation: Maybe<Scalars['String']>;
+  processingOperation: Maybe<Scalars["String"]>;
   /** Établissement ultérieure */
   company: Maybe<FormCompany>;
 };
 
 export type NextDestinationInput = {
   /** Traitement prévue (code D/R) */
-  processingOperation: Scalars['String'];
+  processingOperation: Scalars["String"];
   /** Établissement de destination ultérieur */
   company: InternationalCompanyInput;
 };
@@ -1739,13 +1787,13 @@ export type NextSegmentInfoInput = {
 
 /** Informations sur le conditionnement */
 export type PackagingInfo = {
-  __typename?: 'PackagingInfo';
+  __typename?: "PackagingInfo";
   /** Type de conditionnement */
   type: Packagings;
   /** Description du conditionnement dans le cas où le type de conditionnement est `AUTRE` */
-  other: Maybe<Scalars['String']>;
+  other: Maybe<Scalars["String"]>;
   /** Nombre de colis associés à ce conditionnement */
-  quantity: Scalars['Int'];
+  quantity: Scalars["Int"];
 };
 
 /** Payload lié à un élément de conditionnement */
@@ -1753,84 +1801,91 @@ export type PackagingInfoInput = {
   /** Type de conditionnement */
   type: Packagings;
   /** Description du conditionnement dans le cas où le type de conditionnement est `AUTRE` */
-  other: Maybe<Scalars['String']>;
+  other: Maybe<Scalars["String"]>;
   /** Nombre de colis associés à ce conditionnement */
-  quantity: Scalars['Int'];
+  quantity: Scalars["Int"];
 };
 
 /** Type de packaging du déchet */
 export enum Packagings {
   /** Fut */
-  Fut = 'FUT',
+  Fut = "FUT",
   /** GRV */
-  Grv = 'GRV',
+  Grv = "GRV",
   /** Citerne */
-  Citerne = 'CITERNE',
+  Citerne = "CITERNE",
   /** Benne */
-  Benne = 'BENNE',
+  Benne = "BENNE",
   /** Autre */
-  Autre = 'AUTRE'
+  Autre = "AUTRE"
 }
+
+export type PageInfo = {
+  __typename?: "PageInfo";
+  startCursor: Scalars["String"];
+  endCursor: Scalars["String"];
+  hasNextPage: Scalars["Boolean"];
+  hasPreviousPage: Scalars["Boolean"];
+};
 
 /** Payload permettant le rattachement d'un établissement à un utilisateur */
 export type PrivateCompanyInput = {
   /** SIRET de l'établissement */
-  siret: Scalars['String'];
+  siret: Scalars["String"];
   /** Identifiant GEREP de l'établissement */
-  gerepId: Maybe<Scalars['String']>;
+  gerepId: Maybe<Scalars["String"]>;
   /** Profil de l'établissement */
   companyTypes: Array<CompanyType>;
   /** Code NAF */
-  codeNaf: Maybe<Scalars['String']>;
+  codeNaf: Maybe<Scalars["String"]>;
   /** Nom de l'établissement */
-  companyName: Maybe<Scalars['String']>;
-  /**
-   * Liste de documents permettant de démontrer l'appartenance
-   * de l'utilisateur à l'établissement
-   */
-  documentKeys: Maybe<Array<Maybe<Scalars['String']>>>;
+  companyName: Maybe<Scalars["String"]>;
+  /** Nom d'usage de l'établissement */
+  givenName: Maybe<Scalars["String"]>;
+  /** Adresse de l'établissement */
+  address: Maybe<Scalars["String"]>;
   /** Récipissé transporteur (le cas échéant, pour les profils transporteur) */
-  transporterReceiptId: Maybe<Scalars['String']>;
+  transporterReceiptId: Maybe<Scalars["String"]>;
   /** Récipissé négociant (le cas échéant, pour les profils négociant) */
-  traderReceiptId: Maybe<Scalars['String']>;
+  traderReceiptId: Maybe<Scalars["String"]>;
   /** Liste des agréments de l'éco-organisme */
-  ecoOrganismeAgreements: Maybe<Array<Scalars['URL']>>;
+  ecoOrganismeAgreements: Maybe<Array<Scalars["URL"]>>;
 };
 
 /** Payload de traitement d'un BSD */
 export type ProcessedFormInput = {
   /** Traitement réalisé (code D/R) */
-  processingOperationDone: Scalars['String'];
+  processingOperationDone: Scalars["String"];
   /**
    * Description de l'opération d’élimination / valorisation (case 11)
    * Elle se complète automatiquement lorsque non fournie
    */
-  processingOperationDescription: Maybe<Scalars['String']>;
+  processingOperationDescription: Maybe<Scalars["String"]>;
   /** Personne en charge du traitement */
-  processedBy: Scalars['String'];
+  processedBy: Scalars["String"];
   /** Date à laquelle le déchet a été traité */
-  processedAt: Scalars['DateTime'];
+  processedAt: Scalars["DateTime"];
   /** Destination ultérieure prévue (case 12) */
   nextDestination: Maybe<NextDestinationInput>;
   /** Si oui ou non il y a eu perte de traçabalité */
-  noTraceability: Maybe<Scalars['Boolean']>;
+  noTraceability: Maybe<Scalars["Boolean"]>;
 };
 
 /** Type de quantité lors de l'émission */
 export enum QuantityType {
   /** Quntité réelle */
-  Real = 'REAL',
+  Real = "REAL",
   /** Quantité estimée */
-  Estimated = 'ESTIMATED'
+  Estimated = "ESTIMATED"
 }
 
 export type Query = {
-  __typename?: 'Query';
+  __typename?: "Query";
   /**
    * USAGE INTERNE > Mon Compte > Générer un token
    * Renvoie un token permettant de s'authentifier à l'API Trackdéchets
    */
-  apiKey: Scalars['String'];
+  apiKey: Scalars["String"];
   /** Renvoie des BSD candidats à un regroupement dans une annexe 2 */
   appendixForms: Array<Form>;
   bsdasri: Maybe<Bsdasri>;
@@ -1841,7 +1896,7 @@ export type Query = {
    * Si l'utilisateur est membre de 2 entreprises ou plus, vous devez obligatoirement
    * préciser un SIRET
    * Si l'utilisateur n'est membre d'aucune entreprise, un tableau vide sera renvoyé
-   * 
+   *
    * Vous pouvez filtrer:
    * - par rôle que joue votre entreprise sur le Bsdasri via `role`
    * - par date de dernière modification via `updatedAfter`
@@ -1849,7 +1904,7 @@ export type Query = {
    * - par statut du Bsdasri via `status`
    * - par code déchet via `wasteCode`
    * - par SIRET d'une entreprise présente n'importe où sur le bordereau via `siretPresentOnForm`
-   * 
+   *
    * Par défaut:
    * - tous les BSD accessibles sont retournés
    * - les BSD sont classés par date de création, de la plus récente à la plus vieille
@@ -1857,7 +1912,7 @@ export type Query = {
    * via `first` ou `last` en fonction du curseur utilisé
    * - pour afficher la suite des résultats, utiliser `cursorAfter` ou `cursorBefore`
    */
-  bsdasris: Array<Bsdasri>;
+  bsdasris: BsdasriConnection;
   /**
    * Renvoie des informations publiques sur un établissement
    * extrait de la base SIRENE et de la base des installations
@@ -1872,7 +1927,7 @@ export type Query = {
    */
   favorites: Array<CompanyFavorite>;
   /** Renvoie un BSD sélectionné par son ID (opaque ou lisible, l'un des deux doit être fourni) */
-  form: Maybe<Form>;
+  form: Form;
   /**
    * Renvoie un token pour télécharger un pdf de BSD
    * Ce token doit être transmis à la route /download pour obtenir le fichier.
@@ -1886,7 +1941,7 @@ export type Query = {
    * Si l'utilisateur est membre de 2 entreprises ou plus, vous devez obligatoirement
    * préciser un SIRET
    * Si l'utilisateur n'est membre d'aucune entreprise, un tableau vide sera renvoyé
-   * 
+   *
    * Vous pouvez filtrer:
    * - par rôle que joue votre entreprise sur le BSD via `role`
    * - par date de dernière modification via `updatedAfter`
@@ -1895,7 +1950,7 @@ export type Query = {
    * - les BSD qui attendent une action (ou non) de votre part via `hasNextStep`
    * - par code déchet via `wasteCode`
    * - par SIRET d'une entreprise présente n'importe où sur le bordereau via `siretPresentOnForm`
-   * 
+   *
    * Par défaut:
    * - tous les BSD accessibles sont retournés
    * - les BSD sont classés par date de création, de la plus récente à la plus vieille
@@ -1942,123 +1997,105 @@ export type Query = {
   stats: Array<CompanyStat>;
 };
 
-
 export type QueryAppendixFormsArgs = {
-  siret: Scalars['String'];
-  wasteCode: Maybe<Scalars['String']>;
+  siret: Scalars["String"];
+  wasteCode: Maybe<Scalars["String"]>;
 };
-
 
 export type QueryBsdasriArgs = {
-  id: Maybe<Scalars['ID']>;
-  readableId: Maybe<Scalars['String']>;
+  id: Maybe<Scalars["ID"]>;
 };
-
 
 export type QueryBsdasrisArgs = {
-  siret: Maybe<Scalars['String']>;
-  after: Maybe<Scalars['ID']>;
-  first: Maybe<Scalars['Int']>;
-  before: Maybe<Scalars['ID']>;
-  last: Maybe<Scalars['Int']>;
-  updatedAfter: Maybe<Scalars['String']>;
-  status: Maybe<Array<BsdasriStatus>>;
-  siretPresentOnForm: Maybe<Scalars['String']>;
-  wasteCode: Maybe<Scalars['String']>;
-  roles: Maybe<Array<BsdasriRole>>;
-  hasNextStep: Maybe<Scalars['Boolean']>;
+  siret: Maybe<Scalars["String"]>;
+  after: Maybe<Scalars["ID"]>;
+  first: Maybe<Scalars["Int"]>;
+  before: Maybe<Scalars["ID"]>;
+  last: Maybe<Scalars["Int"]>;
+  updatedAfter: Maybe<Scalars["String"]>;
+  where: Maybe<BsdasriWhere>;
 };
-
 
 export type QueryCompanyInfosArgs = {
-  siret: Scalars['String'];
+  siret: Scalars["String"];
 };
 
-
 export type QueryFavoritesArgs = {
-  siret: Scalars['String'];
+  siret: Scalars["String"];
   type: FavoriteType;
 };
 
-
 export type QueryFormArgs = {
-  id: Maybe<Scalars['ID']>;
-  readableId: Maybe<Scalars['String']>;
+  id: Maybe<Scalars["ID"]>;
+  readableId: Maybe<Scalars["String"]>;
 };
-
 
 export type QueryFormPdfArgs = {
-  id: Maybe<Scalars['ID']>;
+  id: Maybe<Scalars["ID"]>;
 };
-
 
 export type QueryFormsArgs = {
-  siret: Maybe<Scalars['String']>;
-  skip: Maybe<Scalars['Int']>;
-  cursorAfter: Maybe<Scalars['ID']>;
-  first: Maybe<Scalars['Int']>;
-  cursorBefore: Maybe<Scalars['ID']>;
-  last: Maybe<Scalars['Int']>;
-  sentAfter: Maybe<Scalars['String']>;
-  updatedAfter: Maybe<Scalars['String']>;
+  siret: Maybe<Scalars["String"]>;
+  skip: Maybe<Scalars["Int"]>;
+  cursorAfter: Maybe<Scalars["ID"]>;
+  first: Maybe<Scalars["Int"]>;
+  cursorBefore: Maybe<Scalars["ID"]>;
+  last: Maybe<Scalars["Int"]>;
+  sentAfter: Maybe<Scalars["String"]>;
+  updatedAfter: Maybe<Scalars["String"]>;
   status: Maybe<Array<FormStatus>>;
   roles: Maybe<Array<FormRole>>;
-  hasNextStep: Maybe<Scalars['Boolean']>;
-  siretPresentOnForm: Maybe<Scalars['String']>;
-  wasteCode: Maybe<Scalars['String']>;
+  hasNextStep: Maybe<Scalars["Boolean"]>;
+  siretPresentOnForm: Maybe<Scalars["String"]>;
+  wasteCode: Maybe<Scalars["String"]>;
 };
-
 
 export type QueryFormsLifeCycleArgs = {
-  siret: Maybe<Scalars['String']>;
-  loggedBefore: Maybe<Scalars['String']>;
-  loggedAfter: Maybe<Scalars['String']>;
-  cursorAfter: Maybe<Scalars['String']>;
-  cursorBefore: Maybe<Scalars['String']>;
-  formId: Maybe<Scalars['ID']>;
+  siret: Maybe<Scalars["String"]>;
+  loggedBefore: Maybe<Scalars["String"]>;
+  loggedAfter: Maybe<Scalars["String"]>;
+  cursorAfter: Maybe<Scalars["String"]>;
+  cursorBefore: Maybe<Scalars["String"]>;
+  formId: Maybe<Scalars["ID"]>;
 };
 
-
 export type QueryFormsRegisterArgs = {
-  sirets: Array<Scalars['String']>;
+  sirets: Array<Scalars["String"]>;
   exportType: Maybe<FormsRegisterExportType>;
-  startDate: Maybe<Scalars['DateTime']>;
-  endDate: Maybe<Scalars['DateTime']>;
-  wasteCode: Maybe<Scalars['String']>;
+  startDate: Maybe<Scalars["DateTime"]>;
+  endDate: Maybe<Scalars["DateTime"]>;
+  wasteCode: Maybe<Scalars["String"]>;
   exportFormat: Maybe<FormsRegisterExportFormat>;
 };
 
-
 export type QueryInvitationArgs = {
-  hash: Scalars['String'];
+  hash: Scalars["String"];
 };
-
 
 export type QueryMembershipRequestArgs = {
-  id: Maybe<Scalars['ID']>;
-  siret: Maybe<Scalars['String']>;
+  id: Maybe<Scalars["ID"]>;
+  siret: Maybe<Scalars["String"]>;
 };
 
-
 export type QuerySearchCompaniesArgs = {
-  clue: Scalars['String'];
-  department: Maybe<Scalars['String']>;
+  clue: Scalars["String"];
+  department: Maybe<Scalars["String"]>;
 };
 
 /** Payload de réception d'un BSD */
 export type ReceivedFormInput = {
   /** Nom de la personne en charge de la réception du déchet (case 10) */
-  receivedBy: Scalars['String'];
+  receivedBy: Scalars["String"];
   /** Date à laquelle le déchet a été reçu (case 10) */
-  receivedAt: Scalars['DateTime'];
+  receivedAt: Scalars["DateTime"];
   /** Statut d'acceptation du déchet (case 10) */
   wasteAcceptationStatus: Maybe<WasteAcceptationStatusInput>;
   /** Raison du refus (case 10) */
-  wasteRefusalReason: Maybe<Scalars['String']>;
+  wasteRefusalReason: Maybe<Scalars["String"]>;
   /** Date à laquelle le déchet a été accepté ou refusé (case 10) */
-  signedAt: Maybe<Scalars['DateTime']>;
+  signedAt: Maybe<Scalars["DateTime"]>;
   /** Quantité réelle présentée (case 10) */
-  quantityReceived: Maybe<Scalars['Float']>;
+  quantityReceived: Maybe<Scalars["Float"]>;
 };
 
 /**
@@ -2066,15 +2103,15 @@ export type ReceivedFormInput = {
  * ou de reconditionnement prévue (case 2)
  */
 export type Recipient = {
-  __typename?: 'Recipient';
+  __typename?: "Recipient";
   /** N° de CAP (le cas échéant) */
-  cap: Maybe<Scalars['String']>;
+  cap: Maybe<Scalars["String"]>;
   /** Opération d'élimination / valorisation prévue (code D/R) */
-  processingOperation: Maybe<Scalars['String']>;
+  processingOperation: Maybe<Scalars["String"]>;
   /** Établissement de destination */
   company: Maybe<FormCompany>;
   /** Indique si c'est un établissement d'entreposage temporaire ou de reocnditionnement */
-  isTempStorage: Maybe<Scalars['Boolean']>;
+  isTempStorage: Maybe<Scalars["Boolean"]>;
 };
 
 /**
@@ -2083,19 +2120,19 @@ export type Recipient = {
  */
 export type RecipientInput = {
   /** N° de CAP (le cas échéant) */
-  cap: Maybe<Scalars['String']>;
+  cap: Maybe<Scalars["String"]>;
   /** Opération d'élimination / valorisation prévue (code D/R) */
-  processingOperation: Maybe<Scalars['String']>;
+  processingOperation: Maybe<Scalars["String"]>;
   /** Établissement de destination */
   company: Maybe<CompanyInput>;
   /** Si c'est un entreprosage provisoire ou reconditionnement */
-  isTempStorage: Maybe<Scalars['Boolean']>;
+  isTempStorage: Maybe<Scalars["Boolean"]>;
 };
 
 /** Payload de regroupement */
 export type RegroupedBsdasriInput = {
   /** Identifiant unique du bordereau */
-  id: Maybe<Scalars['ID']>;
+  id: Maybe<Scalars["ID"]>;
 };
 
 /** Payload lié au détails du déchet du BSD suite (case 14 à 19) */
@@ -2117,9 +2154,9 @@ export type ResentFormInput = {
   /** Transporteur du déchet reconditionné */
   transporter: Maybe<TransporterInput>;
   /** Nom du signataire du BSD suite  (case 19) */
-  signedBy: Scalars['String'];
+  signedBy: Scalars["String"];
   /** Date de signature du BSD suite (case 19). Défaut à la date d'aujourd'hui. */
-  signedAt: Scalars['DateTime'];
+  signedAt: Scalars["DateTime"];
 };
 
 /**
@@ -2128,29 +2165,29 @@ export type ResentFormInput = {
  * [nomenclature des ICPE](https://www.georisques.gouv.fr/articles-risques/les-installations-classees-pour-la-protection-de-lenvironnement#nomenclature-des-installations-classees)
  */
 export type Rubrique = {
-  __typename?: 'Rubrique';
+  __typename?: "Rubrique";
   /**
    * Numéro de rubrique tel que défini dans la nomenclature des ICPE
    * Ex: 2710
    */
-  rubrique: Scalars['String'];
+  rubrique: Scalars["String"];
   /** Alinéa pour la rubrique concerné */
-  alinea: Maybe<Scalars['String']>;
+  alinea: Maybe<Scalars["String"]>;
   /** État de l'activité, ex: 'En fonct', 'À l'arrêt' */
-  etatActivite: Maybe<Scalars['String']>;
+  etatActivite: Maybe<Scalars["String"]>;
   /** Régime autorisé pour la rubrique: déclaratif, autorisation, seveso, etc */
-  regimeAutorise: Maybe<Scalars['String']>;
+  regimeAutorise: Maybe<Scalars["String"]>;
   /**
    * Description de l'activité:
    * Ex: traitement thermique de déchets dangereux
    */
-  activite: Maybe<Scalars['String']>;
+  activite: Maybe<Scalars["String"]>;
   /** Catégorie d'établissement associé: TTR, VHU, Traitement */
-  category: Scalars['String'];
+  category: Scalars["String"];
   /** Volume autorisé */
-  volume: Maybe<Scalars['String']>;
+  volume: Maybe<Scalars["String"]>;
   /** Unité utilisé pour le volume autorisé */
-  unite: Maybe<Scalars['String']>;
+  unite: Maybe<Scalars["String"]>;
   /** Type de déchets autorisé */
   wasteType: Maybe<WasteType>;
 };
@@ -2158,47 +2195,47 @@ export type Rubrique = {
 /** Payload de signature d'un BSD */
 export type SentFormInput = {
   /** Date de l'envoi du déchet par l'émetteur (case 9) */
-  sentAt: Scalars['DateTime'];
+  sentAt: Scalars["DateTime"];
   /** Nom de la personne responsable de l'envoi du déchet (case 9) */
-  sentBy: Scalars['String'];
+  sentBy: Scalars["String"];
 };
 
 /** Dénomination de l'auteur de la signature */
 export enum SignatureAuthor {
   /** L'auteur de la signature est l'émetteur du déchet */
-  Emitter = 'EMITTER',
+  Emitter = "EMITTER",
   /** L'auteur de la signature est l'éco-organisme figurant sur le BSD */
-  EcoOrganisme = 'ECO_ORGANISME'
+  EcoOrganisme = "ECO_ORGANISME"
 }
 
 /** Payload simplifié de signature d'un BSD par un transporteur */
 export type SignatureFormInput = {
   /** Date de l'envoi du déchet par l'émetteur (case 9) */
-  sentAt: Scalars['DateTime'];
+  sentAt: Scalars["DateTime"];
   /** Nom de la personne responsable de l'envoi du déchet (case 9) */
-  sentBy: Scalars['String'];
+  sentBy: Scalars["String"];
 };
 
 export type SignupInput = {
   /** Email de l'utilisateur */
-  email: Scalars['String'];
+  email: Scalars["String"];
   /** Mot de passe de l'utilisateur */
-  password: Scalars['String'];
+  password: Scalars["String"];
   /** Nom de l'utilisateur */
-  name: Scalars['String'];
+  name: Scalars["String"];
   /** Numéro de téléphone de l'utilisateur */
-  phone: Maybe<Scalars['String']>;
+  phone: Maybe<Scalars["String"]>;
 };
 
 /** Statistiques */
 export type Stat = {
-  __typename?: 'Stat';
+  __typename?: "Stat";
   /** Code déchet */
-  wasteCode: Scalars['String'];
+  wasteCode: Scalars["String"];
   /** Quantité entrante */
-  incoming: Scalars['Float'];
+  incoming: Scalars["Float"];
   /** Qantité sortante */
-  outgoing: Scalars['Float'];
+  outgoing: Scalars["Float"];
 };
 
 /**
@@ -2207,13 +2244,13 @@ export type Stat = {
  * - le bordereau peut naviguer entre plusieurs entreprises.
  * - quand le bordereau a-t-il été modifié pour la dernière fois ? (création, signature, traitement... ?)
  * - si c'est un bordereau avec conditionnement et qu'on attend un transporteur, quel est-il ?
- * 
+ *
  * Cet objet `StateSummary` vise à simplifier ces questions. Il renverra toujours la valeur pour un instant T donné.
  */
 export type StateSummary = {
-  __typename?: 'StateSummary';
+  __typename?: "StateSummary";
   /** Quantité la plus à jour */
-  quantity: Maybe<Scalars['Float']>;
+  quantity: Maybe<Scalars["Float"]>;
   /**
    * DEPRECATED Packaging le plus à jour
    * @deprecated Utiliser packagingInfos
@@ -2222,32 +2259,32 @@ export type StateSummary = {
   /** Packaging le plus à jour */
   packagingInfos: Array<PackagingInfo>;
   /** Code ONU le plus à jour */
-  onuCode: Maybe<Scalars['String']>;
+  onuCode: Maybe<Scalars["String"]>;
   /** Prochaine entreprise à transporter le déchet (entreprise en case 8 ou 18) */
   transporter: Maybe<FormCompany>;
   /** Numéro de plaque d'immatriculation */
-  transporterNumberPlate: Maybe<Scalars['String']>;
+  transporterNumberPlate: Maybe<Scalars["String"]>;
   /** Information libre, destinée aux transporteurs */
-  transporterCustomInfo: Maybe<Scalars['String']>;
+  transporterCustomInfo: Maybe<Scalars["String"]>;
   /** Prochaine entreprise à recevoir le déchet (entreprise en case 2 ou 14) */
   recipient: Maybe<FormCompany>;
   /** Prochaine entreprise à émettre le déchet (entreprise en case 1 ou 13) */
   emitter: Maybe<FormCompany>;
   /** Date de la dernière action sur le bordereau */
-  lastActionOn: Maybe<Scalars['DateTime']>;
+  lastActionOn: Maybe<Scalars["DateTime"]>;
 };
 
 /** Changement de statut d'un bordereau */
 export type StatusLog = {
-  __typename?: 'StatusLog';
+  __typename?: "StatusLog";
   /** Identifiant du log */
-  id: Maybe<Scalars['ID']>;
+  id: Maybe<Scalars["ID"]>;
   /** Statut du bordereau après le changement de statut */
   status: Maybe<FormStatus>;
   /** Date à laquelle le changement de statut a été effectué */
-  loggedAt: Maybe<Scalars['DateTime']>;
+  loggedAt: Maybe<Scalars["DateTime"]>;
   /** Valeur des champs transmis lors du changement de statut (eg. receivedBY, processingOperationDescription) */
-  updatedFields: Maybe<Scalars['JSON']>;
+  updatedFields: Maybe<Scalars["JSON"]>;
   /** BSD concerné */
   form: Maybe<StatusLogForm>;
   /** Utilisateur à l'origine de la modification */
@@ -2256,47 +2293,46 @@ export type StatusLog = {
 
 /** Information sur un BSD dans les logs de modifications de statuts */
 export type StatusLogForm = {
-  __typename?: 'StatusLogForm';
+  __typename?: "StatusLogForm";
   /** Identifiant du BSD */
-  id: Maybe<Scalars['ID']>;
+  id: Maybe<Scalars["ID"]>;
   /**
    * N° du bordereau
    * @deprecated Le readableId apparaît sur le CERFA mais l'id doit être utilisé comme identifiant.
    */
-  readableId: Maybe<Scalars['String']>;
+  readableId: Maybe<Scalars["String"]>;
 };
 
 /** Utilisateur ayant modifié le BSD */
 export type StatusLogUser = {
-  __typename?: 'StatusLogUser';
-  id: Maybe<Scalars['ID']>;
-  email: Maybe<Scalars['String']>;
+  __typename?: "StatusLogUser";
+  id: Maybe<Scalars["ID"]>;
+  email: Maybe<Scalars["String"]>;
 };
 
 export type Subscription = {
-  __typename?: 'Subscription';
+  __typename?: "Subscription";
   /**
    * DEPRECATED - Privilégier l'utilisation d'un polling régulier sur la query `formsLifeCycle`
-   * 
+   *
    * Permet de s'abonner aux changements de statuts d'un BSD
    */
   forms: Maybe<FormSubscription>;
 };
 
-
 export type SubscriptionFormsArgs = {
-  token: Scalars['String'];
+  token: Scalars["String"];
 };
 
 /** Payload de prise en charge de segment */
 export type TakeOverInput = {
-  takenOverAt: Scalars['DateTime'];
-  takenOverBy: Scalars['String'];
+  takenOverAt: Scalars["DateTime"];
+  takenOverBy: Scalars["String"];
 };
 
 /** Données du BSD suite sur la partie entreposage provisoire ou reconditionnement, rattachées à un BSD existant */
 export type TemporaryStorageDetail = {
-  __typename?: 'TemporaryStorageDetail';
+  __typename?: "TemporaryStorageDetail";
   /** Établissement qui stocke temporairement le déchet (case 13) */
   temporaryStorer: Maybe<TemporaryStorer>;
   /**
@@ -2309,9 +2345,9 @@ export type TemporaryStorageDetail = {
   /** Transporteur du déchet (case 18) */
   transporter: Maybe<Transporter>;
   /** Nom du signataire du BSD suite  (case 19) */
-  signedBy: Maybe<Scalars['String']>;
+  signedBy: Maybe<Scalars["String"]>;
   /** Date de signature du BSD suite (case 19) */
-  signedAt: Maybe<Scalars['DateTime']>;
+  signedAt: Maybe<Scalars["DateTime"]>;
 };
 
 export type TemporaryStorageDetailInput = {
@@ -2319,101 +2355,101 @@ export type TemporaryStorageDetailInput = {
 };
 
 export type TemporaryStorer = {
-  __typename?: 'TemporaryStorer';
+  __typename?: "TemporaryStorer";
   quantityType: Maybe<QuantityType>;
-  quantityReceived: Maybe<Scalars['Float']>;
-  wasteAcceptationStatus: Maybe<Scalars['String']>;
-  wasteRefusalReason: Maybe<Scalars['String']>;
-  receivedAt: Maybe<Scalars['DateTime']>;
-  receivedBy: Maybe<Scalars['String']>;
+  quantityReceived: Maybe<Scalars["Float"]>;
+  wasteAcceptationStatus: Maybe<Scalars["String"]>;
+  wasteRefusalReason: Maybe<Scalars["String"]>;
+  receivedAt: Maybe<Scalars["DateTime"]>;
+  receivedBy: Maybe<Scalars["String"]>;
 };
 
 export type TempStoredFormInput = {
   /** Statut d'acceptation du déchet (case 13) */
   wasteAcceptationStatus: Maybe<WasteAcceptationStatusInput>;
   /** Raison du refus (case 13) */
-  wasteRefusalReason: Maybe<Scalars['String']>;
+  wasteRefusalReason: Maybe<Scalars["String"]>;
   /** Nom de la personne en charge de la réception du déchet (case 13) */
-  receivedBy: Scalars['String'];
+  receivedBy: Scalars["String"];
   /** Date à laquelle le déchet a été reçu (case 13) */
-  receivedAt: Scalars['DateTime'];
+  receivedAt: Scalars["DateTime"];
   /** Date à laquelle le déchet a été accepté ou refusé (case 13). Défaut à la date d'aujourd'hui. */
-  signedAt: Maybe<Scalars['DateTime']>;
+  signedAt: Maybe<Scalars["DateTime"]>;
   /** Quantité réelle présentée (case 13) */
-  quantityReceived: Scalars['Float'];
+  quantityReceived: Scalars["Float"];
   /** Réelle ou estimée */
   quantityType: QuantityType;
 };
 
 export type TempStorerAcceptedFormInput = {
   /** Date à laquelle le déchet a été accepté ou refusé (case 13). */
-  signedAt: Scalars['DateTime'];
+  signedAt: Scalars["DateTime"];
   /** Nom de la personne en charge de l'acceptation du déchet (case 13) */
-  signedBy: Scalars['String'];
+  signedBy: Scalars["String"];
   /** Statut d'acceptation du déchet (case 13) */
   wasteAcceptationStatus: WasteAcceptationStatusInput;
   /** Raison du refus (case 13) */
-  wasteRefusalReason: Maybe<Scalars['String']>;
+  wasteRefusalReason: Maybe<Scalars["String"]>;
   /** Quantité réelle présentée (case 13) */
-  quantityReceived: Scalars['Float'];
+  quantityReceived: Scalars["Float"];
   /** Réelle ou estimée */
   quantityType: QuantityType;
 };
 
 /** Négociant (case 7) */
 export type Trader = {
-  __typename?: 'Trader';
+  __typename?: "Trader";
   /** Établissement négociant */
   company: Maybe<FormCompany>;
   /** N° de récipissé */
-  receipt: Maybe<Scalars['String']>;
+  receipt: Maybe<Scalars["String"]>;
   /** Département */
-  department: Maybe<Scalars['String']>;
+  department: Maybe<Scalars["String"]>;
   /** Limite de validité */
-  validityLimit: Maybe<Scalars['DateTime']>;
+  validityLimit: Maybe<Scalars["DateTime"]>;
 };
 
 /** Payload lié au négociant */
 export type TraderInput = {
   /** N° de récipissé */
-  receipt: Maybe<Scalars['String']>;
+  receipt: Maybe<Scalars["String"]>;
   /** Département */
-  department: Maybe<Scalars['String']>;
+  department: Maybe<Scalars["String"]>;
   /** Limite de validité */
-  validityLimit: Maybe<Scalars['DateTime']>;
+  validityLimit: Maybe<Scalars["DateTime"]>;
   /** Établissement négociant */
   company: Maybe<CompanyInput>;
 };
 
 /** Récépissé négociant */
 export type TraderReceipt = {
-  __typename?: 'TraderReceipt';
-  id: Scalars['ID'];
+  __typename?: "TraderReceipt";
+  id: Scalars["ID"];
   /** Numéro de récépissé négociant */
-  receiptNumber: Scalars['String'];
-  /** Limite de validatié du récépissé */
-  validityLimit: Scalars['DateTime'];
+  receiptNumber: Scalars["String"];
+  /** Limite de validité du récépissé */
+  validityLimit: Scalars["DateTime"];
   /** Département ayant enregistré la déclaration */
-  department: Scalars['String'];
+  department: Scalars["String"];
 };
 
 /** Collecteur - transporteur (case 8) */
 export type Transporter = {
-  __typename?: 'Transporter';
+  __typename?: "Transporter";
   /** Établissement collecteur - transporteur */
   company: Maybe<FormCompany>;
   /** Exemption de récipissé */
-  isExemptedOfReceipt: Maybe<Scalars['Boolean']>;
+  isExemptedOfReceipt: Maybe<Scalars["Boolean"]>;
   /** N° de récipissé */
-  receipt: Maybe<Scalars['String']>;
+  receipt: Maybe<Scalars["String"]>;
   /** Département */
-  department: Maybe<Scalars['String']>;
+  department: Maybe<Scalars["String"]>;
   /** Limite de validité du récipissé */
-  validityLimit: Maybe<Scalars['DateTime']>;
+  validityLimit: Maybe<Scalars["DateTime"]>;
   /** Numéro de plaque d'immatriculation */
-  numberPlate: Maybe<Scalars['String']>;
+  numberPlate: Maybe<Scalars["String"]>;
   /** Information libre, destinée aux transporteurs */
-  customInfo: Maybe<Scalars['String']>;
+  customInfo: Maybe<Scalars["String"]>;
 };
 
 /** Collecteur - transporteur (case 8) */
@@ -2421,94 +2457,98 @@ export type TransporterInput = {
   /** Établissement collecteur - transporteur */
   company: Maybe<CompanyInput>;
   /** Exemption de récipissé */
-  isExemptedOfReceipt: Maybe<Scalars['Boolean']>;
+  isExemptedOfReceipt: Maybe<Scalars["Boolean"]>;
   /** N° de récipissé */
-  receipt: Maybe<Scalars['String']>;
+  receipt: Maybe<Scalars["String"]>;
   /** Département */
-  department: Maybe<Scalars['String']>;
+  department: Maybe<Scalars["String"]>;
   /** Limite de validité du récipissé */
-  validityLimit: Maybe<Scalars['DateTime']>;
+  validityLimit: Maybe<Scalars["DateTime"]>;
   /** Numéro de plaque d'immatriculation */
-  numberPlate: Maybe<Scalars['String']>;
+  numberPlate: Maybe<Scalars["String"]>;
   /** Information libre, destinée aux transporteurs */
-  customInfo: Maybe<Scalars['String']>;
+  customInfo: Maybe<Scalars["String"]>;
 };
 
 /** Récépissé transporteur */
 export type TransporterReceipt = {
-  __typename?: 'TransporterReceipt';
-  id: Scalars['ID'];
+  __typename?: "TransporterReceipt";
+  id: Scalars["ID"];
   /** Numéro de récépissé transporteur */
-  receiptNumber: Scalars['String'];
-  /** Limite de validatié du récépissé */
-  validityLimit: Scalars['DateTime'];
+  receiptNumber: Scalars["String"];
+  /** Limite de validité du récépissé */
+  validityLimit: Scalars["DateTime"];
   /** Département ayant enregistré la déclaration */
-  department: Scalars['String'];
+  department: Scalars["String"];
 };
 
 /** Payload de signature d'un BSD par un transporteur */
 export type TransporterSignatureFormInput = {
   /** Date de l'envoi du déchet par l'émetteur (case 9) */
-  sentAt: Scalars['DateTime'];
+  sentAt: Scalars["DateTime"];
   /** Si oui ou non le BSD a été signé par un transporteur */
-  signedByTransporter: Scalars['Boolean'];
+  signedByTransporter: Scalars["Boolean"];
   /** Code de signature permettant d'authentifier l'émetteur */
-  securityCode: Scalars['Int'];
+  securityCode: Scalars["Int"];
   /** Dénomination de l'auteur de la signature, par défaut il s'agit de l'émetteur */
   signatureAuthor: Maybe<SignatureAuthor>;
   /** Nom de la personne responsable de l'envoi du déchet (case 9) */
-  sentBy: Scalars['String'];
+  sentBy: Scalars["String"];
   /** Si oui on non le BSD a été signé par l'émetteur */
-  signedByProducer: Scalars['Boolean'];
+  signedByProducer: Scalars["Boolean"];
   /** Conditionnements */
   packagingInfos: Maybe<Array<PackagingInfoInput>>;
   /** DEPRECATED - Conditionnement */
   packagings: Maybe<Array<Maybe<Packagings>>>;
   /** Quantité en tonnes */
-  quantity: Scalars['Float'];
+  quantity: Scalars["Float"];
   /** Code ONU */
-  onuCode: Maybe<Scalars['String']>;
+  onuCode: Maybe<Scalars["String"]>;
 };
 
 export enum TransportMode {
-  Road = 'ROAD',
-  Rail = 'RAIL',
-  Air = 'AIR',
-  River = 'RIVER',
-  Sea = 'SEA'
+  Road = "ROAD",
+  Rail = "RAIL",
+  Air = "AIR",
+  River = "RIVER",
+  Sea = "SEA"
 }
 
 export type TransportSegment = {
-  __typename?: 'TransportSegment';
-  id: Scalars['ID'];
+  __typename?: "TransportSegment";
+  id: Scalars["ID"];
   /** Siret du transporteur précédent */
-  previousTransporterCompanySiret: Maybe<Scalars['String']>;
+  previousTransporterCompanySiret: Maybe<Scalars["String"]>;
   /** Transporteur du segment */
   transporter: Maybe<Transporter>;
   /** Mode de transport */
   mode: Maybe<TransportMode>;
   /** Date de prise en charge */
-  takenOverAt: Maybe<Scalars['DateTime']>;
+  takenOverAt: Maybe<Scalars["DateTime"]>;
   /** Reponsable de la prise en charge */
-  takenOverBy: Maybe<Scalars['String']>;
+  takenOverBy: Maybe<Scalars["String"]>;
   /** Prêt à être pris en charge */
-  readyToTakeOver: Maybe<Scalars['Boolean']>;
+  readyToTakeOver: Maybe<Scalars["Boolean"]>;
   /** Numéro du segment */
-  segmentNumber: Maybe<Scalars['Int']>;
+  segmentNumber: Maybe<Scalars["Int"]>;
 };
 
 /** Payload de mise à jour d'un bordereau */
 export type UpdateFormInput = {
   /** Identifiant opaque */
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   /**
    * Identifiant personnalisé permettant de faire le lien avec un
    * objet un système d'information tierce
    */
-  customId: Maybe<Scalars['String']>;
+  customId: Maybe<Scalars["String"]>;
   /** Établissement émetteur/producteur du déchet (case 1) */
   emitter: Maybe<EmitterInput>;
-  /** Établissement qui reçoit le déchet (case 2) */
+  /**
+   * Installation de destination ou d’entreposage ou de reconditionnement prévue (case 2)
+   * L'établissement renseigné doit être inscrit sur Trackdéchets en tant qu'installation
+   * de traitement ou de tri, transit, regroupement.
+   */
   recipient: Maybe<RecipientInput>;
   /** Transporteur du déchet (case 8) */
   transporter: Maybe<TransporterInput>;
@@ -2517,56 +2557,55 @@ export type UpdateFormInput = {
   /** Négociant (case 7) */
   trader: Maybe<TraderInput>;
   /** Annexe 2 */
-  appendix2Forms: Maybe<Array<Maybe<AppendixFormInput>>>;
+  appendix2Forms: Maybe<Array<AppendixFormInput>>;
   ecoOrganisme: Maybe<EcoOrganismeInput>;
   temporaryStorageDetail: Maybe<TemporaryStorageDetailInput>;
 };
 
-/** Payload d'édition d'un récépissé transporteur */
+/** Payload d'édition d'un récépissé négociant */
 export type UpdateTraderReceiptInput = {
   /** The id of the trader receipt to modify */
-  id: Scalars['ID'];
-  /** Numéro de récépissé transporteur */
-  receiptNumber: Maybe<Scalars['String']>;
-  /** Limite de validatié du récépissé */
-  validityLimit: Maybe<Scalars['DateTime']>;
+  id: Scalars["ID"];
+  /** Numéro de récépissé négociant */
+  receiptNumber: Maybe<Scalars["String"]>;
+  /** Limite de validité du récépissé */
+  validityLimit: Maybe<Scalars["DateTime"]>;
   /** Département ayant enregistré la déclaration */
-  department: Maybe<Scalars['String']>;
+  department: Maybe<Scalars["String"]>;
 };
 
 /** Payload d'édition d'un récépissé transporteur */
 export type UpdateTransporterReceiptInput = {
   /** The id of the transporter receipt to modify */
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   /** Numéro de récépissé transporteur */
-  receiptNumber: Maybe<Scalars['String']>;
-  /** Limite de validatié du récépissé */
-  validityLimit: Maybe<Scalars['DateTime']>;
+  receiptNumber: Maybe<Scalars["String"]>;
+  /** Limite de validité du récépissé */
+  validityLimit: Maybe<Scalars["DateTime"]>;
   /** Département ayant enregistré la déclaration */
-  department: Maybe<Scalars['String']>;
+  department: Maybe<Scalars["String"]>;
 };
 
 /** Lien d'upload */
 export type UploadLink = {
-  __typename?: 'UploadLink';
+  __typename?: "UploadLink";
   /** URL signé permettant d'uploader un fichier */
-  signedUrl: Maybe<Scalars['String']>;
+  signedUrl: Maybe<Scalars["String"]>;
   /** Clé permettant l'upload du fichier */
-  key: Maybe<Scalars['String']>;
+  key: Maybe<Scalars["String"]>;
 };
-
 
 /** Représente un utilisateur sur la plateforme Trackdéchets */
 export type User = {
-  __typename?: 'User';
+  __typename?: "User";
   /** Identifiant opaque */
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   /** Email de l'utiliateur */
-  email: Scalars['String'];
+  email: Scalars["String"];
   /** Nom de l'utilisateur */
-  name: Maybe<Scalars['String']>;
+  name: Maybe<Scalars["String"]>;
   /** Numéro de téléphone de l'utilisateur */
-  phone: Maybe<Scalars['String']>;
+  phone: Maybe<Scalars["String"]>;
   /** Liste des établissements dont l'utilisateur est membre */
   companies: Array<CompanyPrivate>;
 };
@@ -2574,45 +2613,45 @@ export type User = {
 /**
  * Liste les différents rôles d'un utilisateur au sein
  * d'un établissement.
- * 
+ *
  * Les admins peuvent:
  * * consulter/éditer les bordereaux
  * * gérer les utilisateurs de l'établissement
  * * éditer les informations de la fiche entreprise
  * * demander le renouvellement du code de signature
  * * Éditer les informations de la fiche entreprise
- * 
+ *
  * Les membres peuvent:
  * * consulter/éditer les bordereaux
  * * consulter le reste des informations
- * 
+ *
  * Vous pouvez consulter [cette page](https://docs.google.com/spreadsheets/d/12K9Bd2k5l4uqXhS0h5uI00lNEzW7C-1t-NDOyxy8aKk/edit#gid=0)
  * pour le détail de chacun des rôles
  */
 export enum UserRole {
-  Member = 'MEMBER',
-  Admin = 'ADMIN'
+  Member = "MEMBER",
+  Admin = "ADMIN"
 }
 
 /** Statut d'acceptation d'un déchet */
 export enum WasteAcceptationStatusInput {
   /** Accepté en totalité */
-  Accepted = 'ACCEPTED',
+  Accepted = "ACCEPTED",
   /** Refusé */
-  Refused = 'REFUSED',
+  Refused = "REFUSED",
   /** Refus partiel */
-  PartiallyRefused = 'PARTIALLY_REFUSED'
+  PartiallyRefused = "PARTIALLY_REFUSED"
 }
 
 /** Détails du déchet (case 3, 4, 5, 6) */
 export type WasteDetails = {
-  __typename?: 'WasteDetails';
+  __typename?: "WasteDetails";
   /** Rubrique déchet au format |_|_| |_|_| |_|_| (*) */
-  code: Maybe<Scalars['String']>;
+  code: Maybe<Scalars["String"]>;
   /** Dénomination usuelle */
-  name: Maybe<Scalars['String']>;
+  name: Maybe<Scalars["String"]>;
   /** Code ONU */
-  onuCode: Maybe<Scalars['String']>;
+  onuCode: Maybe<Scalars["String"]>;
   /** Conditionnements */
   packagingInfos: Maybe<Array<PackagingInfo>>;
   /**
@@ -2624,20 +2663,20 @@ export type WasteDetails = {
    * Autre packaging (préciser)
    * @deprecated Utiliser `packagingInfos`
    */
-  otherPackaging: Maybe<Scalars['String']>;
+  otherPackaging: Maybe<Scalars["String"]>;
   /**
    * Nombre de colis
    * @deprecated Utiliser `packagingInfos`
    */
-  numberOfPackages: Maybe<Scalars['Int']>;
+  numberOfPackages: Maybe<Scalars["Int"]>;
   /** Quantité en tonnes */
-  quantity: Maybe<Scalars['Float']>;
+  quantity: Maybe<Scalars["Float"]>;
   /** Réelle ou estimée */
   quantityType: Maybe<QuantityType>;
   /** Consistance */
   consistence: Maybe<Consistence>;
   /** Contient des Polluants Organiques Persistants (POP) oui / non */
-  pop: Maybe<Scalars['Boolean']>;
+  pop: Maybe<Scalars["Boolean"]>;
 };
 
 /** Payload lié au détails du déchet (case 3, 4, 5, 6) */
@@ -2645,98 +2684,104 @@ export type WasteDetailsInput = {
   /**
    * Code du déchet dangereux ou non-dangereux qui doit faire partie de la liste officielle du code de l'environnement :
    * https://aida.ineris.fr/consultation_document/10327
-   * 
+   *
    * Il doit être composé de 3 paires de deux chiffres séparés par un espace et se termine éventuellement par une astérisque.
-   * 
+   *
    * Un exemple de déchet non-dangereux valide (déchets provenant de l'extraction des minéraux métallifères) :
    * 01 01 01
-   * 
+   *
    * Ce même exemple, mais avec un format invalide :
    * 010101
-   * 
+   *
    * Un exemple de déchet dangereux valide (stériles acidogènes provenant de la transformation du sulfure) :
    * 01 03 04*
-   * 
+   *
    * Ce même exemple, mais avec un format invalide :
    * 010304 *
    */
-  code: Maybe<Scalars['String']>;
+  code: Maybe<Scalars["String"]>;
   /** Dénomination usuelle */
-  name: Maybe<Scalars['String']>;
+  name: Maybe<Scalars["String"]>;
   /** Code ONU */
-  onuCode: Maybe<Scalars['String']>;
+  onuCode: Maybe<Scalars["String"]>;
   /** Conditionnements */
   packagingInfos: Maybe<Array<PackagingInfoInput>>;
   /** DEPRECATED - Conditionnement */
   packagings: Maybe<Array<Maybe<Packagings>>>;
   /** DEPRECATED - Autre packaging (préciser) */
-  otherPackaging: Maybe<Scalars['String']>;
+  otherPackaging: Maybe<Scalars["String"]>;
   /** DEPRECATED - Nombre de colis */
-  numberOfPackages: Maybe<Scalars['Int']>;
+  numberOfPackages: Maybe<Scalars["Int"]>;
   /** Quantité en tonnes */
-  quantity: Maybe<Scalars['Float']>;
+  quantity: Maybe<Scalars["Float"]>;
   /** Réelle ou estimée */
   quantityType: Maybe<QuantityType>;
   /** Consistance */
   consistence: Maybe<Consistence>;
   /** Contient des Polluants Organiques Persistants (POP) oui / non */
-  pop: Maybe<Scalars['Boolean']>;
+  pop: Maybe<Scalars["Boolean"]>;
 };
 
 /** Type de déchets autorisé pour une rubrique */
 export enum WasteType {
   /** Déchet inerte */
-  Inerte = 'INERTE',
+  Inerte = "INERTE",
   /** Déchet non dangereux */
-  NotDangerous = 'NOT_DANGEROUS',
+  NotDangerous = "NOT_DANGEROUS",
   /** Déchet dangereux */
-  Dangerous = 'DANGEROUS'
+  Dangerous = "DANGEROUS"
 }
 
 /** Informations sur une adresse chantier */
 export type WorkSite = {
-  __typename?: 'WorkSite';
-  name: Maybe<Scalars['String']>;
-  address: Maybe<Scalars['String']>;
-  city: Maybe<Scalars['String']>;
-  postalCode: Maybe<Scalars['String']>;
-  infos: Maybe<Scalars['String']>;
+  __typename?: "WorkSite";
+  name: Maybe<Scalars["String"]>;
+  address: Maybe<Scalars["String"]>;
+  city: Maybe<Scalars["String"]>;
+  postalCode: Maybe<Scalars["String"]>;
+  infos: Maybe<Scalars["String"]>;
 };
 
 /** Payload d'une adresse chantier */
 export type WorkSiteInput = {
-  address: Maybe<Scalars['String']>;
-  city: Maybe<Scalars['String']>;
-  infos: Maybe<Scalars['String']>;
-  name: Maybe<Scalars['String']>;
-  postalCode: Maybe<Scalars['String']>;
+  address: Maybe<Scalars["String"]>;
+  city: Maybe<Scalars["String"]>;
+  infos: Maybe<Scalars["String"]>;
+  name: Maybe<Scalars["String"]>;
+  postalCode: Maybe<Scalars["String"]>;
 };
 
-export function createAcceptedFormInputMock(props: Partial<AcceptedFormInput>): AcceptedFormInput {
+export function createAcceptedFormInputMock(
+  props: Partial<AcceptedFormInput>
+): AcceptedFormInput {
   return {
     wasteAcceptationStatus: WasteAcceptationStatusInput.Accepted,
     wasteRefusalReason: null,
     signedAt: new Date().toISOString(),
     signedBy: "",
     quantityReceived: 0,
-    ...props,
+    ...props
   };
 }
 
-export function createAppendixFormInputMock(props: Partial<AppendixFormInput>): AppendixFormInput {
+export function createAppendixFormInputMock(
+  props: Partial<AppendixFormInput>
+): AppendixFormInput {
   return {
     id: null,
     readableId: null,
-    ...props,
+    ...props
   };
 }
 
-export function createAuthPayloadMock(props: Partial<AuthPayload>): AuthPayload {
+export function createAuthPayloadMock(
+  props: Partial<AuthPayload>
+): AuthPayload {
   return {
     __typename: "AuthPayload",
     token: "",
     user: createUserMock({}),
-    ...props,
+    ...props
   };
 }
 
@@ -2744,11 +2789,11 @@ export function createBsdasriMock(props: Partial<Bsdasri>): Bsdasri {
   return {
     __typename: "Bsdasri",
     id: "",
-    readableId: "",
     customId: null,
-    status: BsdasriStatus.Draft,
+    status: BsdasriStatus.Initial,
     createdAt: null,
     updatedAt: null,
+    isDraft: false,
     emitter: null,
     emission: null,
     transporter: null,
@@ -2757,11 +2802,34 @@ export function createBsdasriMock(props: Partial<Bsdasri>): Bsdasri {
     reception: null,
     operation: null,
     regroupedBsdasris: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriCreateInputMock(props: Partial<BsdasriCreateInput>): BsdasriCreateInput {
+export function createBsdasriCompanyWhereMock(
+  props: Partial<BsdasriCompanyWhere>
+): BsdasriCompanyWhere {
+  return {
+    siret: "",
+    ...props
+  };
+}
+
+export function createBsdasriConnectionMock(
+  props: Partial<BsdasriConnection>
+): BsdasriConnection {
+  return {
+    __typename: "BsdasriConnection",
+    totalCount: 0,
+    pageInfo: createPageInfoMock({}),
+    edges: [],
+    ...props
+  };
+}
+
+export function createBsdasriCreateInputMock(
+  props: Partial<BsdasriCreateInput>
+): BsdasriCreateInput {
   return {
     customId: null,
     emitter: null,
@@ -2772,53 +2840,82 @@ export function createBsdasriCreateInputMock(props: Partial<BsdasriCreateInput>)
     reception: null,
     operation: null,
     regroupedBsdasris: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriEmissionMock(props: Partial<BsdasriEmission>): BsdasriEmission {
+export function createBsdasriEdgeMock(
+  props: Partial<BsdasriEdge>
+): BsdasriEdge {
+  return {
+    __typename: "BsdasriEdge",
+    cursor: "",
+    node: createBsdasriMock({}),
+    ...props
+  };
+}
+
+export function createBsdasriEmissionMock(
+  props: Partial<BsdasriEmission>
+): BsdasriEmission {
   return {
     __typename: "BsdasriEmission",
     wasteCode: null,
     wasteDetails: null,
     handedOverAt: null,
-    signedBy: null,
-    signedAt: null,
-    ...props,
+    signature: null,
+    ...props
   };
 }
 
-export function createBsdasriEmissionInputMock(props: Partial<BsdasriEmissionInput>): BsdasriEmissionInput {
+export function createBsdasriEmissionInputMock(
+  props: Partial<BsdasriEmissionInput>
+): BsdasriEmissionInput {
   return {
     wasteCode: null,
-    wasteDetailsOnuCode: null,
     wasteDetails: null,
     handedOverAt: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriEmitterMock(props: Partial<BsdasriEmitter>): BsdasriEmitter {
+export function createBsdasriEmitterMock(
+  props: Partial<BsdasriEmitter>
+): BsdasriEmitter {
   return {
     __typename: "BsdasriEmitter",
     company: null,
     workSite: null,
     handOverToTransporterAt: null,
     customInfo: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriEmitterInputMock(props: Partial<BsdasriEmitterInput>): BsdasriEmitterInput {
+export function createBsdasriEmitterInputMock(
+  props: Partial<BsdasriEmitterInput>
+): BsdasriEmitterInput {
   return {
     company: null,
     workSite: null,
     customInfo: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriInputMock(props: Partial<BsdasriInput>): BsdasriInput {
+export function createBsdasriEmitterWhereMock(
+  props: Partial<BsdasriEmitterWhere>
+): BsdasriEmitterWhere {
+  return {
+    company: null,
+    signature: null,
+    ...props
+  };
+}
+
+export function createBsdasriInputMock(
+  props: Partial<BsdasriInput>
+): BsdasriInput {
   return {
     customId: null,
     emitter: null,
@@ -2828,118 +2925,170 @@ export function createBsdasriInputMock(props: Partial<BsdasriInput>): BsdasriInp
     recipient: null,
     reception: null,
     operation: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriOperationMock(props: Partial<BsdasriOperation>): BsdasriOperation {
+export function createBsdasriOperationMock(
+  props: Partial<BsdasriOperation>
+): BsdasriOperation {
   return {
     __typename: "BsdasriOperation",
-    signedBy: null,
-    signedAt: null,
     processingOperation: null,
     processedAt: null,
-    ...props,
+    signature: null,
+    ...props
   };
 }
 
-export function createBsdasriOperationInputMock(props: Partial<BsdasriOperationInput>): BsdasriOperationInput {
+export function createBsdasriOperationInputMock(
+  props: Partial<BsdasriOperationInput>
+): BsdasriOperationInput {
   return {
     processingOperation: null,
     processedAt: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriPackagingInfoMock(props: Partial<BsdasriPackagingInfo>): BsdasriPackagingInfo {
+export function createBsdasriPackagingInfoMock(
+  props: Partial<BsdasriPackagingInfo>
+): BsdasriPackagingInfo {
   return {
     __typename: "BsdasriPackagingInfo",
     type: BsdasriPackagings.BoiteCarton,
     other: null,
     quantity: 0,
     volume: 0,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriPackagingInfoInputMock(props: Partial<BsdasriPackagingInfoInput>): BsdasriPackagingInfoInput {
+export function createBsdasriPackagingInfoInputMock(
+  props: Partial<BsdasriPackagingInfoInput>
+): BsdasriPackagingInfoInput {
   return {
     type: BsdasriPackagings.BoiteCarton,
     other: null,
     volume: 0,
     quantity: 0,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriReceptionMock(props: Partial<BsdasriReception>): BsdasriReception {
+export function createBsdasriReceptionMock(
+  props: Partial<BsdasriReception>
+): BsdasriReception {
   return {
     __typename: "BsdasriReception",
     wasteDetails: null,
     wasteAcceptation: null,
     receivedAt: null,
-    signedBy: null,
-    signedAt: null,
-    ...props,
+    signature: null,
+    ...props
   };
 }
 
-export function createBsdasriReceptionInputMock(props: Partial<BsdasriReceptionInput>): BsdasriReceptionInput {
+export function createBsdasriReceptionInputMock(
+  props: Partial<BsdasriReceptionInput>
+): BsdasriReceptionInput {
   return {
     wasteDetails: null,
     receivedAt: null,
-    ...props,
+    wasteAcceptation: null,
+    ...props
   };
 }
 
-export function createBsdasriRecipientMock(props: Partial<BsdasriRecipient>): BsdasriRecipient {
+export function createBsdasriRecipientMock(
+  props: Partial<BsdasriRecipient>
+): BsdasriRecipient {
   return {
     __typename: "BsdasriRecipient",
     company: null,
     customInfo: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriRecipientInputMock(props: Partial<BsdasriRecipientInput>): BsdasriRecipientInput {
+export function createBsdasriRecipientInputMock(
+  props: Partial<BsdasriRecipientInput>
+): BsdasriRecipientInput {
   return {
     company: null,
     customInfo: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriRecipientWasteDetailInputMock(props: Partial<BsdasriRecipientWasteDetailInput>): BsdasriRecipientWasteDetailInput {
+export function createBsdasriRecipientWasteDetailInputMock(
+  props: Partial<BsdasriRecipientWasteDetailInput>
+): BsdasriRecipientWasteDetailInput {
   return {
     quantity: null,
     volume: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriSignatureInputMock(props: Partial<BsdasriSignatureInput>): BsdasriSignatureInput {
+export function createBsdasriRecipientWhereMock(
+  props: Partial<BsdasriRecipientWhere>
+): BsdasriRecipientWhere {
+  return {
+    company: null,
+    signature: null,
+    ...props
+  };
+}
+
+export function createBsdasriSignatureMock(
+  props: Partial<BsdasriSignature>
+): BsdasriSignature {
+  return {
+    __typename: "BsdasriSignature",
+    date: null,
+    author: null,
+    ...props
+  };
+}
+
+export function createBsdasriSignatureInputMock(
+  props: Partial<BsdasriSignatureInput>
+): BsdasriSignatureInput {
   return {
     type: BsdasriSignatureType.Emission,
-    signedBy: "",
+    author: "",
     securityCode: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriTransportMock(props: Partial<BsdasriTransport>): BsdasriTransport {
+export function createBsdasriSignatureWhereMock(
+  props: Partial<BsdasriSignatureWhere>
+): BsdasriSignatureWhere {
+  return {
+    date: createDateFilterMock({}),
+    ...props
+  };
+}
+
+export function createBsdasriTransportMock(
+  props: Partial<BsdasriTransport>
+): BsdasriTransport {
   return {
     __typename: "BsdasriTransport",
     wasteDetails: null,
     wasteAcceptation: null,
     handedOverAt: null,
     takenOverAt: null,
-    signedBy: null,
-    signedAt: null,
-    ...props,
+    signature: null,
+    ...props
   };
 }
 
-export function createBsdasriTransporterMock(props: Partial<BsdasriTransporter>): BsdasriTransporter {
+export function createBsdasriTransporterMock(
+  props: Partial<BsdasriTransporter>
+): BsdasriTransporter {
   return {
     __typename: "BsdasriTransporter",
     company: null,
@@ -2947,32 +3096,48 @@ export function createBsdasriTransporterMock(props: Partial<BsdasriTransporter>)
     receiptDepartment: null,
     receiptValidityLimit: null,
     customInfo: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriTransporterInputMock(props: Partial<BsdasriTransporterInput>): BsdasriTransporterInput {
+export function createBsdasriTransporterInputMock(
+  props: Partial<BsdasriTransporterInput>
+): BsdasriTransporterInput {
   return {
     company: null,
     receipt: null,
     receiptDepartment: null,
     receiptValidityLimit: null,
     customInfo: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriTransportInputMock(props: Partial<BsdasriTransportInput>): BsdasriTransportInput {
+export function createBsdasriTransporterWhereMock(
+  props: Partial<BsdasriTransporterWhere>
+): BsdasriTransporterWhere {
+  return {
+    company: null,
+    signature: null,
+    ...props
+  };
+}
+
+export function createBsdasriTransportInputMock(
+  props: Partial<BsdasriTransportInput>
+): BsdasriTransportInput {
   return {
     wasteDetails: null,
     takenOverAt: null,
     handedOverAt: null,
     wasteAcceptation: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriUpdateInputMock(props: Partial<BsdasriUpdateInput>): BsdasriUpdateInput {
+export function createBsdasriUpdateInputMock(
+  props: Partial<BsdasriUpdateInput>
+): BsdasriUpdateInput {
   return {
     id: "",
     customId: null,
@@ -2984,40 +3149,48 @@ export function createBsdasriUpdateInputMock(props: Partial<BsdasriUpdateInput>)
     reception: null,
     operation: null,
     regroupedBsdasris: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriWasteAcceptationMock(props: Partial<BsdasriWasteAcceptation>): BsdasriWasteAcceptation {
+export function createBsdasriWasteAcceptationMock(
+  props: Partial<BsdasriWasteAcceptation>
+): BsdasriWasteAcceptation {
   return {
     __typename: "BsdasriWasteAcceptation",
     status: null,
     refusalReason: null,
     refusedQuantity: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriWasteAcceptationInputMock(props: Partial<BsdasriWasteAcceptationInput>): BsdasriWasteAcceptationInput {
+export function createBsdasriWasteAcceptationInputMock(
+  props: Partial<BsdasriWasteAcceptationInput>
+): BsdasriWasteAcceptationInput {
   return {
     status: null,
     refusalReason: null,
     refusedQuantity: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriWasteDetailInputMock(props: Partial<BsdasriWasteDetailInput>): BsdasriWasteDetailInput {
+export function createBsdasriWasteDetailInputMock(
+  props: Partial<BsdasriWasteDetailInput>
+): BsdasriWasteDetailInput {
   return {
     quantity: null,
     quantityType: null,
     packagingInfos: null,
     onuCode: null,
-    ...props,
+    ...props
   };
 }
 
-export function createBsdasriWasteDetailsMock(props: Partial<BsdasriWasteDetails>): BsdasriWasteDetails {
+export function createBsdasriWasteDetailsMock(
+  props: Partial<BsdasriWasteDetails>
+): BsdasriWasteDetails {
   return {
     __typename: "BsdasriWasteDetails",
     quantity: null,
@@ -3025,11 +3198,31 @@ export function createBsdasriWasteDetailsMock(props: Partial<BsdasriWasteDetails
     volume: null,
     packagingInfos: null,
     onuCode: null,
-    ...props,
+    ...props
   };
 }
 
-export function createCompanyFavoriteMock(props: Partial<CompanyFavorite>): CompanyFavorite {
+export function createBsdasriWhereMock(
+  props: Partial<BsdasriWhere>
+): BsdasriWhere {
+  return {
+    isDraft: null,
+    status: null,
+    createdAt: null,
+    updatedAt: null,
+    emitter: null,
+    transporter: null,
+    recipient: null,
+    _and: null,
+    _or: null,
+    _not: null,
+    ...props
+  };
+}
+
+export function createCompanyFavoriteMock(
+  props: Partial<CompanyFavorite>
+): CompanyFavorite {
   return {
     __typename: "CompanyFavorite",
     name: null,
@@ -3040,11 +3233,13 @@ export function createCompanyFavoriteMock(props: Partial<CompanyFavorite>): Comp
     mail: null,
     transporterReceipt: null,
     traderReceipt: null,
-    ...props,
+    ...props
   };
 }
 
-export function createCompanyInputMock(props: Partial<CompanyInput>): CompanyInput {
+export function createCompanyInputMock(
+  props: Partial<CompanyInput>
+): CompanyInput {
   return {
     siret: null,
     name: null,
@@ -3052,11 +3247,13 @@ export function createCompanyInputMock(props: Partial<CompanyInput>): CompanyInp
     contact: null,
     mail: null,
     phone: null,
-    ...props,
+    ...props
   };
 }
 
-export function createCompanyMemberMock(props: Partial<CompanyMember>): CompanyMember {
+export function createCompanyMemberMock(
+  props: Partial<CompanyMember>
+): CompanyMember {
   return {
     __typename: "CompanyMember",
     id: "",
@@ -3066,11 +3263,13 @@ export function createCompanyMemberMock(props: Partial<CompanyMember>): CompanyM
     isActive: null,
     isPendingInvitation: null,
     isMe: null,
-    ...props,
+    ...props
   };
 }
 
-export function createCompanyPrivateMock(props: Partial<CompanyPrivate>): CompanyPrivate {
+export function createCompanyPrivateMock(
+  props: Partial<CompanyPrivate>
+): CompanyPrivate {
   return {
     __typename: "CompanyPrivate",
     id: "",
@@ -3092,11 +3291,13 @@ export function createCompanyPrivateMock(props: Partial<CompanyPrivate>): Compan
     transporterReceipt: null,
     traderReceipt: null,
     ecoOrganismeAgreements: [],
-    ...props,
+    ...props
   };
 }
 
-export function createCompanyPublicMock(props: Partial<CompanyPublic>): CompanyPublic {
+export function createCompanyPublicMock(
+  props: Partial<CompanyPublic>
+): CompanyPublic {
   return {
     __typename: "CompanyPublic",
     contactEmail: null,
@@ -3110,14 +3311,17 @@ export function createCompanyPublicMock(props: Partial<CompanyPublic>): CompanyP
     libelleNaf: null,
     installation: null,
     isRegistered: null,
+    companyTypes: [],
     transporterReceipt: null,
     traderReceipt: null,
     ecoOrganismeAgreements: [],
-    ...props,
+    ...props
   };
 }
 
-export function createCompanySearchResultMock(props: Partial<CompanySearchResult>): CompanySearchResult {
+export function createCompanySearchResultMock(
+  props: Partial<CompanySearchResult>
+): CompanySearchResult {
   return {
     __typename: "CompanySearchResult",
     siret: null,
@@ -3125,26 +3329,29 @@ export function createCompanySearchResultMock(props: Partial<CompanySearchResult
     address: null,
     codeCommune: null,
     name: null,
-    companyTypes: null,
     naf: null,
     libelleNaf: null,
     installation: null,
     transporterReceipt: null,
     traderReceipt: null,
-    ...props,
+    ...props
   };
 }
 
-export function createCompanyStatMock(props: Partial<CompanyStat>): CompanyStat {
+export function createCompanyStatMock(
+  props: Partial<CompanyStat>
+): CompanyStat {
   return {
     __typename: "CompanyStat",
     company: null,
     stats: [],
-    ...props,
+    ...props
   };
 }
 
-export function createCreateFormInputMock(props: Partial<CreateFormInput>): CreateFormInput {
+export function createCreateFormInputMock(
+  props: Partial<CreateFormInput>
+): CreateFormInput {
   return {
     customId: null,
     emitter: null,
@@ -3155,89 +3362,118 @@ export function createCreateFormInputMock(props: Partial<CreateFormInput>): Crea
     appendix2Forms: null,
     ecoOrganisme: null,
     temporaryStorageDetail: null,
-    ...props,
+    ...props
   };
 }
 
-export function createCreateTraderReceiptInputMock(props: Partial<CreateTraderReceiptInput>): CreateTraderReceiptInput {
+export function createCreateTraderReceiptInputMock(
+  props: Partial<CreateTraderReceiptInput>
+): CreateTraderReceiptInput {
   return {
     receiptNumber: "",
     validityLimit: new Date().toISOString(),
     department: "",
-    ...props,
+    ...props
   };
 }
 
-export function createCreateTransporterReceiptInputMock(props: Partial<CreateTransporterReceiptInput>): CreateTransporterReceiptInput {
+export function createCreateTransporterReceiptInputMock(
+  props: Partial<CreateTransporterReceiptInput>
+): CreateTransporterReceiptInput {
   return {
     receiptNumber: "",
     validityLimit: new Date().toISOString(),
     department: "",
-    ...props,
+    ...props
   };
 }
 
-export function createDeclarationMock(props: Partial<Declaration>): Declaration {
+export function createDateFilterMock(props: Partial<DateFilter>): DateFilter {
+  return {
+    _gte: null,
+    _gt: null,
+    _lte: null,
+    _lt: null,
+    _eq: null,
+    ...props
+  };
+}
+
+export function createDeclarationMock(
+  props: Partial<Declaration>
+): Declaration {
   return {
     __typename: "Declaration",
     annee: null,
     codeDechet: null,
     libDechet: null,
     gerepType: null,
-    ...props,
+    ...props
   };
 }
 
-export function createDeleteTraderReceiptInputMock(props: Partial<DeleteTraderReceiptInput>): DeleteTraderReceiptInput {
+export function createDeleteTraderReceiptInputMock(
+  props: Partial<DeleteTraderReceiptInput>
+): DeleteTraderReceiptInput {
   return {
     id: "",
-    ...props,
+    ...props
   };
 }
 
-export function createDeleteTransporterReceiptInputMock(props: Partial<DeleteTransporterReceiptInput>): DeleteTransporterReceiptInput {
+export function createDeleteTransporterReceiptInputMock(
+  props: Partial<DeleteTransporterReceiptInput>
+): DeleteTransporterReceiptInput {
   return {
     id: "",
-    ...props,
+    ...props
   };
 }
 
-export function createDestinationMock(props: Partial<Destination>): Destination {
+export function createDestinationMock(
+  props: Partial<Destination>
+): Destination {
   return {
     __typename: "Destination",
     cap: null,
     processingOperation: null,
     company: null,
     isFilledByEmitter: null,
-    ...props,
+    ...props
   };
 }
 
-export function createDestinationInputMock(props: Partial<DestinationInput>): DestinationInput {
+export function createDestinationInputMock(
+  props: Partial<DestinationInput>
+): DestinationInput {
   return {
     company: null,
     cap: null,
     processingOperation: null,
-    ...props,
+    ...props
   };
 }
 
-export function createEcoOrganismeMock(props: Partial<EcoOrganisme>): EcoOrganisme {
+export function createEcoOrganismeMock(
+  props: Partial<EcoOrganisme>
+): EcoOrganisme {
   return {
     __typename: "EcoOrganisme",
     id: "",
     name: "",
     siret: "",
     address: "",
-    ...props,
+    ...props
   };
 }
 
-export function createEcoOrganismeInputMock(props: Partial<EcoOrganismeInput>): EcoOrganismeInput {
+export function createEcoOrganismeInputMock(
+  props: Partial<EcoOrganismeInput>
+): EcoOrganismeInput {
   return {
     name: "",
     siret: "",
-    ...props,
+    ...props
   };
 }
 
@@ -3248,26 +3484,30 @@ export function createEmitterMock(props: Partial<Emitter>): Emitter {
     workSite: null,
     pickupSite: null,
     company: null,
-    ...props,
+    ...props
   };
 }
 
-export function createEmitterInputMock(props: Partial<EmitterInput>): EmitterInput {
+export function createEmitterInputMock(
+  props: Partial<EmitterInput>
+): EmitterInput {
   return {
     type: null,
     workSite: null,
     pickupSite: null,
     company: null,
-    ...props,
+    ...props
   };
 }
 
-export function createFileDownloadMock(props: Partial<FileDownload>): FileDownload {
+export function createFileDownloadMock(
+  props: Partial<FileDownload>
+): FileDownload {
   return {
     __typename: "FileDownload",
     token: null,
     downloadLink: null,
-    ...props,
+    ...props
   };
 }
 
@@ -3309,11 +3549,13 @@ export function createFormMock(props: Partial<Form>): Form {
     transportSegments: null,
     currentTransporterSiret: null,
     nextTransporterSiret: null,
-    ...props,
+    ...props
   };
 }
 
-export function createFormCompanyMock(props: Partial<FormCompany>): FormCompany {
+export function createFormCompanyMock(
+  props: Partial<FormCompany>
+): FormCompany {
   return {
     __typename: "FormCompany",
     name: null,
@@ -3323,16 +3565,18 @@ export function createFormCompanyMock(props: Partial<FormCompany>): FormCompany 
     contact: null,
     phone: null,
     mail: null,
-    ...props,
+    ...props
   };
 }
 
-export function createFormEcoOrganismeMock(props: Partial<FormEcoOrganisme>): FormEcoOrganisme {
+export function createFormEcoOrganismeMock(
+  props: Partial<FormEcoOrganisme>
+): FormEcoOrganisme {
   return {
     __typename: "FormEcoOrganisme",
     name: "",
     siret: "",
-    ...props,
+    ...props
   };
 }
 
@@ -3348,11 +3592,13 @@ export function createFormInputMock(props: Partial<FormInput>): FormInput {
     appendix2Forms: null,
     ecoOrganisme: null,
     temporaryStorageDetail: null,
-    ...props,
+    ...props
   };
 }
 
-export function createFormsLifeCycleDataMock(props: Partial<FormsLifeCycleData>): FormsLifeCycleData {
+export function createFormsLifeCycleDataMock(
+  props: Partial<FormsLifeCycleData>
+): FormsLifeCycleData {
   return {
     __typename: "formsLifeCycleData",
     statusLogs: [],
@@ -3361,22 +3607,26 @@ export function createFormsLifeCycleDataMock(props: Partial<FormsLifeCycleData>)
     startCursor: null,
     endCursor: null,
     count: null,
-    ...props,
+    ...props
   };
 }
 
-export function createFormSubscriptionMock(props: Partial<FormSubscription>): FormSubscription {
+export function createFormSubscriptionMock(
+  props: Partial<FormSubscription>
+): FormSubscription {
   return {
     __typename: "FormSubscription",
     mutation: null,
     node: null,
     updatedFields: null,
     previousValues: null,
-    ...props,
+    ...props
   };
 }
 
-export function createImportPaperFormInputMock(props: Partial<ImportPaperFormInput>): ImportPaperFormInput {
+export function createImportPaperFormInputMock(
+  props: Partial<ImportPaperFormInput>
+): ImportPaperFormInput {
   return {
     id: null,
     customId: null,
@@ -3389,22 +3639,26 @@ export function createImportPaperFormInputMock(props: Partial<ImportPaperFormInp
     signingInfo: createSignatureFormInputMock({}),
     receivedInfo: createReceivedFormInputMock({}),
     processedInfo: createProcessedFormInputMock({}),
-    ...props,
+    ...props
   };
 }
 
-export function createInstallationMock(props: Partial<Installation>): Installation {
+export function createInstallationMock(
+  props: Partial<Installation>
+): Installation {
   return {
     __typename: "Installation",
     codeS3ic: null,
     urlFiche: null,
     rubriques: null,
     declarations: null,
-    ...props,
+    ...props
   };
 }
 
-export function createInternationalCompanyInputMock(props: Partial<InternationalCompanyInput>): InternationalCompanyInput {
+export function createInternationalCompanyInputMock(
+  props: Partial<InternationalCompanyInput>
+): InternationalCompanyInput {
   return {
     siret: null,
     name: null,
@@ -3413,7 +3667,7 @@ export function createInternationalCompanyInputMock(props: Partial<International
     contact: null,
     mail: null,
     phone: null,
-    ...props,
+    ...props
   };
 }
 
@@ -3426,11 +3680,13 @@ export function createInvitationMock(props: Partial<Invitation>): Invitation {
     hash: "",
     role: UserRole.Member,
     acceptedAt: null,
-    ...props,
+    ...props
   };
 }
 
-export function createMembershipRequestMock(props: Partial<MembershipRequest>): MembershipRequest {
+export function createMembershipRequestMock(
+  props: Partial<MembershipRequest>
+): MembershipRequest {
   return {
     __typename: "MembershipRequest",
     id: "",
@@ -3439,70 +3695,96 @@ export function createMembershipRequestMock(props: Partial<MembershipRequest>): 
     name: "",
     status: MembershipRequestStatus.Pending,
     sentTo: [],
-    ...props,
+    ...props
   };
 }
 
-export function createNextDestinationMock(props: Partial<NextDestination>): NextDestination {
+export function createNextDestinationMock(
+  props: Partial<NextDestination>
+): NextDestination {
   return {
     __typename: "NextDestination",
     processingOperation: null,
     company: null,
-    ...props,
+    ...props
   };
 }
 
-export function createNextDestinationInputMock(props: Partial<NextDestinationInput>): NextDestinationInput {
+export function createNextDestinationInputMock(
+  props: Partial<NextDestinationInput>
+): NextDestinationInput {
   return {
     processingOperation: "",
     company: createInternationalCompanyInputMock({}),
-    ...props,
+    ...props
   };
 }
 
-export function createNextSegmentInfoInputMock(props: Partial<NextSegmentInfoInput>): NextSegmentInfoInput {
+export function createNextSegmentInfoInputMock(
+  props: Partial<NextSegmentInfoInput>
+): NextSegmentInfoInput {
   return {
     transporter: null,
     mode: TransportMode.Road,
-    ...props,
+    ...props
   };
 }
 
-export function createPackagingInfoMock(props: Partial<PackagingInfo>): PackagingInfo {
+export function createPackagingInfoMock(
+  props: Partial<PackagingInfo>
+): PackagingInfo {
   return {
     __typename: "PackagingInfo",
     type: Packagings.Fut,
     other: null,
     quantity: 0,
-    ...props,
+    ...props
   };
 }
 
-export function createPackagingInfoInputMock(props: Partial<PackagingInfoInput>): PackagingInfoInput {
+export function createPackagingInfoInputMock(
+  props: Partial<PackagingInfoInput>
+): PackagingInfoInput {
   return {
     type: Packagings.Fut,
     other: null,
     quantity: 0,
-    ...props,
+    ...props
   };
 }
 
-export function createPrivateCompanyInputMock(props: Partial<PrivateCompanyInput>): PrivateCompanyInput {
+export function createPageInfoMock(props: Partial<PageInfo>): PageInfo {
+  return {
+    __typename: "PageInfo",
+    startCursor: "",
+    endCursor: "",
+    hasNextPage: false,
+    hasPreviousPage: false,
+    ...props
+  };
+}
+
+export function createPrivateCompanyInputMock(
+  props: Partial<PrivateCompanyInput>
+): PrivateCompanyInput {
   return {
     siret: "",
     gerepId: null,
     companyTypes: [],
     codeNaf: null,
     companyName: null,
-    documentKeys: null,
+    givenName: null,
+    address: null,
     transporterReceiptId: null,
     traderReceiptId: null,
     ecoOrganismeAgreements: null,
-    ...props,
+    ...props
   };
 }
 
-export function createProcessedFormInputMock(props: Partial<ProcessedFormInput>): ProcessedFormInput {
+export function createProcessedFormInputMock(
+  props: Partial<ProcessedFormInput>
+): ProcessedFormInput {
   return {
     processingOperationDone: "",
     processingOperationDescription: null,
@@ -3510,11 +3792,13 @@ export function createProcessedFormInputMock(props: Partial<ProcessedFormInput>)
     processedAt: new Date().toISOString(),
     nextDestination: null,
     noTraceability: null,
-    ...props,
+    ...props
   };
 }
 
-export function createReceivedFormInputMock(props: Partial<ReceivedFormInput>): ReceivedFormInput {
+export function createReceivedFormInputMock(
+  props: Partial<ReceivedFormInput>
+): ReceivedFormInput {
   return {
     receivedBy: "",
     receivedAt: new Date().toISOString(),
@@ -3522,7 +3806,7 @@ export function createReceivedFormInputMock(props: Partial<ReceivedFormInput>): 
     wasteRefusalReason: null,
     signedAt: null,
     quantityReceived: null,
-    ...props,
+    ...props
   };
 }
 
@@ -3533,44 +3817,52 @@ export function createRecipientMock(props: Partial<Recipient>): Recipient {
     processingOperation: null,
     company: null,
     isTempStorage: null,
-    ...props,
+    ...props
   };
 }
 
-export function createRecipientInputMock(props: Partial<RecipientInput>): RecipientInput {
+export function createRecipientInputMock(
+  props: Partial<RecipientInput>
+): RecipientInput {
   return {
     cap: null,
     processingOperation: null,
     company: null,
     isTempStorage: null,
-    ...props,
+    ...props
   };
 }
 
-export function createRegroupedBsdasriInputMock(props: Partial<RegroupedBsdasriInput>): RegroupedBsdasriInput {
+export function createRegroupedBsdasriInputMock(
+  props: Partial<RegroupedBsdasriInput>
+): RegroupedBsdasriInput {
   return {
     id: null,
-    ...props,
+    ...props
   };
 }
 
-export function createResealedFormInputMock(props: Partial<ResealedFormInput>): ResealedFormInput {
+export function createResealedFormInputMock(
+  props: Partial<ResealedFormInput>
+): ResealedFormInput {
   return {
     destination: null,
     wasteDetails: null,
     transporter: null,
-    ...props,
+    ...props
   };
 }
 
-export function createResentFormInputMock(props: Partial<ResentFormInput>): ResentFormInput {
+export function createResentFormInputMock(
+  props: Partial<ResentFormInput>
+): ResentFormInput {
   return {
     destination: null,
     wasteDetails: null,
     transporter: null,
     signedBy: "",
     signedAt: new Date().toISOString(),
-    ...props,
+    ...props
   };
 }
 
@@ -3586,33 +3878,39 @@ export function createRubriqueMock(props: Partial<Rubrique>): Rubrique {
     volume: null,
     unite: null,
     wasteType: null,
-    ...props,
+    ...props
   };
 }
 
-export function createSentFormInputMock(props: Partial<SentFormInput>): SentFormInput {
+export function createSentFormInputMock(
+  props: Partial<SentFormInput>
+): SentFormInput {
   return {
     sentAt: new Date().toISOString(),
     sentBy: "",
-    ...props,
+    ...props
   };
 }
 
-export function createSignatureFormInputMock(props: Partial<SignatureFormInput>): SignatureFormInput {
+export function createSignatureFormInputMock(
+  props: Partial<SignatureFormInput>
+): SignatureFormInput {
   return {
     sentAt: new Date().toISOString(),
     sentBy: "",
-    ...props,
+    ...props
   };
 }
 
-export function createSignupInputMock(props: Partial<SignupInput>): SignupInput {
+export function createSignupInputMock(
+  props: Partial<SignupInput>
+): SignupInput {
   return {
     email: "",
     password: "",
     name: "",
     phone: null,
-    ...props,
+    ...props
   };
 }
 
@@ -3622,11 +3920,13 @@ export function createStatMock(props: Partial<Stat>): Stat {
     wasteCode: "",
     incoming: 0,
     outgoing: 0,
-    ...props,
+    ...props
   };
 }
 
-export function createStateSummaryMock(props: Partial<StateSummary>): StateSummary {
+export function createStateSummaryMock(
+  props: Partial<StateSummary>
+): StateSummary {
   return {
     __typename: "StateSummary",
     quantity: null,
@@ -3639,7 +3939,7 @@ export function createStateSummaryMock(props: Partial<StateSummary>): StateSumma
     recipient: null,
     emitter: null,
     lastActionOn: null,
-    ...props,
+    ...props
   };
 }
 
@@ -3652,45 +3952,55 @@ export function createStatusLogMock(props: Partial<StatusLog>): StatusLog {
     updatedFields: null,
     form: null,
     user: null,
-    ...props,
+    ...props
   };
 }
 
-export function createStatusLogFormMock(props: Partial<StatusLogForm>): StatusLogForm {
+export function createStatusLogFormMock(
+  props: Partial<StatusLogForm>
+): StatusLogForm {
   return {
     __typename: "StatusLogForm",
     id: null,
     readableId: null,
-    ...props,
+    ...props
   };
 }
 
-export function createStatusLogUserMock(props: Partial<StatusLogUser>): StatusLogUser {
+export function createStatusLogUserMock(
+  props: Partial<StatusLogUser>
+): StatusLogUser {
   return {
     __typename: "StatusLogUser",
     id: null,
     email: null,
-    ...props,
+    ...props
   };
 }
 
-export function createSubscriptionMock(props: Partial<Subscription>): Subscription {
+export function createSubscriptionMock(
+  props: Partial<Subscription>
+): Subscription {
   return {
     __typename: "Subscription",
     forms: null,
-    ...props,
+    ...props
   };
 }
 
-export function createTakeOverInputMock(props: Partial<TakeOverInput>): TakeOverInput {
+export function createTakeOverInputMock(
+  props: Partial<TakeOverInput>
+): TakeOverInput {
   return {
     takenOverAt: new Date().toISOString(),
     takenOverBy: "",
-    ...props,
+    ...props
   };
 }
 
-export function createTemporaryStorageDetailMock(props: Partial<TemporaryStorageDetail>): TemporaryStorageDetail {
+export function createTemporaryStorageDetailMock(
+  props: Partial<TemporaryStorageDetail>
+): TemporaryStorageDetail {
   return {
     __typename: "TemporaryStorageDetail",
     temporaryStorer: null,
@@ -3699,18 +4009,22 @@ export function createTemporaryStorageDetailMock(props: Partial<TemporaryStorage
     transporter: null,
     signedBy: null,
     signedAt: null,
-    ...props,
+    ...props
   };
 }
 
-export function createTemporaryStorageDetailInputMock(props: Partial<TemporaryStorageDetailInput>): TemporaryStorageDetailInput {
+export function createTemporaryStorageDetailInputMock(
+  props: Partial<TemporaryStorageDetailInput>
+): TemporaryStorageDetailInput {
   return {
     destination: null,
-    ...props,
+    ...props
   };
 }
 
-export function createTemporaryStorerMock(props: Partial<TemporaryStorer>): TemporaryStorer {
+export function createTemporaryStorerMock(
+  props: Partial<TemporaryStorer>
+): TemporaryStorer {
   return {
     __typename: "TemporaryStorer",
     quantityType: null,
@@ -3719,11 +4033,13 @@ export function createTemporaryStorerMock(props: Partial<TemporaryStorer>): Temp
     wasteRefusalReason: null,
     receivedAt: null,
     receivedBy: null,
-    ...props,
+    ...props
   };
 }
 
-export function createTempStoredFormInputMock(props: Partial<TempStoredFormInput>): TempStoredFormInput {
+export function createTempStoredFormInputMock(
+  props: Partial<TempStoredFormInput>
+): TempStoredFormInput {
   return {
     wasteAcceptationStatus: null,
     wasteRefusalReason: null,
@@ -3732,11 +4048,13 @@ export function createTempStoredFormInputMock(props: Partial<TempStoredFormInput
     signedAt: null,
     quantityReceived: 0,
     quantityType: QuantityType.Real,
-    ...props,
+    ...props
   };
 }
 
-export function createTempStorerAcceptedFormInputMock(props: Partial<TempStorerAcceptedFormInput>): TempStorerAcceptedFormInput {
+export function createTempStorerAcceptedFormInputMock(
+  props: Partial<TempStorerAcceptedFormInput>
+): TempStorerAcceptedFormInput {
   return {
     signedAt: new Date().toISOString(),
     signedBy: "",
@@ -3744,7 +4062,7 @@ export function createTempStorerAcceptedFormInputMock(props: Partial<TempStorerA
     wasteRefusalReason: null,
     quantityReceived: 0,
     quantityType: QuantityType.Real,
-    ...props,
+    ...props
   };
 }
 
@@ -3755,32 +4073,38 @@ export function createTraderMock(props: Partial<Trader>): Trader {
     receipt: null,
     department: null,
     validityLimit: null,
-    ...props,
+    ...props
   };
 }
 
-export function createTraderInputMock(props: Partial<TraderInput>): TraderInput {
+export function createTraderInputMock(
+  props: Partial<TraderInput>
+): TraderInput {
   return {
     receipt: null,
     department: null,
     validityLimit: null,
     company: null,
-    ...props,
+    ...props
   };
 }
 
-export function createTraderReceiptMock(props: Partial<TraderReceipt>): TraderReceipt {
+export function createTraderReceiptMock(
+  props: Partial<TraderReceipt>
+): TraderReceipt {
   return {
     __typename: "TraderReceipt",
     id: "",
     receiptNumber: "",
     validityLimit: new Date().toISOString(),
     department: "",
-    ...props,
+    ...props
   };
 }
 
-export function createTransporterMock(props: Partial<Transporter>): Transporter {
+export function createTransporterMock(
+  props: Partial<Transporter>
+): Transporter {
   return {
     __typename: "Transporter",
     company: null,
@@ -3790,11 +4114,13 @@ export function createTransporterMock(props: Partial<Transporter>): Transporter 
     validityLimit: null,
     numberPlate: null,
     customInfo: null,
-    ...props,
+    ...props
   };
 }
 
-export function createTransporterInputMock(props: Partial<TransporterInput>): TransporterInput {
+export function createTransporterInputMock(
+  props: Partial<TransporterInput>
+): TransporterInput {
   return {
     company: null,
     isExemptedOfReceipt: null,
@@ -3803,22 +4129,26 @@ export function createTransporterInputMock(props: Partial<TransporterInput>): Tr
     validityLimit: null,
     numberPlate: null,
     customInfo: null,
-    ...props,
+    ...props
   };
 }
 
-export function createTransporterReceiptMock(props: Partial<TransporterReceipt>): TransporterReceipt {
+export function createTransporterReceiptMock(
+  props: Partial<TransporterReceipt>
+): TransporterReceipt {
   return {
     __typename: "TransporterReceipt",
     id: "",
     receiptNumber: "",
     validityLimit: new Date().toISOString(),
     department: "",
-    ...props,
+    ...props
   };
 }
 
-export function createTransporterSignatureFormInputMock(props: Partial<TransporterSignatureFormInput>): TransporterSignatureFormInput {
+export function createTransporterSignatureFormInputMock(
+  props: Partial<TransporterSignatureFormInput>
+): TransporterSignatureFormInput {
   return {
     sentAt: new Date().toISOString(),
     signedByTransporter: false,
@@ -3830,11 +4160,13 @@ export function createTransporterSignatureFormInputMock(props: Partial<Transport
     packagings: null,
     quantity: 0,
     onuCode: null,
-    ...props,
+    ...props
   };
 }
 
-export function createTransportSegmentMock(props: Partial<TransportSegment>): TransportSegment {
+export function createTransportSegmentMock(
+  props: Partial<TransportSegment>
+): TransportSegment {
   return {
     __typename: "TransportSegment",
     id: "",
@@ -3845,11 +4177,13 @@ export function createTransportSegmentMock(props: Partial<TransportSegment>): Tr
     takenOverBy: null,
     readyToTakeOver: null,
     segmentNumber: null,
-    ...props,
+    ...props
   };
 }
 
-export function createUpdateFormInputMock(props: Partial<UpdateFormInput>): UpdateFormInput {
+export function createUpdateFormInputMock(
+  props: Partial<UpdateFormInput>
+): UpdateFormInput {
   return {
     id: "",
     customId: null,
@@ -3861,27 +4195,31 @@ export function createUpdateFormInputMock(props: Partial<UpdateFormInput>): Upda
     appendix2Forms: null,
     ecoOrganisme: null,
     temporaryStorageDetail: null,
-    ...props,
+    ...props
   };
 }
 
-export function createUpdateTraderReceiptInputMock(props: Partial<UpdateTraderReceiptInput>): UpdateTraderReceiptInput {
+export function createUpdateTraderReceiptInputMock(
+  props: Partial<UpdateTraderReceiptInput>
+): UpdateTraderReceiptInput {
   return {
     id: "",
     receiptNumber: null,
     validityLimit: null,
     department: null,
-    ...props,
+    ...props
   };
 }
 
-export function createUpdateTransporterReceiptInputMock(props: Partial<UpdateTransporterReceiptInput>): UpdateTransporterReceiptInput {
+export function createUpdateTransporterReceiptInputMock(
+  props: Partial<UpdateTransporterReceiptInput>
+): UpdateTransporterReceiptInput {
   return {
     id: "",
     receiptNumber: null,
     validityLimit: null,
     department: null,
-    ...props,
+    ...props
   };
 }
 
@@ -3890,7 +4228,7 @@ export function createUploadLinkMock(props: Partial<UploadLink>): UploadLink {
     __typename: "UploadLink",
     signedUrl: null,
     key: null,
-    ...props,
+    ...props
   };
 }
 
@@ -3902,11 +4240,13 @@ export function createUserMock(props: Partial<User>): User {
     name: null,
     phone: null,
     companies: [],
-    ...props,
+    ...props
   };
 }
 
-export function createWasteDetailsMock(props: Partial<WasteDetails>): WasteDetails {
+export function createWasteDetailsMock(
+  props: Partial<WasteDetails>
+): WasteDetails {
   return {
     __typename: "WasteDetails",
     code: null,
@@ -3920,11 +4260,13 @@ export function createWasteDetailsMock(props: Partial<WasteDetails>): WasteDetai
     quantityType: null,
     consistence: null,
     pop: null,
-    ...props,
+    ...props
   };
 }
 
-export function createWasteDetailsInputMock(props: Partial<WasteDetailsInput>): WasteDetailsInput {
+export function createWasteDetailsInputMock(
+  props: Partial<WasteDetailsInput>
+): WasteDetailsInput {
   return {
     code: null,
     name: null,
@@ -3937,7 +4279,7 @@ export function createWasteDetailsInputMock(props: Partial<WasteDetailsInput>): 
     quantityType: null,
     consistence: null,
     pop: null,
-    ...props,
+    ...props
   };
 }
 
@@ -3949,17 +4291,19 @@ export function createWorkSiteMock(props: Partial<WorkSite>): WorkSite {
     city: null,
     postalCode: null,
     infos: null,
-    ...props,
+    ...props
   };
 }
 
-export function createWorkSiteInputMock(props: Partial<WorkSiteInput>): WorkSiteInput {
+export function createWorkSiteInputMock(
+  props: Partial<WorkSiteInput>
+): WorkSiteInput {
   return {
     address: null,
     city: null,
     infos: null,
     name: null,
     postalCode: null,
-    ...props,
+    ...props
   };
 }

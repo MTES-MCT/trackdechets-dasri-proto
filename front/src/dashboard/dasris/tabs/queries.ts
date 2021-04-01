@@ -23,7 +23,7 @@ export const DASRI_FOLLOW_TAB = gql`
   query DasrisGetFollow($siret: String) {
     bsdasris(
       siret: $siret
-      status: [SENT, RECEIVED, READY_FOR_TAKEOVER]
+      status: [SENT, RECEIVED, SIGNED_BY_PRODUCER]
       hasNextStep: false
     ) {
       ...FullDasri
