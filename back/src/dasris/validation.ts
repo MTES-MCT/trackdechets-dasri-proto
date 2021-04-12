@@ -9,14 +9,16 @@ import configureYup from "../common/yup/configureYup";
 
 import {
   BsdasriPackagings,
-  BsdasriPackagingInfo
+  BsdasriSignatureType
 } from "../generated/graphql/types";
 
 const wasteCodes = DASRI_WASTE_CODES.map(el => el.code);
 // set yup default error messages
 configureYup();
 
-export type FactorySchemaOf<Type> = () => yup.SchemaOf<Type>;
+export type FactorySchemaOf<Context, Type> = (
+  context: Context
+) => yup.SchemaOf<Type>;
 
 // *************************************************
 // BREAK DOWN DASRI TYPE INTO INDIVIDUAL FRAME TYPES
@@ -24,11 +26,11 @@ export type FactorySchemaOf<Type> = () => yup.SchemaOf<Type>;
 
 type Emitter = Pick<
   Prisma.BsdasriCreateInput,
-  // | "emitterWorkSiteName"
-  // | "emitterWorkSiteAddress"
-  // | "emitterWorkSiteCity"
-  // | "emitterWorkSitePostalCode"
-  // | "emitterWorkSiteInfos"
+  | "emitterWorkSiteName"
+  | "emitterWorkSiteAddress"
+  | "emitterWorkSiteCity"
+  | "emitterWorkSitePostalCode"
+  | "emitterWorkSiteInfos"
   | "emitterCompanyName"
   | "emitterCompanySiret"
   | "emitterCompanyAddress"
@@ -120,35 +122,62 @@ interface DasriValidationContext {
   operationSignature?: boolean;
 }
 
-export const emitterSchema: FactorySchemaOf<Emitter> = () =>
-  yup.object({
+export const emitterSchema: FactorySchemaOf<
+  BsdasriValidationContext,
+  Emitter
+> = context => {
+  return yup.object({
     emitterCompanyName: yup
       .string()
       .ensure()
-      .required(`Émetteur: ${MISSING_COMPANY_NAME}`),
+      .requiredIf(
+        context.emissionSignature,
+        `Émetteur--: ${MISSING_COMPANY_NAME}`
+      ),
     emitterCompanySiret: yup
       .string()
       .ensure()
-      .required(`Émetteur: ${MISSING_COMPANY_SIRET}`)
+      .requiredIf(
+        context.emissionSignature,
+        `Émetteur: ${MISSING_COMPANY_SIRET}`
+      )
       .length(14, `Émetteur: ${INVALID_SIRET_LENGTH}`),
     emitterCompanyAddress: yup
       .string()
       .ensure()
-      .required(`Émetteur: ${MISSING_COMPANY_ADDRESS}`),
+      .requiredIf(
+        context.emissionSignature,
+        `Émetteur: ${MISSING_COMPANY_ADDRESS}`
+      ),
     emitterCompanyContact: yup
       .string()
       .ensure()
-      .required(`Émetteur: ${MISSING_COMPANY_CONTACT}`),
+      .requiredIf(
+        context.emissionSignature,
+        `Émetteur: ${MISSING_COMPANY_CONTACT}`
+      ),
     emitterCompanyPhone: yup
       .string()
       .ensure()
-      .required(`Émetteur: ${MISSING_COMPANY_PHONE}`),
+      .requiredIf(
+        context.emissionSignature,
+        `Émetteur: ${MISSING_COMPANY_PHONE}`
+      ),
     emitterCompanyMail: yup
       .string()
       .email()
       .ensure()
-      .required(`Émetteur: ${MISSING_COMPANY_EMAIL}`)
+      .requiredIf(
+        context.emissionSignature,
+        `Émetteur: ${MISSING_COMPANY_EMAIL}`
+      ),
+    emitterWorkSiteName: yup.string().nullable(),
+    emitterWorkSiteAddress: yup.string().nullable(),
+    emitterWorkSiteCity: yup.string().nullable(),
+    emitterWorkSitePostalCode: yup.string().nullable(),
+    emitterWorkSiteInfos: yup.string().nullable()
   });
+};
 
 const packagingsTypes: BsdasriPackagings[] = [
   "BOITE_CARTON",
@@ -158,9 +187,7 @@ const packagingsTypes: BsdasriPackagings[] = [
   "GRV",
   "AUTRE"
 ];
-export const packagingInfo: FactorySchemaOf<
-  Omit<BsdasriPackagingInfo, "__typename">
-> = () =>
+export const packagingInfo = _ =>
   yup.object({
     type: yup
       .mixed<BsdasriPackagings>()
@@ -196,81 +223,131 @@ export const packagingInfo: FactorySchemaOf<
       .min(1, "Le volume de chaque type de contenant doit être supérieur à 0.")
   });
 
-export const emissionSchema: FactorySchemaOf<Emission> = () =>
+export const emissionSchema: FactorySchemaOf<
+  BsdasriValidationContext,
+  Emission
+> = context =>
   yup.object({
     wasteDetailsCode: yup
       .string()
-      .ensure()
-      .required("Le code déchet est obligatoire")
-      .oneOf(wasteCodes, INVALID_DASRI_WASTE_CODE),
+      .oneOf([...wasteCodes, "", null], INVALID_DASRI_WASTE_CODE)
+      .requiredIf(context.emissionSignature, "Le code déchet est obligatoire"),
     wasteDetailsOnuCode: yup
       .string()
       .ensure()
-      .required(`La mention ADR est obligatoire.`),
+      .requiredIf(context.emissionSignature, `La mention ADR est obligatoire.`),
     emitterWasteQuantity: yup
       .number()
-      .required("La quantité du déchet émis en tonnes est obligatoire")
+      .requiredIf(
+        context.emissionSignature,
+        "La quantité du déchet émis en tonnes est obligatoire"
+      )
       .min(0, "La quantité émise doit être supérieure à 0"),
     emitterWasteVolume: yup
       .number()
-      .required("La quantité du déchet émis en litres est obligatoire")
+      .requiredIf(
+        context.emissionSignature,
+        "La quantité du déchet émis en litres est obligatoire"
+      )
       .min(0, "La quantité émise doit être supérieure à 0"),
     emitterWasteQuantityType: yup
       .mixed<QuantityType>()
-      .required(
+      .requiredIf(
+        context.emissionSignature,
         "Le type de quantité (réelle ou estimée) émis doit être précisé"
       ),
     emitterWastePackagingsInfo: yup
       .array()
-      .required("Le détail du conditionnement émis est obligatoire")
-      .of(packagingInfo()),
+      .requiredIf(
+        context.emissionSignature,
+        "Le détail du conditionnement émis est obligatoire"
+      )
+      .of(packagingInfo(true)),
     handedOverToTransporterAt: yup.date().nullable()
   });
 
-export const transporterSchema: FactorySchemaOf<Transporter> = () =>
+export const transporterSchema: FactorySchemaOf<
+  BsdasriValidationContext,
+  Transporter
+> = context =>
   yup.object({
     transporterCompanyName: yup
       .string()
       .ensure()
-      .required(`Transporteur: ${MISSING_COMPANY_NAME}`),
+      .requiredIf(
+        context.transportSignature,
+        `Transporteur: ${MISSING_COMPANY_NAME}`
+      ),
     transporterCompanySiret: yup
       .string()
-      .ensure()
-      .required(`Transporteur: ${MISSING_COMPANY_SIRET}`)
+
+      .requiredIf(
+        context.transportSignature,
+        `Transporteur: ${MISSING_COMPANY_SIRET}`
+      )
       .length(14, `Transporteur: ${INVALID_SIRET_LENGTH}`),
     transporterCompanyAddress: yup
       .string()
       .ensure()
-      .required(`Transporteur: ${MISSING_COMPANY_ADDRESS}`),
+      .requiredIf(
+        context.transportSignature,
+        `Transporteur: ${MISSING_COMPANY_ADDRESS}`
+      ),
     transporterCompanyContact: yup
       .string()
       .ensure()
-      .required(`Transporteur: ${MISSING_COMPANY_CONTACT}`),
+      .requiredIf(
+        context.transportSignature,
+        `Transporteur: ${MISSING_COMPANY_CONTACT}`
+      ),
     transporterCompanyPhone: yup
       .string()
       .ensure()
-      .required(`Transporteur: ${MISSING_COMPANY_PHONE}`),
+      .requiredIf(
+        context.transportSignature,
+        `Transporteur: ${MISSING_COMPANY_PHONE}`
+      ),
     transporterCompanyMail: yup
       .string()
       .email()
       .ensure()
-      .required(`Transporteur: ${MISSING_COMPANY_EMAIL}`),
-    transporterIsExemptedOfReceipt: yup.boolean().notRequired().nullable(),
-    transporterReceipt: yup.string().ensure().required(),
+      .requiredIf(
+        context.transportSignature,
+        `Transporteur: ${MISSING_COMPANY_EMAIL}`
+      ),
+
+    transporterReceipt: yup
+      .string()
+      .ensure()
+      .requiredIf(
+        context.transportSignature,
+        "Le numéro de récépissé est obligatoire"
+      ),
 
     transporterReceiptDepartment: yup
       .string()
       .ensure()
-      .required("Le département du transporteur est obligatoire"),
+      .requiredIf(
+        context.transportSignature,
+        "Le département du transporteur est obligatoire"
+      ),
 
-    transporterReceiptValidityLimit: yup.date().nullable()
+    transporterReceiptValidityLimit: yup
+      .date()
+      .requiredIf(
+        context.transportSignature,
+        "La date de validité du récépissé est obligatoire"
+      )
   });
 
-export const transportSchema: FactorySchemaOf<Transport> = () =>
+export const transportSchema: FactorySchemaOf<
+  BsdasriValidationContext,
+  Transport
+> = context =>
   yup.object({
     transporterWasteAcceptationStatus: yup
       .mixed<WasteAcceptationStatus>()
-      .required(),
+      .requiredIf(context.transportSignature, ""),
 
     transporterWasteRefusedQuantity: yup
       .number()
@@ -304,63 +381,103 @@ export const transportSchema: FactorySchemaOf<Transport> = () =>
       ),
     transporterWasteQuantity: yup
       .number()
-      .required("La quantité du déchet transporté en tonnes est obligatoire")
+      .requiredIf(
+        context.transportSignature,
+        "La quantité du déchet transporté en tonnes est obligatoire"
+      )
       .min(0, "La quantité transportée doit être supérieure à 0"),
     transporterWasteVolume: yup
       .number()
-      .required("La quantité du déchet transporté en litres est obligatoire")
+      .requiredIf(
+        context.transportSignature,
+        "La quantité du déchet transporté en litres est obligatoire"
+      )
       .min(0, "La quantité transportée doit être supérieure à 0"),
     transporterWasteQuantityType: yup
       .mixed<QuantityType>()
-      .required(
+      .requiredIf(
+        context.transportSignature,
         "Le type de quantité (réelle ou estimée) transportée doit être précisé"
       ),
 
     transporterWastePackagingsInfo: yup
       .array()
-      .required("Le détail du conditionnement transporté est obligatoire")
-      .of(packagingInfo()),
-    transporterTakenOverAt: yup.date().required(),
-    handedOverToRecipientAt: yup.date().required()
+      .requiredIf(
+        context.transportSignature,
+        "Le détail du conditionnement transporté est obligatoire"
+      )
+      .of(packagingInfo(true)),
+    transporterTakenOverAt: yup
+      .date()
+      .requiredIf(
+        context.transportSignature,
+        "Le date de prise en charge du déchet est obligatoire"
+      ),
+    handedOverToRecipientAt: yup.date().nullable() // optional field
   });
 
-export const recipientSchema: FactorySchemaOf<Recipient> = () =>
+export const recipientSchema: FactorySchemaOf<
+  BsdasriValidationContext,
+  Recipient
+> = context =>
   yup.object().shape({
     recipientCompanyName: yup
       .string()
       .ensure()
-      .required(`Destinataire: ${MISSING_COMPANY_NAME}`),
+      .requiredIf(
+        context.receptionSignature,
+        `Destinataire: ${MISSING_COMPANY_NAME}`
+      ),
     recipientCompanySiret: yup
       .string()
-      .ensure()
-      .required(`Destinataire: ${MISSING_COMPANY_SIRET}`)
+
+      .requiredIf(
+        context.receptionSignature,
+        `Destinataire: ${MISSING_COMPANY_SIRET}`
+      )
       .length(14, `Destinataire: ${INVALID_SIRET_LENGTH}`),
     recipientCompanyAddress: yup
       .string()
       .ensure()
-      .required(`Destinataire: ${MISSING_COMPANY_ADDRESS}`),
+      .requiredIf(
+        context.receptionSignature,
+        `Destinataire: ${MISSING_COMPANY_ADDRESS}`
+      ),
     recipientCompanyContact: yup
       .string()
       .ensure()
-      .required(`Destinataire: ${MISSING_COMPANY_CONTACT}`),
+      .requiredIf(
+        context.receptionSignature,
+        `Destinataire: ${MISSING_COMPANY_CONTACT}`
+      ),
     recipientCompanyPhone: yup
       .string()
       .ensure()
-      .required(`Destinataire: ${MISSING_COMPANY_PHONE}`),
+      .requiredIf(
+        context.receptionSignature,
+        `Destinataire: ${MISSING_COMPANY_PHONE}`
+      ),
     recipientCompanyMail: yup
       .string()
       .email()
       .ensure()
-      .required(`Destinataire: ${MISSING_COMPANY_EMAIL}`)
+      .requiredIf(
+        context.receptionSignature,
+        `Destinataire: ${MISSING_COMPANY_EMAIL}`
+      )
   });
 
-// | "recipientWasteRefusalReason"
-
-export const receptionSchema: FactorySchemaOf<Reception> = () =>
+export const receptionSchema: FactorySchemaOf<
+  BsdasriValidationContext,
+  Reception
+> = context =>
   yup.object().shape({
     recipientWasteAcceptationStatus: yup
       .mixed<WasteAcceptationStatus>()
-      .required(),
+      .requiredIf(
+        context.receptionSignature,
+        "Vous devez préciser si le déchet est accepté"
+      ),
 
     recipientWasteRefusedQuantity: yup
       .number()
@@ -369,11 +486,14 @@ export const receptionSchema: FactorySchemaOf<Reception> = () =>
       .min(0, "La quantité doit être supérieure à 0"),
     recipientWasteQuantity: yup
       .number()
-      .required("La quantité du déchet en tonnes est obligatoire")
+      .requiredIf(
+        context.receptionSignature,
+        "La quantité du déchet en tonnes est obligatoire"
+      )
       .min(0, "La quantité doit être supérieure à 0"),
     recipientWasteRefusalReason: yup
       .string()
-      .when(" recipientWasteAcceptationStatus", (type, schema) =>
+      .when("recipientWasteAcceptationStatus", (type, schema) =>
         ["REFUSED", "PARTIALLY_REFUSED"].includes(type)
           ? schema.required("Vous devez saisir un motif de refus")
           : schema
@@ -387,89 +507,95 @@ export const receptionSchema: FactorySchemaOf<Reception> = () =>
       ),
     recipientWasteVolume: yup
       .number()
-      .required("La quantité du déchet émis en litres est obligatoire")
+      .requiredIf(
+        context.receptionSignature,
+        "La quantité du déchet émis en litres est obligatoire"
+      )
       .min(0, "La quantité émise doit être supérieure à 0"),
 
     recipientWastePackagingsInfo: yup
       .array()
-      .required("Le détail du conditionnement est obligatoire")
-      .of(packagingInfo()),
+      .requiredIf(
+        context.receptionSignature,
+        "Le détail du conditionnement est obligatoire"
+      )
+      .of(packagingInfo(true)),
     receivedAt: yup.date().nullable()
   });
 
-export const operationSchema: FactorySchemaOf<Operation> = () =>
+export const operationSchema: FactorySchemaOf<
+  BsdasriValidationContext,
+  Operation
+> = context =>
   yup.object({
     processingOperation: yup
       .string()
       .label("Opération d’élimination / valorisation")
-      .oneOf(DASRI_PROCESSING_OPERATIONS_CODES, INVALID_PROCESSING_OPERATION),
-    processedAt: yup.date().nullable()
+      .oneOf(
+        [...DASRI_PROCESSING_OPERATIONS_CODES, "", null],
+        INVALID_PROCESSING_OPERATION
+      )
+      .requiredIf(context.operationSignature),
+    processedAt: yup
+      .date()
+      .nullable()
+      .requiredIf(context.operationSignature, "")
   });
 
-export const dasriDraftSchema = yup.object().shape({
-  emitterCompanySiret: yup
-    .string()
-    .nullable()
-    .notRequired()
-    .matches(/^$|^\d{14}$/, {
-      message: `Émetteur: ${INVALID_SIRET_LENGTH}`
-    }),
-  emitterCompanyMail: yup.string().email().nullable().notRequired(),
-  recipientCompanySiret: yup
-    .string()
-    .notRequired()
-    .nullable()
-    .matches(/^$|^\d{14}$/, {
-      message: `Destinataire: ${INVALID_SIRET_LENGTH}`
-    }),
-  recipientCompanyMail: yup.string().notRequired().nullable().email(),
-  wasteDetailsCode: yup
-    .string()
-    .notRequired()
-    .nullable()
-    .oneOf([...wasteCodes, "", null], INVALID_DASRI_WASTE_CODE),
-  transporterCompanySiret: yup
-    .string()
-    .notRequired()
-    .nullable()
-    .matches(/^$|^\d{14}$/, {
-      message: `Transporteur: ${INVALID_SIRET_LENGTH}`
-    }),
-  transporterCompanyMail: yup.string().notRequired().nullable().email()
-});
+export type BsdasriValidationContext = {
+  emissionSignature?: boolean;
+  transportSignature?: boolean;
+  receptionSignature?: boolean;
+  operationSignature?: boolean;
+};
+export function validateBsdasri(
+  dasri: Partial<Prisma.BsdasriCreateInput>,
+  context: BsdasriValidationContext
+) {
+  return emitterSchema(context)
+    .concat(emissionSchema(context))
+    .concat(transporterSchema(context))
+    .concat(transportSchema(context))
+    .concat(recipientSchema(context))
+    .concat(receptionSchema(context))
+    .concat(operationSchema(context))
+    .validate(dasri, { abortEarly: false });
+}
 
-// validation schema for Bsdasri before it can be sealed
-export const okForSealedFormSchema = yup.object().shape({
-  emitterCompanySiret: yup.string().matches(/^\d{14}$/, {
-    message: `Émetteur: ${INVALID_SIRET_LENGTH}`
-  }),
-  emitterCompanyMail: yup.string().email().required(),
-  recipientCompanySiret: yup.string().matches(/^\d{14}$/, {
-    message: `Destinataire: ${INVALID_SIRET_LENGTH}`
-  }),
-  recipientCompanyMail: yup.string().email().required(),
-  wasteDetailsCode: yup
-    .string()
-    .oneOf([...wasteCodes, "", null], INVALID_DASRI_WASTE_CODE),
-  transporterCompanySiret: yup.string().matches(/^\d{14}$/, {
-    message: `Transporteur: ${INVALID_SIRET_LENGTH}`
-  }),
-  transporterCompanyMail: yup.string().email().required()
-});
+/**
+ * Filter a strings array according to a same length booleans array.
+ * select(["lorem", "ipsum", "dolor", "sit", "amet"], [false, true, false, false, true ])
+ * ["ipsum", "amet"]
+ */
+export const select = (arr: string[], truthTable: boolean[]): string[] =>
+  arr.filter((el, idx) => {
+    if (truthTable[idx]) return { el };
+  });
 
-export const okForEmissionSignatureSchema = emitterSchema().concat(
-  emissionSchema()
-);
+/**
+ * Return wich operation requires the given path to be filled
+ */
+export const getRequiredFor = (path: string) => {
+  const emission = Object.keys(
+    emitterSchema({}).concat(emissionSchema({})).describe().fields
+  );
+  const transport = Object.keys(
+    transporterSchema({}).concat(transportSchema({})).describe().fields
+  );
+  const reception = Object.keys(
+    recipientSchema({}).concat(receptionSchema({})).describe().fields
+  );
 
-// we need to also check check emission
-// transition from SEALED to SENT is possible if explicitly allowed by emitting company (field allowDasriTakeOverWithoutSignature)
-export const okForTransportSignatureSchema = transporterSchema()
-  .concat(transportSchema())
-  .concat(okForEmissionSignatureSchema);
+  const operation = Object.keys(operationSchema({}).describe().fields);
+  const truthTable = [emission, transport, reception, operation].map(el =>
+    el.includes(path)
+  );
+  const steps = [
+    "EMISSION",
+    "TRANSPORT",
+    "RECEPTION",
+    "OPERATION" as BsdasriSignatureType
+  ];
 
-export const okForReceptionSignatureSchema = recipientSchema().concat(
-  receptionSchema()
-);
-export const okForProcessingSignatureSchema = okForReceptionSignatureSchema.concat(
-  operationSchema()
-);
+  return select(steps, truthTable);
+};
