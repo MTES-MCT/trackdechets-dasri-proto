@@ -18,6 +18,11 @@ export const DASRI_WASTE_CODES = [
 ];
 export const DASRI_PROCESSING_OPERATIONS = [
   {
+    type: DasriProcessingOperationType.Pretraitement,
+    code: "D9",
+    description: "Prétraitement par désinfection"
+  },
+  {
     type: DasriProcessingOperationType.Incineration,
     code: "D10",
     description: "DASRI d'origine humaine"
@@ -27,19 +32,15 @@ export const DASRI_PROCESSING_OPERATIONS = [
     code: "R1",
     description: "DASRI d'origine animale"
   },
-  {
-    type: DasriProcessingOperationType.Pretraitement,
-    code: "D9",
-    description: "Prétraitement par désinfection"
-  },
+
   {
     type: DasriProcessingOperationType.RegroupementPrealableD9D10,
-    code: "D13",
+    code: "D12",
     description: "Regroupement D13 Préalable à D9 ou D10"
   },
   {
     type: DasriProcessingOperationType.RegroupementPrealableR1,
-    code: "R13",
+    code: "R12",
     description: "Regroupement R13 Préalable à R1"
   }
 ];
