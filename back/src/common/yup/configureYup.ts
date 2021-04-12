@@ -21,11 +21,13 @@ export default function configureYup() {
     "requiredIf",
     function requiredIf(condition: boolean, message?: string) {
       if (condition) {
-        return this.nullable().notRequired();
+        return this.nullable().required();
       }
 
       // nullable to treat null as a missing value, not a type error
-      return this.nullable().required(message);
+      return this.nullable().notRequired(message);
     }
   );
 }
+
+
