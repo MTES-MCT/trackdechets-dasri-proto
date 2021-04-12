@@ -1,6 +1,7 @@
 -- CreateEnum
 CREATE TYPE "default$default"."BsdasriStatus" AS ENUM ('INITIAL', 'SIGNED_BY_PRODUCER', 'SENT', 'RECEIVED', 'REFUSED_BY_RECIPIENT','PROCESSED', 'REFUSED');
 
+CREATE TYPE "default$default"."BsdasriEmitterType" AS ENUM ('PRODUCER', 'COLLECTOR');
 
 
 -- CreateTable
@@ -13,6 +14,7 @@ CREATE TABLE "default$default"."Bsdasri" (
     "ownerId" TEXT NOT NULL,
     "isDeleted" BOOLEAN DEFAULT FALSE,
     "isDraft" BOOLEAN DEFAULT FALSE,
+    "emitterType" "BsdasriEmitterType" NOT NULL DEFAULT E'PRODUCER',
     "emitterCompanyName" TEXT,
     "emitterCompanySiret" TEXT,
     "emitterCompanyAddress" TEXT,
@@ -76,7 +78,6 @@ CREATE TABLE "default$default"."Bsdasri" (
     "receptionSignatureDate" TIMESTAMP(3),
     "operationSignatureDate" TIMESTAMP(3),
     "operationSignatureAuthor" TEXT,
-
 
     PRIMARY KEY ("id")
 );

@@ -527,6 +527,12 @@ enum BsdasriStatus {
   PROCESSED
   REFUSED
 }
+
+enum BsdasriEmitterType {
+  PRODUCER
+  COLLECTOR
+  
+}
 model Bsdasri {
   id                                 String                  @unique
   customId                           String? 
@@ -539,6 +545,8 @@ model Bsdasri {
   isDraft                            Boolean?                @default(false)
   
   // emitter
+  emitterType                        BsdasriEmitterType     @default(PRODUCER)
+  emitterOnBehalfOfEcoorganisme      Boolean?               @default(false)
   emitterCompanyName                 String?
   emitterCompanySiret                String?
   emitterCompanyAddress              String?
