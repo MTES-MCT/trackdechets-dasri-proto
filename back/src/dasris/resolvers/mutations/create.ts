@@ -14,7 +14,6 @@ import { validateBsdasri } from "../../validation";
 import { checkIsBsdasriContributor } from "../../permissions";
 
 import { emitterIsAllowedToGroup, checkDasrisAreGroupable } from "./utils";
- 
 
 const createBsdasri = async (
   parent: ResolversParentTypes["Mutation"],
@@ -39,14 +38,20 @@ const createBsdasri = async (
   );
 
   const flattenedInput = flattenBsdasriInput(bsdasriCreateInput);
-  const sigantureContext = isDraft ? {} : { emissionSignature: true };
-  await validateBsdasri(flattenedInput, sigantureContext);
 
   await emitterIsAllowedToGroup(flattenedInput?.emitterCompanySiret);
   await checkDasrisAreGroupable(
     regroupedBsdasris,
     flattenedInput.emitterCompanySiret
   );
+  const isRegrouping = !!regroupedBsdasris && !!regroupedBsdasris.length;
+
+  const signatureContext = isDraft
+    ? { isRegrouping }
+    : { emissionSignature: true, isRegrouping };
+
+  await validateBsdasri(flattenedInput, signatureContext);
+
   try {
     const newDasri = await prisma.bsdasri.create({
       data: {

@@ -109,8 +109,6 @@ export type BsdasriConnection = {
 };
 
 export type BsdasriCreateInput = {
-  /** Identifiant custom */
-  customId?: Maybe<Scalars["String"]>;
   emitter?: Maybe<BsdasriEmitterInput>;
   emission?: Maybe<BsdasriEmissionInput>;
   transporter?: Maybe<BsdasriTransporterInput>;
@@ -186,7 +184,6 @@ export type BsdasriError = {
 };
 
 export type BsdasriInput = {
-  customId?: Maybe<Scalars["String"]>;
   emitter?: Maybe<BsdasriEmitterInput>;
   emission?: Maybe<BsdasriEmissionInput>;
   transporter?: Maybe<BsdasriTransporterInput>;
@@ -397,7 +394,6 @@ export type BsdasriUpdateInput = {
   /** Identifiant opaque */
   id: Scalars["ID"];
   /** Identifiant custom */
-  customId?: Maybe<Scalars["String"]>;
   emitter?: Maybe<BsdasriEmitterInput>;
   emission?: Maybe<BsdasriEmissionInput>;
   transporter?: Maybe<BsdasriTransporterInput>;
@@ -5184,7 +5180,6 @@ export function createBsdasriCreateInputMock(
   props: Partial<BsdasriCreateInput>
 ): BsdasriCreateInput {
   return {
-    customId: null,
     emitter: null,
     emission: null,
     transporter: null,
@@ -5284,7 +5279,6 @@ export function createBsdasriInputMock(
   props: Partial<BsdasriInput>
 ): BsdasriInput {
   return {
-    customId: null,
     emitter: null,
     emission: null,
     transporter: null,
@@ -5517,7 +5511,6 @@ export function createBsdasriUpdateInputMock(
 ): BsdasriUpdateInput {
   return {
     id: "",
-    customId: null,
     emitter: null,
     emission: null,
     transporter: null,

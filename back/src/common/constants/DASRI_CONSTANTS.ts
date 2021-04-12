@@ -31,8 +31,10 @@ export const DASRI_PROCESSING_OPERATIONS = [
     type: DasriProcessingOperationType.IncinerationValorisation,
     code: "R1",
     description: "DASRI d'origine animale"
-  },
+  }
+];
 
+export const DASRI_GROUPING_OPERATIONS = [
   {
     type: DasriProcessingOperationType.RegroupementPrealableD9D10,
     code: "D12",
@@ -44,6 +46,15 @@ export const DASRI_PROCESSING_OPERATIONS = [
     description: "Regroupement R13 Préalable à R1"
   }
 ];
+
+export const DASRI_GROUPING_OPERATIONS_CODES: string[] = DASRI_GROUPING_OPERATIONS.map(
+  operation => operation.code
+);
+
 export const DASRI_PROCESSING_OPERATIONS_CODES: string[] = DASRI_PROCESSING_OPERATIONS.map(
   operation => operation.code
 );
+export const DASRI_ALL_OPERATIONS_CODES: string[] = [
+  ...DASRI_PROCESSING_OPERATIONS_CODES,
+  ...DASRI_GROUPING_OPERATIONS_CODES
+];

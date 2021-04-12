@@ -3,6 +3,7 @@ import { WasteAcceptationStatus, QuantityType, Prisma } from "@prisma/client";
 import * as yup from "yup";
 import {
   DASRI_WASTE_CODES,
+  DASRI_ALL_OPERATIONS_CODES,
   DASRI_PROCESSING_OPERATIONS_CODES
 } from "../common/constants";
 import configureYup from "../common/yup/configureYup";
@@ -113,7 +114,7 @@ const INVALID_SIRET_LENGTH = "Le SIRET doit faire 14 caractères numériques";
 const INVALID_DASRI_WASTE_CODE =
   "Ce code déchet n'est pas autorisé pour les DASRI";
 const INVALID_PROCESSING_OPERATION =
-  "Cette opération d’élimination / valorisation n'existe pas.";
+  "Cette opération d’élimination / valorisation n'existe pas ou n'est pas appropriée";
 
 interface DasriValidationContext {
   emissionSignature?: boolean;
@@ -526,27 +527,31 @@ export const receptionSchema: FactorySchemaOf<
 export const operationSchema: FactorySchemaOf<
   BsdasriValidationContext,
   Operation
-> = context =>
-  yup.object({
+> = context => {
+  // a grouping dasri should not have a grouping operation code (D12, R12)
+  const allowedOperations = context?.isRegrouping
+    ? DASRI_PROCESSING_OPERATIONS_CODES
+    : DASRI_ALL_OPERATIONS_CODES;
+
+  return yup.object({
     processingOperation: yup
       .string()
       .label("Opération d’élimination / valorisation")
-      .oneOf(
-        [...DASRI_PROCESSING_OPERATIONS_CODES, "", null],
-        INVALID_PROCESSING_OPERATION
-      )
+      .oneOf([...allowedOperations, "", null], INVALID_PROCESSING_OPERATION)
       .requiredIf(context.operationSignature),
     processedAt: yup
       .date()
       .nullable()
       .requiredIf(context.operationSignature, "")
   });
+};
 
 export type BsdasriValidationContext = {
   emissionSignature?: boolean;
   transportSignature?: boolean;
   receptionSignature?: boolean;
   operationSignature?: boolean;
+  isRegrouping?: boolean;
 };
 export function validateBsdasri(
   dasri: Partial<Prisma.BsdasriCreateInput>,
