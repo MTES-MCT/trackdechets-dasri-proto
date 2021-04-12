@@ -27,6 +27,7 @@ input BsdasriEmitterInput {
   workSite: WorkSiteInput
   "Champ libre émetteur"
   customInfo: String
+  onBehalfOfEcoorganisme: Boolean
 }
 
 input BsdasriWasteDetailInput {

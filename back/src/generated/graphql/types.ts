@@ -153,6 +153,8 @@ export type BsdasriEmitter = {
   customInfo?: Maybe<Scalars["String"]>;
   /** Type d'émetteur */
   type?: Maybe<BsdasriEmitterType>;
+  /** Agit pour le compte de l'éco organisme agréé */
+  onBehalfOfEcoorganisme: Scalars["Boolean"];
 };
 
 export type BsdasriEmitterInput = {
@@ -162,6 +164,7 @@ export type BsdasriEmitterInput = {
   workSite?: Maybe<WorkSiteInput>;
   /** Champ libre émetteur */
   customInfo?: Maybe<Scalars["String"]>;
+  onBehalfOfEcoorganisme?: Maybe<Scalars["Boolean"]>;
 };
 
 /** Type d'émetteur */
@@ -3294,6 +3297,11 @@ export type BsdasriEmitterResolvers<
     ParentType,
     ContextType
   >;
+  onBehalfOfEcoorganisme?: Resolver<
+    ResolversTypes["Boolean"],
+    ParentType,
+    ContextType
+  >;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5237,6 +5245,7 @@ export function createBsdasriEmitterMock(
     handOverToTransporterAt: null,
     customInfo: null,
     type: null,
+    onBehalfOfEcoorganisme: false,
     ...props
   };
 }
@@ -5249,6 +5258,7 @@ export function createBsdasriEmitterInputMock(
     company: null,
     workSite: null,
     customInfo: null,
+    onBehalfOfEcoorganisme: null,
     ...props
   };
 }

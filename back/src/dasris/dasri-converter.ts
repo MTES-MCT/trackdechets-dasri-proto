@@ -30,6 +30,7 @@ export function expandBsdasriFromDb(bsdasri: Bsdasri): GqlBsdasri {
   return {
     id: bsdasri.id,
     isDraft: bsdasri.isDraft,
+
     emitter: nullIfNoValues<BsdasriEmitter>({
       company: nullIfNoValues<FormCompany>({
         name: bsdasri.emitterCompanyName,
@@ -38,6 +39,7 @@ export function expandBsdasriFromDb(bsdasri: Bsdasri): GqlBsdasri {
         phone: bsdasri.emitterCompanyPhone,
         mail: bsdasri.emitterCompanyMail
       }),
+      onBehalfOfEcoorganisme: bsdasri.emitterOnBehalfOfEcoorganisme,
       customInfo: bsdasri.emitterCustomInfo,
       type: bsdasri.emitterType,
       workSite: nullIfNoValues<WorkSite>({
@@ -194,7 +196,11 @@ function flattenEmitterInput(input: { emitter?: BsdasriEmitterInput }) {
     emitterWorkSiteInfos: chain(input.emitter, e =>
       chain(e.workSite, w => w.infos)
     ),
-    emitterCustomInfo: chain(input.emitter, e => e.customInfo)
+    emitterCustomInfo: chain(input.emitter, e => e.customInfo),
+    emitterOnBehalfOfEcoorganisme: chain(
+      input.emitter,
+      e => e.onBehalfOfEcoorganisme
+    )
   };
 }
 

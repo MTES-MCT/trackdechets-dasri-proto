@@ -176,7 +176,16 @@ export const emitterSchema: FactorySchemaOf<
     emitterWorkSiteAddress: yup.string().nullable(),
     emitterWorkSiteCity: yup.string().nullable(),
     emitterWorkSitePostalCode: yup.string().nullable(),
-    emitterWorkSiteInfos: yup.string().nullable()
+    emitterWorkSiteInfos: yup.string().nullable(),
+    emitterOnBehalfOfEcoorganisme: yup
+      .boolean()
+      .notRequired()
+      .nullable()
+      .test(
+        "no-ecoorg-if-not-regrouping",
+        "Émetteur: le champ onBehalfOfEcoorganisme n'est à remplir que pour les bordereaux de regroupement",
+        v => (!context.isRegrouping ? !v : true)
+      )
   });
 };
 

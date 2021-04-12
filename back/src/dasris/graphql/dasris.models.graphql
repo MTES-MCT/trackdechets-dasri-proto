@@ -76,6 +76,8 @@ type BsdasriEmitter {
   customInfo: String
   "Type d'émetteur"
   type: BsdasriEmitterType
+  "Agit pour le compte de l'éco organisme agréé"
+  onBehalfOfEcoorganisme: Boolean!
 }
 
 "Destinataire du Bsdasri"
