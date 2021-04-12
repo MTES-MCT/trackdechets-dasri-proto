@@ -59,6 +59,7 @@ export default async function dasris(_, args, context: GraphQLContext) {
   const queried = await prisma.bsdasri.findMany({
     ...connectionsArgs,
     orderBy: { createdAt: "desc" },
+
     where
   });
   const totalCount = await prisma.bsdasri.count({ where });
@@ -77,35 +78,4 @@ export default async function dasris(_, args, context: GraphQLContext) {
     edges: expanded.map(bsd => ({ cursor: bsd.id, node: bsd })),
     pageInfo
   };
-}
-
-function getHasNextStepFilter(siret: string, hasNextStep?: boolean | null) {
-  if (hasNextStep == null) {
-    return {};
-  }
-
-  const filter = {
-    OR: [
-      // DRAFT
-      { status: BsdasriStatus.INITIAL },
-      // isEmitter && SEALED
-      {
-        AND: [{ emitterCompanySiret: siret }, { status: BsdasriStatus.INITIAL }]
-      },
-      // isRecipient && (RECEIVED || ACCEPTED )
-      {
-        AND: [
-          { recipientCompanySiret: siret },
-          {
-            OR: [
-              { status: BsdasriStatus.SENT },
-              { status: BsdasriStatus.RECEIVED }
-            ]
-          }
-        ]
-      }
-    ]
-  };
-
-  return hasNextStep ? filter : { NOT: filter };
 }

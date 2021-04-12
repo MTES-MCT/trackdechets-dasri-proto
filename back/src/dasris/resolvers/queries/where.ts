@@ -29,8 +29,22 @@ export function convertWhereToDbFilter(
   });
 }
 
+/**  */
+const getGroupableCondition = (groupable?: boolean) => {
+  if (!!groupable) {
+    return { regroupedBsdasris: { none: {} }, regroupedOnBsdasri: null };
+  }
+  if (groupable === false) {
+    return {
+      OR: [
+        { regroupedBsdasris: { some: {} } },
+        { NOT: { regroupedOnBsdasri: null } }
+      ]
+    };
+  }
+  return {};
+};
 function toPrismaFilter(where: Omit<BsdasriWhere, "_or" | "_and" | "_not">) {
-  console.log(where);
   return safeInput({
     createdAt: where.createdAt
       ? toPrismaDateFilter(where.createdAt)
@@ -43,7 +57,8 @@ function toPrismaFilter(where: Omit<BsdasriWhere, "_or" | "_and" | "_not">) {
     recipientCompanySiret: where.recipient?.company?.siret,
     processingOperation: { in: where.processingOperation },
     status: where.status,
-    isDraft: where.isDraft
+    isDraft: where.isDraft,
+    ...getGroupableCondition(where?.groupable)
   });
 }
 

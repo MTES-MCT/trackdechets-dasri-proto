@@ -62,6 +62,14 @@ input BsdasriWhere {
   transporter: BsdasriTransporterWhere
   recipient: BsdasriRecipientWhere
   processingOperation: [processingOperationTypes!]
+    """
+  (Optionnel) Filtre sur l'état de regroupement des bordereaux
+  Si aucun filtre n'est passé, les bordereaux seront retournés sans filtrage supplémentaire
+  Si groupable: true, les bordereaux retournés ne sont pas déjà regroupés et ne regroupent pas d'autres bordereaux
+  Si groupable: false, les bordereaux retournés ne sont déjà regroupés ou ne regroupent d'autres bordereaux
+
+  """
+  groupable: Boolean
   _and: [BsdasriWhere!]
   _or: [BsdasriWhere!]
   _not: [BsdasriWhere!]

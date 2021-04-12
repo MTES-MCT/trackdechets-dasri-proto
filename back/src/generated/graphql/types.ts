@@ -455,6 +455,13 @@ export type BsdasriWhere = {
   transporter?: Maybe<BsdasriTransporterWhere>;
   recipient?: Maybe<BsdasriRecipientWhere>;
   processingOperation?: Maybe<Array<ProcessingOperationTypes>>;
+  /**
+   * (Optionnel) Filtre sur l'état de regroupement des bordereaux
+   * Si aucun filtre n'est passé, les bordereaux seront retournés sans filtrage supplémentaire
+   * Si groupable: true, les bordereaux retournés ne sont pas déjà regroupés et ne regroupent pas d'autres bordereaux
+   * Si groupable: false, les bordereaux retournés ne sont déjà regroupés ou ne regroupent d'autres bordereaux
+   */
+  groupable?: Maybe<Scalars["Boolean"]>;
   _and?: Maybe<Array<BsdasriWhere>>;
   _or?: Maybe<Array<BsdasriWhere>>;
   _not?: Maybe<Array<BsdasriWhere>>;
@@ -5587,6 +5594,7 @@ export function createBsdasriWhereMock(
     transporter: null,
     recipient: null,
     processingOperation: null,
+    groupable: null,
     _and: null,
     _or: null,
     _not: null,
