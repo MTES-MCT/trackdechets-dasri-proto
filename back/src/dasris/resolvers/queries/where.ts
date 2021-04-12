@@ -11,7 +11,7 @@ export function convertWhereToDbFilter(
   }
 
   const { _or, _and, _not, ...filters } = where;
- 
+
   // const hasNesting = or_not_and?.some(w => w._or || w._and || w._not);
   const hasOrNesting = _or?.some(w => w._or || w._and || w._not);
   const hasAndNesting = _and?.some(w => w._or || w._and || w._not);
@@ -30,6 +30,7 @@ export function convertWhereToDbFilter(
 }
 
 function toPrismaFilter(where: Omit<BsdasriWhere, "_or" | "_and" | "_not">) {
+  console.log(where);
   return safeInput({
     createdAt: where.createdAt
       ? toPrismaDateFilter(where.createdAt)
@@ -40,6 +41,7 @@ function toPrismaFilter(where: Omit<BsdasriWhere, "_or" | "_and" | "_not">) {
     transporterCompanySiret: where.transporter?.company?.siret,
     emitterCompanySiret: where.emitter?.company?.siret,
     recipientCompanySiret: where.recipient?.company?.siret,
+    processingOperation: { in: where.processingOperation },
     status: where.status,
     isDraft: where.isDraft
   });
