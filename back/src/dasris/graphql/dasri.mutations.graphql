@@ -22,6 +22,7 @@ input WorkSiteInput {
 
 input BsdasriEmitterInput {
   "Établissement émetteur"
+  type: BsdasriEmitterType
   company: CompanyInput
   workSite: WorkSiteInput
   "Champ libre émetteur"
@@ -162,4 +163,42 @@ input BsdasriSignatureInput {
   type: BsdasriSignatureType!
   author: String!
   securityCode: Int
+}
+
+ 
+ 
+type Mutation {
+  "Crée un nouveau dasri en brouillon"
+  createDraftBsdasri(
+    "Payload de création d'un dasri brouillon"
+    bsdasriCreateInput: BsdasriCreateInput!
+  ): Bsdasri!
+  "Crée un nouveau dasri"
+  createBsdasri(
+    "Payload de création d'un dasri"
+    bsdasriCreateInput: BsdasriCreateInput!
+  ): Bsdasri!
+  
+  """
+  Met à jour un dasri existant
+  Par défaut, tous les champs sont modifiables.
+  """
+  updateBsdasri(
+    "Payload de mise à jour d'un dasri"
+    bsdasriUpdateInput: BsdasriUpdateInput!
+  ): Bsdasri!
+
+  "Marque un dasri brouillon comme publié (isDraft=false)"
+  publishBsdasri("ID d'un Bsdasri" id: ID!): Bsdasri
+
+  """
+  Appose une signature sur un Bsdasri, verrouille les cadres correspondant
+
+  Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
+  Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport
+
+  Toutefois il existe un exception: le cadre emetteur peut être signé par le transporteur grâce au code de
+  sécurité de l'émetteur (BsdasriSignatureType: EMISSION_WITH_SECRET_CODE)
+  """
+  signBsdasri(id: ID!, signatureInput: BsdasriSignatureInput!): Bsdasri
 }
