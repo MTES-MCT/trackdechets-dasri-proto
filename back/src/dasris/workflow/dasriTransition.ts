@@ -3,7 +3,7 @@ import prisma from "../../prisma";
 import { BsdasriEvent } from "./types";
 import machine from "./machine";
 import { InvalidTransition } from "../../forms/errors";
-
+import { validateBsdasri, BsdasriValidationContext } from "../validation";
 
 /**
  * Transition a form from initial state (ex: DRAFT) to next state (ex: SEALED)
@@ -12,14 +12,11 @@ import { InvalidTransition } from "../../forms/errors";
 export default async function dasriTransition(
   bsdasri: Bsdasri,
   event: BsdasriEvent,
-  validator?: any
+  validationContext: BsdasriValidationContext
 ) {
   const currentStatus = bsdasri.status;
 
-  // are required dasri fields filled ?
-  if (!!validator) {
-    await validator.validate(bsdasri);
-  }
+  await validateBsdasri(bsdasri, validationContext);
   // Use state machine to calculate new status
   const nextState = machine.transition(currentStatus, event, bsdasri);
 
