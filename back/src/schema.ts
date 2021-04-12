@@ -12,11 +12,11 @@ import dasriResolvers from "./dasris/resolvers";
 const repositories = ["users", "companies", "forms", "dasris"];
 
 const typeDefsPath = repositories.map(
-  repository => `${__dirname}/${repository}/*.graphql`
+  repository => `${__dirname}/${repository}/**/*.graphql`
 );
 
 const typeDefsArray = loadFilesSync(typeDefsPath);
-
+ 
 const typeDefs = mergeTypeDefs(typeDefsArray);
 
 const resolvers = [
