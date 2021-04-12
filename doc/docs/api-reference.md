@@ -45,12 +45,12 @@ Siret d'un des établissements dont je suis membre
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>bsdasri</strong></td>
-<td valign="top"><a href="#bsdasri">Bsdasri</a></td>
+<td valign="top"><a href="#bsdasri">Bsdasri</a>!</td>
 <td></td>
 </tr>
 <tr>
 <td colspan="2" align="right" valign="top">id</td>
-<td valign="top"><a href="#id">ID</a></td>
+<td valign="top"><a href="#id">ID</a>!</td>
 <td>
 
 Identifiant opaque du BSD
@@ -62,35 +62,9 @@ Identifiant opaque du BSD
 <td valign="top"><a href="#bsdasriconnection">BsdasriConnection</a>!</td>
 <td>
 
-Renvoie les Bsdasri de l'établissement sélectionné.
-Si aucun SIRET n'est précisé et que l'utilisateur est membre d'une seule entreprise
-alors les Bsdasri de cette entreprise sont retournés.
-Si l'utilisateur est membre de 2 entreprises ou plus, vous devez obligatoirement
-préciser un SIRET
-Si l'utilisateur n'est membre d'aucune entreprise, un tableau vide sera renvoyé
+Renvoie les Bsdasris.
 
-Vous pouvez filtrer:
-- par rôle que joue votre entreprise sur le Bsdasri via `role`
-- par date de dernière modification via `updatedAfter`
-- par date d'envoi via `sentAfter`
-- par statut du Bsdasri via `status`
-- par code déchet via `wasteCode`
-- par SIRET d'une entreprise présente n'importe où sur le bordereau via `siretPresentOnForm`
-
-Par défaut:
-- tous les BSD accessibles sont retournés
-- les BSD sont classés par date de création, de la plus récente à la plus vieille
-- les résultats sont paginés par 50. Il est possible de modifier cette valeur via `first` ou `last` en fonction du curseur utilisé
-- pour afficher la suite des résultats, utiliser `cursorAfter` ou `cursorBefore`
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">siret</td>
-<td valign="top"><a href="#string">String</a></td>
-<td>
-
-SIRET d'un établissement dont je suis membre
+SIRET d'une entreprise présente n'importe où sur le bordereau via `siretPresentOnForm`
 
 </td>
 </tr>
@@ -161,17 +135,18 @@ Par défaut vide, aucun filtre n'est appliqué
 </td>
 </tr>
 <tr>
-<td colspan="2" align="right" valign="top">where</td>
-<td valign="top"><a href="#bsdasriwhere">BsdasriWhere</a></td>
+<td colspan="2" align="right" valign="top">siret</td>
+<td valign="top"><a href="#string">String</a></td>
 <td>
 
-(Optionnel) Permet de filtrer sur les dasris en attente d'une action de votre part
-Si `true`, seul les dasris attendant une action sont renvoyés
-Si `false`, seul les dasris n'attendant aucune action son renvoyés
-Si vide, tous les dasris sont renvoyés
-Défaut à vide.
+SIRET d'un établissement dont je suis membre
 
 </td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">where</td>
+<td valign="top"><a href="#bsdasriwhere">BsdasriWhere</a></td>
+<td></td>
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>companyInfos</strong></td>
@@ -1464,12 +1439,17 @@ Bordereau Bsdasri
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>regroupedBsdasris</strong></td>
-<td valign="top">[<a href="#bsdasri">Bsdasri</a>!]</td>
+<td valign="top">[<a href="#id">ID</a>!]</td>
 <td>
 
 Bordereaux regroupés
 
 </td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>metadata</strong></td>
+<td valign="top"><a href="#bsdasrimetadata">BsdasriMetadata</a>!</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -1615,6 +1595,65 @@ Date de remise au tranporteur
 Champ libre
 
 </td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>type</strong></td>
+<td valign="top"><a href="#bsdasriemittertype">BsdasriEmitterType</a></td>
+<td>
+
+Type d'émetteur
+
+</td>
+</tr>
+</tbody>
+</table>
+
+### BsdasriError
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>message</strong></td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>path</strong></td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>requiredFor</strong></td>
+<td valign="top">[<a href="#bsdasrisignaturetype">BsdasriSignatureType</a>!]!</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### BsdasriMetadata
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>errors</strong></td>
+<td valign="top">[<a href="#bsdasrierror">BsdasriError</a>]!</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -4976,13 +5015,18 @@ Identifiant custom
 </thead>
 <tbody>
 <tr>
-<td colspan="2" valign="top"><strong>company</strong></td>
-<td valign="top"><a href="#companyinput">CompanyInput</a></td>
+<td colspan="2" valign="top"><strong>type</strong></td>
+<td valign="top"><a href="#bsdasriemittertype">BsdasriEmitterType</a></td>
 <td>
 
 Établissement émetteur
 
 </td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#companyinput">CompanyInput</a></td>
+<td></td>
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>workSite</strong></td>
@@ -5616,6 +5660,11 @@ Défaut à vide.
 <tr>
 <td colspan="2" valign="top"><strong>recipient</strong></td>
 <td valign="top"><a href="#bsdasrirecipientwhere">BsdasriRecipientWhere</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>processingOperation</strong></td>
+<td valign="top">[<a href="#processingoperationtypes">processingOperationTypes</a>!]</td>
 <td></td>
 </tr>
 <tr>
@@ -7455,6 +7504,35 @@ Payload d'une adresse chantier
 
 ## Enums
 
+### BsdasriEmitterType
+
+Type d'émetteur
+
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>PRODUCER</strong></td>
+<td>
+
+Producteur
+
+</td>
+</tr>
+<tr>
+<td valign="top"><strong>COLLECTOR</strong></td>
+<td>
+
+Installation de regroupement
+
+</td>
+</tr>
+</tbody>
+</table>
+
 ### BsdasriPackagings
 
 Type de packaging du déchet
@@ -8401,6 +8479,37 @@ Déchet non dangereux
 Déchet dangereux
 
 </td>
+</tr>
+</tbody>
+</table>
+
+### processingOperationTypes
+
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>D9</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>D10</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>D12</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>R1</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>R12</strong></td>
+<td></td>
 </tr>
 </tbody>
 </table>

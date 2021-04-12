@@ -94,7 +94,8 @@ export type Bsdasri = {
   reception?: Maybe<BsdasriReception>;
   operation?: Maybe<BsdasriOperation>;
   /** Bordereaux regroupés */
-  regroupedBsdasris?: Maybe<Array<Bsdasri>>;
+  regroupedBsdasris?: Maybe<Array<Scalars["ID"]>>;
+  metadata: BsdasriMetadata;
 };
 
 export type BsdasriCompanyWhere = {
@@ -153,19 +154,36 @@ export type BsdasriEmitter = {
   handOverToTransporterAt?: Maybe<Scalars["DateTime"]>;
   /** Champ libre */
   customInfo?: Maybe<Scalars["String"]>;
+  /** Type d'émetteur */
+  type?: Maybe<BsdasriEmitterType>;
 };
 
 export type BsdasriEmitterInput = {
   /** Établissement émetteur */
+  type?: Maybe<BsdasriEmitterType>;
   company?: Maybe<CompanyInput>;
   workSite?: Maybe<WorkSiteInput>;
   /** Champ libre émetteur */
   customInfo?: Maybe<Scalars["String"]>;
 };
 
+/** Type d'émetteur */
+export type BsdasriEmitterType =
+  /** Producteur */
+  | "PRODUCER"
+  /** Installation de regroupement */
+  | "COLLECTOR";
+
 export type BsdasriEmitterWhere = {
   company?: Maybe<BsdasriCompanyWhere>;
   signature?: Maybe<BsdasriSignatureWhere>;
+};
+
+export type BsdasriError = {
+  __typename?: "BsdasriError";
+  message: Scalars["String"];
+  path: Scalars["String"];
+  requiredFor: Array<BsdasriSignatureType>;
 };
 
 export type BsdasriInput = {
@@ -177,6 +195,11 @@ export type BsdasriInput = {
   recipient?: Maybe<BsdasriRecipientInput>;
   reception?: Maybe<BsdasriReceptionInput>;
   operation?: Maybe<BsdasriOperationInput>;
+};
+
+export type BsdasriMetadata = {
+  __typename?: "BsdasriMetadata";
+  errors: Array<Maybe<BsdasriError>>;
 };
 
 /** Informations relatives au traitement du Bsdasri */
@@ -431,6 +454,7 @@ export type BsdasriWhere = {
   emitter?: Maybe<BsdasriEmitterWhere>;
   transporter?: Maybe<BsdasriTransporterWhere>;
   recipient?: Maybe<BsdasriRecipientWhere>;
+  processingOperation?: Maybe<Array<ProcessingOperationTypes>>;
   _and?: Maybe<Array<BsdasriWhere>>;
   _or?: Maybe<Array<BsdasriWhere>>;
   _not?: Maybe<Array<BsdasriWhere>>;
@@ -1861,6 +1885,8 @@ export type ProcessedFormInput = {
   noTraceability?: Maybe<Scalars["Boolean"]>;
 };
 
+export type ProcessingOperationTypes = "D9" | "D10" | "D12" | "R1" | "R12";
+
 /** Type de quantité lors de l'émission */
 export type QuantityType =
   /** Quntité réelle */
@@ -1877,29 +1903,11 @@ export type Query = {
   apiKey: Scalars["String"];
   /** Renvoie des BSD candidats à un regroupement dans une annexe 2 */
   appendixForms: Array<Form>;
-  bsdasri?: Maybe<Bsdasri>;
+  bsdasri: Bsdasri;
   /**
-   * Renvoie les Bsdasri de l'établissement sélectionné.
-   * Si aucun SIRET n'est précisé et que l'utilisateur est membre d'une seule entreprise
-   * alors les Bsdasri de cette entreprise sont retournés.
-   * Si l'utilisateur est membre de 2 entreprises ou plus, vous devez obligatoirement
-   * préciser un SIRET
-   * Si l'utilisateur n'est membre d'aucune entreprise, un tableau vide sera renvoyé
+   * Renvoie les Bsdasris.
    *
-   * Vous pouvez filtrer:
-   * - par rôle que joue votre entreprise sur le Bsdasri via `role`
-   * - par date de dernière modification via `updatedAfter`
-   * - par date d'envoi via `sentAfter`
-   * - par statut du Bsdasri via `status`
-   * - par code déchet via `wasteCode`
-   * - par SIRET d'une entreprise présente n'importe où sur le bordereau via `siretPresentOnForm`
-   *
-   * Par défaut:
-   * - tous les BSD accessibles sont retournés
-   * - les BSD sont classés par date de création, de la plus récente à la plus vieille
-   * - les résultats sont paginés par 50. Il est possible de modifier cette valeur
-   * via `first` ou `last` en fonction du curseur utilisé
-   * - pour afficher la suite des résultats, utiliser `cursorAfter` ou `cursorBefore`
+   * SIRET d'une entreprise présente n'importe où sur le bordereau via `siretPresentOnForm`
    */
   bsdasris: BsdasriConnection;
   /**
@@ -1992,16 +2000,16 @@ export type QueryAppendixFormsArgs = {
 };
 
 export type QueryBsdasriArgs = {
-  id?: Maybe<Scalars["ID"]>;
+  id: Scalars["ID"];
 };
 
 export type QueryBsdasrisArgs = {
-  siret?: Maybe<Scalars["String"]>;
   after?: Maybe<Scalars["ID"]>;
   first?: Maybe<Scalars["Int"]>;
   before?: Maybe<Scalars["ID"]>;
   last?: Maybe<Scalars["Int"]>;
   updatedAfter?: Maybe<Scalars["String"]>;
+  siret?: Maybe<Scalars["String"]>;
   where?: Maybe<BsdasriWhere>;
 };
 
@@ -2876,6 +2884,7 @@ export type ResolversTypes = {
   Bsdasri: ResolverTypeWrapper<Bsdasri>;
   BsdasriStatus: BsdasriStatus;
   BsdasriEmitter: ResolverTypeWrapper<BsdasriEmitter>;
+  BsdasriEmitterType: BsdasriEmitterType;
   BsdasriEmission: ResolverTypeWrapper<BsdasriEmission>;
   BsdasriWasteDetails: ResolverTypeWrapper<BsdasriWasteDetails>;
   BsdasriPackagingInfo: ResolverTypeWrapper<BsdasriPackagingInfo>;
@@ -2887,6 +2896,9 @@ export type ResolversTypes = {
   BsdasriRecipient: ResolverTypeWrapper<BsdasriRecipient>;
   BsdasriReception: ResolverTypeWrapper<BsdasriReception>;
   BsdasriOperation: ResolverTypeWrapper<BsdasriOperation>;
+  BsdasriMetadata: ResolverTypeWrapper<BsdasriMetadata>;
+  BsdasriError: ResolverTypeWrapper<BsdasriError>;
+  BsdasriSignatureType: BsdasriSignatureType;
   BsdasriWhere: BsdasriWhere;
   DateFilter: DateFilter;
   BsdasriEmitterWhere: BsdasriEmitterWhere;
@@ -2894,6 +2906,7 @@ export type ResolversTypes = {
   BsdasriSignatureWhere: BsdasriSignatureWhere;
   BsdasriTransporterWhere: BsdasriTransporterWhere;
   BsdasriRecipientWhere: BsdasriRecipientWhere;
+  processingOperationTypes: ProcessingOperationTypes;
   BsdasriConnection: ResolverTypeWrapper<BsdasriConnection>;
   PageInfo: ResolverTypeWrapper<PageInfo>;
   BsdasriEdge: ResolverTypeWrapper<BsdasriEdge>;
@@ -2978,7 +2991,6 @@ export type ResolversTypes = {
   TempStorerAcceptedFormInput: TempStorerAcceptedFormInput;
   FormInput: FormInput;
   BsdasriSignatureInput: BsdasriSignatureInput;
-  BsdasriSignatureType: BsdasriSignatureType;
   TransporterSignatureFormInput: TransporterSignatureFormInput;
   SignatureAuthor: SignatureAuthor;
   SignupInput: SignupInput;
@@ -3031,6 +3043,8 @@ export type ResolversParentTypes = {
   BsdasriRecipient: BsdasriRecipient;
   BsdasriReception: BsdasriReception;
   BsdasriOperation: BsdasriOperation;
+  BsdasriMetadata: BsdasriMetadata;
+  BsdasriError: BsdasriError;
   BsdasriWhere: BsdasriWhere;
   DateFilter: DateFilter;
   BsdasriEmitterWhere: BsdasriEmitterWhere;
@@ -3188,7 +3202,12 @@ export type BsdasriResolvers<
     ContextType
   >;
   regroupedBsdasris?: Resolver<
-    Maybe<Array<ResolversTypes["Bsdasri"]>>,
+    Maybe<Array<ResolversTypes["ID"]>>,
+    ParentType,
+    ContextType
+  >;
+  metadata?: Resolver<
+    ResolversTypes["BsdasriMetadata"],
     ParentType,
     ContextType
   >;
@@ -3266,6 +3285,37 @@ export type BsdasriEmitterResolvers<
   >;
   customInfo?: Resolver<
     Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  type?: Resolver<
+    Maybe<ResolversTypes["BsdasriEmitterType"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BsdasriErrorResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes["BsdasriError"] = ResolversParentTypes["BsdasriError"]
+> = {
+  message?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  path?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  requiredFor?: Resolver<
+    Array<ResolversTypes["BsdasriSignatureType"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BsdasriMetadataResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes["BsdasriMetadata"] = ResolversParentTypes["BsdasriMetadata"]
+> = {
+  errors?: Resolver<
+    Array<Maybe<ResolversTypes["BsdasriError"]>>,
     ParentType,
     ContextType
   >;
@@ -4427,10 +4477,10 @@ export type QueryResolvers<
     RequireFields<QueryAppendixFormsArgs, "siret">
   >;
   bsdasri?: Resolver<
-    Maybe<ResolversTypes["Bsdasri"]>,
+    ResolversTypes["Bsdasri"],
     ParentType,
     ContextType,
-    RequireFields<QueryBsdasriArgs, never>
+    RequireFields<QueryBsdasriArgs, "id">
   >;
   bsdasris?: Resolver<
     ResolversTypes["BsdasriConnection"],
@@ -4984,6 +5034,8 @@ export type Resolvers<ContextType = GraphQLContext> = {
   BsdasriEdge?: BsdasriEdgeResolvers<ContextType>;
   BsdasriEmission?: BsdasriEmissionResolvers<ContextType>;
   BsdasriEmitter?: BsdasriEmitterResolvers<ContextType>;
+  BsdasriError?: BsdasriErrorResolvers<ContextType>;
+  BsdasriMetadata?: BsdasriMetadataResolvers<ContextType>;
   BsdasriOperation?: BsdasriOperationResolvers<ContextType>;
   BsdasriPackagingInfo?: BsdasriPackagingInfoResolvers<ContextType>;
   BsdasriReception?: BsdasriReceptionResolvers<ContextType>;
@@ -5098,6 +5150,7 @@ export function createBsdasriMock(props: Partial<Bsdasri>): Bsdasri {
     reception: null,
     operation: null,
     regroupedBsdasris: null,
+    metadata: createBsdasriMetadataMock({}),
     ...props
   };
 }
@@ -5184,6 +5237,7 @@ export function createBsdasriEmitterMock(
     workSite: null,
     handOverToTransporterAt: null,
     customInfo: null,
+    type: null,
     ...props
   };
 }
@@ -5192,6 +5246,7 @@ export function createBsdasriEmitterInputMock(
   props: Partial<BsdasriEmitterInput>
 ): BsdasriEmitterInput {
   return {
+    type: null,
     company: null,
     workSite: null,
     customInfo: null,
@@ -5209,6 +5264,18 @@ export function createBsdasriEmitterWhereMock(
   };
 }
 
+export function createBsdasriErrorMock(
+  props: Partial<BsdasriError>
+): BsdasriError {
+  return {
+    __typename: "BsdasriError",
+    message: "",
+    path: "",
+    requiredFor: [],
+    ...props
+  };
+}
+
 export function createBsdasriInputMock(
   props: Partial<BsdasriInput>
 ): BsdasriInput {
@@ -5221,6 +5288,16 @@ export function createBsdasriInputMock(
     recipient: null,
     reception: null,
     operation: null,
+    ...props
+  };
+}
+
+export function createBsdasriMetadataMock(
+  props: Partial<BsdasriMetadata>
+): BsdasriMetadata {
+  return {
+    __typename: "BsdasriMetadata",
+    errors: [],
     ...props
   };
 }
@@ -5509,6 +5586,7 @@ export function createBsdasriWhereMock(
     emitter: null,
     transporter: null,
     recipient: null,
+    processingOperation: null,
     _and: null,
     _or: null,
     _not: null,
