@@ -7,7 +7,6 @@ CREATE TYPE "default$default"."BsdasriEmitterType" AS ENUM ('PRODUCER', 'COLLECT
 -- CreateTable
 CREATE TABLE "default$default"."Bsdasri" (
     "id" TEXT NOT NULL,
-    "customId" TEXT,
     "status" "BsdasriStatus" NOT NULL DEFAULT E'DRAFT',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,

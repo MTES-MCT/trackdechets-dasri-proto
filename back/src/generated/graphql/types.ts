@@ -81,7 +81,6 @@ export type AuthPayload = {
 export type Bsdasri = {
   __typename?: "Bsdasri";
   id: Scalars["ID"];
-  customId?: Maybe<Scalars["String"]>;
   status: BsdasriStatus;
   createdAt?: Maybe<Scalars["DateTime"]>;
   updatedAt?: Maybe<Scalars["DateTime"]>;
@@ -3160,7 +3159,6 @@ export type BsdasriResolvers<
   ParentType extends ResolversParentTypes["Bsdasri"] = ResolversParentTypes["Bsdasri"]
 > = {
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
-  customId?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   status?: Resolver<ResolversTypes["BsdasriStatus"], ParentType, ContextType>;
   createdAt?: Resolver<
     Maybe<ResolversTypes["DateTime"]>,
@@ -5144,7 +5142,6 @@ export function createBsdasriMock(props: Partial<Bsdasri>): Bsdasri {
   return {
     __typename: "Bsdasri",
     id: "",
-    customId: null,
     status: "INITIAL",
     createdAt: null,
     updatedAt: null,

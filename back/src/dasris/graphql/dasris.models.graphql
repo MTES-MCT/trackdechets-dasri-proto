@@ -173,7 +173,6 @@ type BsdasriOperation {
 "Bordereau Bsdasri"
 type Bsdasri {
   id: ID!
-  customId: String
   status: BsdasriStatus!
   createdAt: DateTime
   updatedAt: DateTime

@@ -93,7 +93,6 @@ input BsdasriOperationInput {
 }
 
 input BsdasriInput {
-  customId: String
   emitter: BsdasriEmitterInput
   emission: BsdasriEmissionInput
   transporter: BsdasriTransporterInput
@@ -110,9 +109,6 @@ input RegroupedBsdasriInput {
 }
 
 input BsdasriCreateInput {
-  "Identifiant custom"
-  customId: String
-
   emitter: BsdasriEmitterInput
   emission: BsdasriEmissionInput
   transporter: BsdasriTransporterInput
@@ -129,8 +125,6 @@ input BsdasriUpdateInput {
   id: ID!
 
   "Identifiant custom"
-  customId: String
-
   emitter: BsdasriEmitterInput
   emission: BsdasriEmissionInput
   transporter: BsdasriTransporterInput

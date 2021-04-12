@@ -535,7 +535,6 @@ enum BsdasriEmitterType {
 }
 model Bsdasri {
   id                                 String                  @unique
-  customId                           String? 
   status                             BsdasriStatus           @default(INITIAL)
   createdAt                          DateTime                @default(now())
   updatedAt                          DateTime                @updatedAt

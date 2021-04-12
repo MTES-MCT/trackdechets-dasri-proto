@@ -29,7 +29,6 @@ import { Prisma, Bsdasri, BsdasriStatus, QuantityType } from "@prisma/client";
 export function expandBsdasriFromDb(bsdasri: Bsdasri): GqlBsdasri {
   return {
     id: bsdasri.id,
-    customId: bsdasri.customId,
     isDraft: bsdasri.isDraft,
     emitter: nullIfNoValues<BsdasriEmitter>({
       company: nullIfNoValues<FormCompany>({
@@ -351,7 +350,6 @@ function flattenOperationInput(input: { operation?: BsdasriOperationInput }) {
 export function flattenBsdasriInput(
   formInput: Pick<
     BsdasriInput,
-    | "customId"
     | "emitter"
     | "emission"
     | "transporter"
@@ -362,7 +360,6 @@ export function flattenBsdasriInput(
   >
 ): Partial<Prisma.BsdasriCreateInput> {
   return safeInput({
-    customId: formInput.customId,
     ...flattenEmitterInput(formInput),
     ...flattenEmissionInput(formInput),
     ...flattenTransporterInput(formInput),

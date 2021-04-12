@@ -9,7 +9,6 @@ const PUBLISH_DASRI = `
 mutation PublishDasri($id: ID!){
   publishBsdasri(id: $id)  {
     id
-    customId
     status
     isDraft
     
