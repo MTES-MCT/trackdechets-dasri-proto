@@ -2,16 +2,13 @@ import prisma from "../prisma";
 
 import { BsdasriNotFound } from "./errors";
 import { UserInputError } from "apollo-server-express";
-import { Prisma, Bsdasri } from "@prisma/client";
-
+import { Bsdasri } from "@prisma/client";
 
 import { FullBsdasri } from "./types";
 /**
  * Retrieves a dasri by id or throw a BsdasriNotFound error
  */
-export async function getBsdasriOrNotFound({
-  id
-}: Prisma.BsdasriWhereUniqueInput) {
+export async function getBsdasriOrNotFound({ id }: { id: string }) {
   if (!id) {
     throw new UserInputError("You should specify an id");
   }
