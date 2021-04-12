@@ -8,7 +8,7 @@ import {
   BsdasriSignatureType,
   MutationResolvers
 } from "../../../generated/graphql/types";
-import { AnyObjectSchema } from "yup";
+
 import { UserInputError } from "apollo-server-express";
 import { InvalidTransition } from "../../../forms/errors";
 
@@ -16,15 +16,11 @@ import { Bsdasri, BsdasriStatus } from "@prisma/client";
 import dasriTransition from "../../workflow/dasriTransition";
 import { BsdasriEventType } from "../../workflow/types";
 import { checkIsCompanyMember } from "../../../users/permissions";
-import {
-  okForEmissionSignatureSchema,
-  okForReceptionSignatureSchema,
-  okForTransportSignatureSchema,
-  okForProcessingSignatureSchema
-} from "../../validation";
-import { getCompanyOrCompanyNotFound } from "../../../companies/database";
 
-const dasriSign: MutationResolvers["signBsdasri"] = async (
+import { getCompanyOrCompanyNotFound } from "../../../companies/database";
+import { BsdasriValidationContext } from "../../validation";
+
+const signBsdasri: MutationResolvers["signBsdasri"] = async (
   _,
   { id, signatureInput }: MutationSignBsdasriArgs,
   context
@@ -67,13 +63,13 @@ const dasriSign: MutationResolvers["signBsdasri"] = async (
       type: signatureParams.eventType,
       dasriUpdateInput: data
     },
-    signatureParams.validator
+    signatureParams.validationContext
   );
 
   return expandBsdasriFromDb(updatedDasri);
 };
 
-export default dasriSign;
+export default signBsdasri;
 
 type getFieldsUpdateFn = ({
   bsdasri: Dasri,
@@ -106,14 +102,17 @@ type BsdasriSignatureInfos = {
     | "operationSignatureDate";
   eventType: BsdasriEventType;
   authorizedSiret: (bsdasri: Bsdasri) => string;
+  validationContext: BsdasriValidationContext;
   signatoryField:
     | "emissionSignatory"
     | "transportSignatory"
     | "receptionSignatory"
     | "operationSignatory";
-  validator: AnyObjectSchema;
 };
 
+/**
+ * Parameters to pass to state machine
+ */
 const dasriSignatureMapping: Record<
   BsdasriSignatureType,
   BsdasriSignatureInfos
@@ -122,7 +121,7 @@ const dasriSignatureMapping: Record<
     author: "emissionSignatureAuthor",
     date: "emissionSignatureDate",
     eventType: BsdasriEventType.SignEmission,
-    validator: okForEmissionSignatureSchema,
+    validationContext: { emissionSignature: true },
     signatoryField: "emissionSignatory",
     authorizedSiret: bsdasri => bsdasri.emitterCompanySiret
   },
@@ -130,7 +129,7 @@ const dasriSignatureMapping: Record<
     author: "emissionSignatureAuthor",
     date: "emissionSignatureDate",
     eventType: BsdasriEventType.SignEmissionWithSecretCode,
-    validator: okForEmissionSignatureSchema,
+    validationContext: { emissionSignature: true, transportSignature: true },
     signatoryField: "emissionSignatory",
     authorizedSiret: bsdasri => bsdasri.transporterCompanySiret // transporter can sign with emitter secret code (trs device)
   },
@@ -138,7 +137,8 @@ const dasriSignatureMapping: Record<
     author: "transportSignatureAuthor",
     date: "transportSignatureDate",
     eventType: BsdasriEventType.SignTransport,
-    validator: okForTransportSignatureSchema,
+    validationContext: { transportSignature: true },
+
     signatoryField: "transportSignatory",
     authorizedSiret: bsdasri => bsdasri.transporterCompanySiret
   },
@@ -147,7 +147,7 @@ const dasriSignatureMapping: Record<
     author: "receptionSignatureAuthor",
     date: "receptionSignatureDate",
     eventType: BsdasriEventType.SignReception,
-    validator: okForReceptionSignatureSchema,
+    validationContext: { receptionSignature: true },
     signatoryField: "receptionSignatory",
     authorizedSiret: bsdasri => bsdasri.recipientCompanySiret
   },
@@ -155,7 +155,7 @@ const dasriSignatureMapping: Record<
     author: "operationSignatureAuthor", // changeme
     date: "operationSignatureDate",
     eventType: BsdasriEventType.SignOperation,
-    validator: okForProcessingSignatureSchema,
+    validationContext: { operationSignature: true },
     signatoryField: "operationSignatory",
     authorizedSiret: bsdasri => bsdasri.recipientCompanySiret
   }

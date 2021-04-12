@@ -2,12 +2,13 @@ import { checkIsAuthenticated } from "../../../common/permissions";
 import { MutationResolvers } from "../../../generated/graphql/types";
 import { getBsdasriOrNotFound } from "../../database";
 import { expandBsdasriFromDb } from "../../dasri-converter";
+import { validateBsdasri } from "../../validation";
 import {
   checkIsBsdasriContributor,
   checkIsBsdasriPublishable
 } from "../../permissions";
 import prisma from "../../../prisma";
-// import { okForSealedFormSchema } from "../../validation";
+
 const publishBsdasriResolver: MutationResolvers["publishBsdasri"] = async (
   _,
   { id },
@@ -18,10 +19,11 @@ const publishBsdasriResolver: MutationResolvers["publishBsdasri"] = async (
   await checkIsBsdasriContributor(
     user,
     bsdasri,
-    "Vous ne pouvez pas mettre ce borderau dasri à jour si vous ne figurez pas dessus"
+    "Vous ne pouvez publier ce bordereau si vous ne figurez pas dessus"
   );
   await checkIsBsdasriPublishable(user, bsdasri);
 
+  await validateBsdasri(bsdasri, { emissionSignature: true });
   // publish  dasri
   const publishedBsdasri = await prisma.bsdasri.update({
     where: { id: bsdasri.id },

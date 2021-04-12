@@ -10,9 +10,53 @@ import {
 } from "../../dasri-converter";
 import getReadableId, { ReadableIdPrefix } from "../../../common/readableId";
 import { checkIsAuthenticated } from "../../../common/permissions";
-import { dasriDraftSchema } from "../../validation";
+import { validateBsdasri } from "../../validation";
 import { checkIsBsdasriContributor } from "../../permissions";
 
+const checkDasrisAreGroupable = async (regroupedBsdasris, emitterSiret) => {
+  if (!regroupedBsdasris) {
+    return;
+  }
+  if (!regroupedBsdasris.length) {
+    return;
+  }
+  const regroupedBsdasrisIds = regroupedBsdasris.map(dasri => dasri.id);
+  // retrieve dasris which:
+  // id is in regroupedBsdasrisIds
+  // are in PROCESSED status
+  // whose processingOperation is either D12 or  R12
+  // which are not already grouped
+  const found = await prisma.bsdasri.findMany({
+    where: {
+      id: { in: regroupedBsdasrisIds },
+      processingOperation: { in: ["R12", "D12"] },
+      status: "PROCESSED",
+      regroupedOnBsdasri: null
+      // recipientCompanySiret: emitterSiret
+    },
+    select: { id: true }
+  });
+
+  const foundIds = found.map(el => el.id);
+  const diff = regroupedBsdasrisIds.filter(el => !foundIds.includes(el));
+
+  if (!!diff.length) {
+    throw new Error(
+      `Les dasris suivants ne peuvent pas être regroupés ${diff.join()}`
+    );
+  }
+};
+
+const emitterIsAllowedToGroup = async emitterSiret => {
+  const emitterCompany = await prisma.company.findUnique({
+    where: { siret: emitterSiret }
+  });
+  if (!emitterCompany?.companyTypes.includes("COLLECTOR")) {
+    throw new Error(
+      "Le siret de l'émetteur n'est pas autorisé à regrouper des dasris"
+    );
+  }
+};
 const createBsdasriResolver = async (
   parent: ResolversParentTypes["Mutation"],
   { bsdasriCreateInput: input }: MutationCreateBsdasriArgs,
@@ -35,7 +79,14 @@ const createBsdasriResolver = async (
   );
 
   const flattenedInput = flattenBsdasriInput(bsdasriCreateInput);
-  await dasriDraftSchema.validate(flattenedInput);
+
+  await validateBsdasri(flattenedInput, { emissionSignature: true });
+
+  await emitterIsAllowedToGroup(flattenedInput?.emitterCompanySiret);
+  await checkDasrisAreGroupable(
+    regroupedBsdasris,
+    flattenedInput.emitterCompanySiret
+  );
   try {
     const newDasri = await prisma.bsdasri.create({
       data: {

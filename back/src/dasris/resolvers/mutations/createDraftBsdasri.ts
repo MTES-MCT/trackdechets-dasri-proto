@@ -10,7 +10,7 @@ import {
 } from "../../dasri-converter";
 import getReadableId, { ReadableIdPrefix } from "../../../common/readableId";
 import { checkIsAuthenticated } from "../../../common/permissions";
-import { dasriDraftSchema } from "../../validation";
+import { validateBsdasri } from "../../validation";
 import { checkIsBsdasriContributor } from "../../permissions";
 
 const createDraftBsdasriResolver = async (
@@ -35,13 +35,14 @@ const createDraftBsdasriResolver = async (
   );
 
   const flattenedInput = flattenBsdasriInput(bsdasriCreateInput);
-  await dasriDraftSchema.validate(flattenedInput);
+
+  await validateBsdasri(flattenedInput, {});
   try {
     const newDasri = await prisma.bsdasri.create({
       data: {
         ...flattenedInput,
         id: getReadableId(ReadableIdPrefix.DASRI),
-    
+
         owner: { connect: { id: user.id } },
         regroupedBsdasris: { connect: regroupedBsdasris },
         isDraft: true

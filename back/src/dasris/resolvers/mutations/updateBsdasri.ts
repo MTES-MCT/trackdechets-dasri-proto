@@ -14,7 +14,7 @@ import { checkIsBsdasriContributor } from "../../permissions";
 
 import { GraphQLContext } from "../../../types";
 import { getBsdasriOrNotFound } from "../../database";
-import { dasriDraftSchema } from "../../validation";
+import { validateBsdasri } from "../../validation";
 import { ForbiddenError } from "apollo-server-express";
 
 const fieldsAllowedForUpdateOnceReceived = [
@@ -89,7 +89,7 @@ const dasriUpdateResolver = async (
   const { regroupedBsdasris, id, ...dasriContent } = bsdasriUpdateInput;
 
   const existingDasri = await getBsdasriOrNotFound({ id });
-
+ 
   await checkIsBsdasriContributor(
     user,
     existingDasri,
@@ -100,12 +100,13 @@ const dasriUpdateResolver = async (
     throw new ForbiddenError("Ce bordereau n'est plus modifiable");
   }
 
-  const flattened = flattenBsdasriInput(dasriContent);
+  const flattenedInput = flattenBsdasriInput(dasriContent);
 
+  const expectedBsdasri = { ...existingDasri, ...flattenedInput };
   // Validate form input
-  await dasriDraftSchema.validate(bsdasriUpdateInput);
+  await validateBsdasri(expectedBsdasri, {});
 
-  const flattenedFields = Object.keys(flattened);
+  const flattenedFields = Object.keys(flattenedInput);
 
   // except for draft and sealed status, update fields are whitelisted
   if (existingDasri.status !== "INITIAL") {
@@ -121,7 +122,10 @@ const dasriUpdateResolver = async (
 
   const updatedDasri = await prisma.bsdasri.update({
     where: { id },
-    data: { ...flattened, regroupedBsdasris: { connect: regroupedBsdasris } }
+    data: {
+      ...flattenedInput,
+      regroupedBsdasris: { connect: regroupedBsdasris }
+    }
   });
   return expandBsdasriFromDb(updatedDasri);
 };
