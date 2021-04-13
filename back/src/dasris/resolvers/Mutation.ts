@@ -3,6 +3,7 @@ import createDraftBsdasri from "./mutations/createDraftBsdasri";
 import updateBsdasri from "./mutations/updateBsdasri";
 import publishBsdasri from "./mutations/publishBsdasri";
 import signBsdasri from "./mutations/signBsdasri";
+import signBsdasriEmissionWithSecretCode from "./mutations/signBsdasriEmissionWithSecretCode";
 import { MutationResolvers } from "../../generated/graphql/types";
 
 const Mutation: MutationResolvers = {
@@ -10,7 +11,8 @@ const Mutation: MutationResolvers = {
   createBsdasri,
   updateBsdasri,
   publishBsdasri,
-  signBsdasri
+  signBsdasri,
+  signBsdasriEmissionWithSecretCode
 };
 
 export default Mutation;

@@ -38,13 +38,15 @@ const createBsdasri = async (
   );
 
   const flattenedInput = flattenBsdasriInput(bsdasriCreateInput);
-
-  await emitterIsAllowedToGroup(flattenedInput?.emitterCompanySiret);
-  await checkDasrisAreGroupable(
-    regroupedBsdasris,
-    flattenedInput.emitterCompanySiret
-  );
   const isRegrouping = !!regroupedBsdasris && !!regroupedBsdasris.length;
+  
+  if (isRegrouping) {
+    await emitterIsAllowedToGroup(flattenedInput?.emitterCompanySiret);
+    await checkDasrisAreGroupable(
+      regroupedBsdasris,
+      flattenedInput.emitterCompanySiret
+    );
+  }
 
   const signatureContext = isDraft
     ? { isRegrouping }

@@ -157,11 +157,12 @@ enum BsdasriSignatureType {
 input BsdasriSignatureInput {
   type: BsdasriSignatureType!
   author: String!
-  securityCode: Int
 }
 
- 
- 
+input BsdasriSignatureWithSecretCodeInput {
+  author: String!
+  securityCode: Int
+}
 type Mutation {
   "Crée un nouveau dasri en brouillon"
   createDraftBsdasri(
@@ -173,7 +174,7 @@ type Mutation {
     "Payload de création d'un dasri"
     bsdasriCreateInput: BsdasriCreateInput!
   ): Bsdasri!
-  
+
   """
   Met à jour un dasri existant
   Par défaut, tous les champs sont modifiables.
@@ -196,4 +197,8 @@ type Mutation {
   sécurité de l'émetteur (BsdasriSignatureType: EMISSION_WITH_SECRET_CODE)
   """
   signBsdasri(id: ID!, signatureInput: BsdasriSignatureInput!): Bsdasri
+  signBsdasriEmissionWithSecretCode(
+    id: ID!
+    signatureInput: BsdasriSignatureWithSecretCodeInput!
+  ): Bsdasri
 }

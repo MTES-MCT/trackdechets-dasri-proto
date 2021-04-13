@@ -310,7 +310,6 @@ export type BsdasriSignature = {
 export type BsdasriSignatureInput = {
   type: BsdasriSignatureType;
   author: Scalars["String"];
-  securityCode?: Maybe<Scalars["Int"]>;
 };
 
 export type BsdasriSignatureType =
@@ -327,6 +326,11 @@ export type BsdasriSignatureType =
 
 export type BsdasriSignatureWhere = {
   date: DateFilter;
+};
+
+export type BsdasriSignatureWithSecretCodeInput = {
+  author: Scalars["String"];
+  securityCode?: Maybe<Scalars["Int"]>;
 };
 
 export type BsdasriStatus =
@@ -1499,6 +1503,7 @@ export type Mutation = {
    * sécurité de l'émetteur (BsdasriSignatureType: EMISSION_WITH_SECRET_CODE)
    */
   signBsdasri?: Maybe<Bsdasri>;
+  signBsdasriEmissionWithSecretCode?: Maybe<Bsdasri>;
   /**
    * Permet de transférer le déchet à un transporteur lors de la collecte initiale (signatures en case 8 et 9)
    * ou après une étape d'entreposage provisoire ou de reconditionnement (signatures en case 18 et 19).
@@ -1732,6 +1737,11 @@ export type MutationSendMembershipRequestArgs = {
 export type MutationSignBsdasriArgs = {
   id: Scalars["ID"];
   signatureInput: BsdasriSignatureInput;
+};
+
+export type MutationSignBsdasriEmissionWithSecretCodeArgs = {
+  id: Scalars["ID"];
+  signatureInput: BsdasriSignatureWithSecretCodeInput;
 };
 
 export type MutationSignedByTransporterArgs = {
@@ -2996,6 +3006,7 @@ export type ResolversTypes = {
   TempStorerAcceptedFormInput: TempStorerAcceptedFormInput;
   FormInput: FormInput;
   BsdasriSignatureInput: BsdasriSignatureInput;
+  BsdasriSignatureWithSecretCodeInput: BsdasriSignatureWithSecretCodeInput;
   TransporterSignatureFormInput: TransporterSignatureFormInput;
   SignatureAuthor: SignatureAuthor;
   SignupInput: SignupInput;
@@ -3131,6 +3142,7 @@ export type ResolversParentTypes = {
   TempStorerAcceptedFormInput: TempStorerAcceptedFormInput;
   FormInput: FormInput;
   BsdasriSignatureInput: BsdasriSignatureInput;
+  BsdasriSignatureWithSecretCodeInput: BsdasriSignatureWithSecretCodeInput;
   TransporterSignatureFormInput: TransporterSignatureFormInput;
   SignupInput: SignupInput;
   TakeOverInput: TakeOverInput;
@@ -4376,6 +4388,15 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationSignBsdasriArgs, "id" | "signatureInput">
   >;
+  signBsdasriEmissionWithSecretCode?: Resolver<
+    Maybe<ResolversTypes["Bsdasri"]>,
+    ParentType,
+    ContextType,
+    RequireFields<
+      MutationSignBsdasriEmissionWithSecretCodeArgs,
+      "id" | "signatureInput"
+    >
+  >;
   signedByTransporter?: Resolver<
     Maybe<ResolversTypes["Form"]>,
     ParentType,
@@ -5439,7 +5460,6 @@ export function createBsdasriSignatureInputMock(
   return {
     type: "EMISSION",
     author: "",
-    securityCode: null,
     ...props
   };
 }
@@ -5449,6 +5469,16 @@ export function createBsdasriSignatureWhereMock(
 ): BsdasriSignatureWhere {
   return {
     date: createDateFilterMock({}),
+    ...props
+  };
+}
+
+export function createBsdasriSignatureWithSecretCodeInputMock(
+  props: Partial<BsdasriSignatureWithSecretCodeInput>
+): BsdasriSignatureWithSecretCodeInput {
+  return {
+    author: "",
+    securityCode: null,
     ...props
   };
 }
