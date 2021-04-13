@@ -1,4 +1,6 @@
 import prisma from "../../../prisma";
+
+import { DASRI_GROUPING_OPERATIONS_CODES } from "../../../common/constants";
 export const checkDasrisAreGroupable = async (
   regroupedBsdasris,
   emitterSiret
@@ -19,7 +21,7 @@ export const checkDasrisAreGroupable = async (
   const found = await prisma.bsdasri.findMany({
     where: {
       id: { in: regroupedBsdasrisIds },
-      processingOperation: { in: ["R12", "D12"] },
+      processingOperation: { in: DASRI_GROUPING_OPERATIONS_CODES },
       status: "PROCESSED",
       regroupedOnBsdasri: null,
       regroupedBsdasris: { none: {} },

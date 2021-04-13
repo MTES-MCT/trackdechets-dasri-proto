@@ -38,12 +38,12 @@ export const DASRI_GROUPING_OPERATIONS = [
   {
     type: DasriProcessingOperationType.RegroupementPrealableD9D10,
     code: "D12",
-    description: "Regroupement D13 Préalable à D9 ou D10"
+    description: "Regroupement D12 Préalable à D9 ou D10"
   },
   {
     type: DasriProcessingOperationType.RegroupementPrealableR1,
     code: "R12",
-    description: "Regroupement R13 Préalable à R1"
+    description: "Regroupement R12 Préalable à R1"
   }
 ];
 
