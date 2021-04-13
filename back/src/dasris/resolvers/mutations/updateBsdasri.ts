@@ -76,7 +76,31 @@ const getFieldsAllorwedForUpdate = (bsdasri: Bsdasri) => {
   };
   return allowedFields[bsdasri.status];
 };
+const getRegroupedBsdasriArgs = inputRegroupedBsdasris => {
+  if (inputRegroupedBsdasris === null) {
+    return { set: [] };
+  }
 
+  const args = !!inputRegroupedBsdasris
+    ? { connect: inputRegroupedBsdasris }
+    : {};
+  return { regroupedBsdasris: args };
+};
+const getIsRegrouping = (dbRegroupedBsdasris, regroupedBsdasris) => {
+  if (regroupedBsdasris === null) {
+    return { isRegrouping: false };
+  }
+  if (regroupedBsdasris === undefined) {
+    return {
+      isRegrouping:
+        (!!regroupedBsdasris && !!regroupedBsdasris.length) ||
+        !!dbRegroupedBsdasris.length
+    };
+  }
+  if (!!regroupedBsdasris) {
+    return { isRegrouping: true };
+  }
+};
 const dasriUpdateResolver = async (
   parent: ResolversParentTypes["Mutation"],
   args: MutationUpdateBsdasriArgs,
@@ -86,31 +110,40 @@ const dasriUpdateResolver = async (
 
   const { bsdasriUpdateInput } = { ...args };
 
-  const { regroupedBsdasris, id, ...dasriContent } = bsdasriUpdateInput;
+  const {
+    regroupedBsdasris: inputRegroupedBsdasris,
+    id,
+    ...dasriContent
+  } = bsdasriUpdateInput;
 
-  const existingDasri = await getBsdasriOrNotFound({ id });
- 
+  const {
+    regroupedBsdasris: dbRegroupedBsdasris,
+    ...dbBsdasri
+  } = await getBsdasriOrNotFound({ id, includeRegrouped: true });
+
   await checkIsBsdasriContributor(
     user,
-    existingDasri,
+    dbBsdasri,
     "Vous ne pouvez pas modifier un bordereau sur lequel votre entreprise n'apparait pas"
   );
 
-  if (["PROCESSED", "REFUSED"].includes(existingDasri.status)) {
+  if (["PROCESSED", "REFUSED"].includes(dbBsdasri.status)) {
     throw new ForbiddenError("Ce bordereau n'est plus modifiable");
   }
 
   const flattenedInput = flattenBsdasriInput(dasriContent);
 
-  const expectedBsdasri = { ...existingDasri, ...flattenedInput };
+  const expectedBsdasri = { ...dbBsdasri, ...flattenedInput };
   // Validate form input
-  await validateBsdasri(expectedBsdasri, {});
+  await validateBsdasri(expectedBsdasri, {
+    ...getIsRegrouping(dbRegroupedBsdasris, inputRegroupedBsdasris)
+  });
 
   const flattenedFields = Object.keys(flattenedInput);
 
   // except for draft and sealed status, update fields are whitelisted
-  if (existingDasri.status !== "INITIAL") {
-    const allowedFields = getFieldsAllorwedForUpdate(existingDasri);
+  if (dbBsdasri.status !== "INITIAL") {
+    const allowedFields = getFieldsAllorwedForUpdate(dbBsdasri);
 
     const diff = flattenedFields.filter(el => !allowedFields.includes(el));
 
@@ -124,7 +157,7 @@ const dasriUpdateResolver = async (
     where: { id },
     data: {
       ...flattenedInput,
-      regroupedBsdasris: { connect: regroupedBsdasris }
+      ...getRegroupedBsdasriArgs(inputRegroupedBsdasris)
     }
   });
   return expandBsdasriFromDb(updatedDasri);
