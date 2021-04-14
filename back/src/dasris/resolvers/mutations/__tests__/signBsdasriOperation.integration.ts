@@ -1,18 +1,18 @@
-import { resetDatabase } from "../../../integration-tests/helper";
-import { ErrorCode } from "../../common/errors";
-import { userWithCompanyFactory } from "../../__tests__/factories";
-import makeClient from "../../__tests__/testClient";
+import { resetDatabase } from "../../../../../integration-tests/helper";
+import { ErrorCode } from "../../../../common/errors";
+import { userWithCompanyFactory } from "../../../../__tests__/factories";
+import makeClient from "../../../../__tests__/testClient";
 import { BsdasriStatus } from "@prisma/client";
-import { bsdasriFactory } from "./factories";
-import prisma from "../../prisma";
-
 import {
-  SIGN_DASRI,
-  draftData,
+  bsdasriFactory,
+  initialData,
   readyToTakeOverData,
   readyToReceiveData,
   readyToProcessData
-} from "./signUtils";
+} from "../../../__tests__/factories";
+import prisma from "../../../../prisma";
+
+import { SIGN_DASRI } from "./signUtils";
 
 describe("Mutation.signBsdasri operation", () => {
   afterEach(resetDatabase);
@@ -33,7 +33,7 @@ describe("Mutation.signBsdasri operation", () => {
     const dasri = await bsdasriFactory({
       ownerId: emitter.id,
       opt: {
-        ...draftData(emitterCompany),
+        ...initialData(emitterCompany),
         ...readyToTakeOverData(transporterCompany),
         ...readyToReceiveData(recipientCompany),
         ...{ processingOperation: "XYZ", processedAt: new Date() },
@@ -51,7 +51,8 @@ describe("Mutation.signBsdasri operation", () => {
 
     expect(errors).toEqual([
       expect.objectContaining({
-        message: "Cette opération d’élimination / valorisation n'existe pas.",
+        message:
+          "Cette opération d’élimination / valorisation n'existe pas ou n'est pas appropriée",
         extensions: expect.objectContaining({
           code: ErrorCode.BAD_USER_INPUT
         })
@@ -82,7 +83,7 @@ describe("Mutation.signBsdasri operation", () => {
     const dasri = await bsdasriFactory({
       ownerId: emitter.id,
       opt: {
-        ...draftData(emitterCompany),
+        ...initialData(emitterCompany),
         ...readyToTakeOverData(transporterCompany),
         ...readyToReceiveData(recipientCompany),
         ...readyToProcessData,

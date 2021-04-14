@@ -1,10 +1,10 @@
-import { resetDatabase } from "../../../integration-tests/helper";
-import { ErrorCode } from "../../common/errors";
-import { bsdasriFactory } from "./factories";
-import { userWithCompanyFactory } from "../../__tests__/factories";
-import makeClient from "../../__tests__/testClient";
+import { resetDatabase } from "../../../../../integration-tests/helper";
+import { ErrorCode } from "../../../../common/errors";
+import { bsdasriFactory } from "../../../__tests__/factories";
+import { userWithCompanyFactory } from "../../../../__tests__/factories";
+import makeClient from "../../../../__tests__/testClient";
 import { BsdasriStatus } from "@prisma/client";
-import prisma from "../../prisma";
+import prisma from "../../../../prisma";
 
 const UPDATE_DASRI = `
 mutation UpdateDasri($input: BsdasriUpdateInput!) {

@@ -188,7 +188,7 @@ type Mutation {
   publishBsdasri("ID d'un Bsdasri" id: ID!): Bsdasri
 
   """
-  Appose une signature sur un Bsdasri, verrouille les cadres correspondant
+  Appowse une signature sur un Bsdasri, verrouille les cadres correspondant
 
   Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
   Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport

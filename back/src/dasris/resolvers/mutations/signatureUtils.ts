@@ -88,7 +88,7 @@ export const dasriSignatureMapping: Record<
     author: "emissionSignatureAuthor",
     date: "emissionSignatureDate",
     eventType: BsdasriEventType.SignEmissionWithSecretCode,
-    validationContext: { emissionSignature: true, transportSignature: true },
+    validationContext: { emissionSignature: true },
     signatoryField: "emissionSignatory",
     authorizedSiret: bsdasri => bsdasri.transporterCompanySiret // transporter can sign with emitter secret code (trs device)
   },
@@ -96,7 +96,7 @@ export const dasriSignatureMapping: Record<
     author: "transportSignatureAuthor",
     date: "transportSignatureDate",
     eventType: BsdasriEventType.SignTransport,
-    validationContext: { transportSignature: true },
+    validationContext: { emissionSignature: true, transportSignature: true }, // validate emission in case of direct takeover
 
     signatoryField: "transportSignatory",
     authorizedSiret: bsdasri => bsdasri.transporterCompanySiret

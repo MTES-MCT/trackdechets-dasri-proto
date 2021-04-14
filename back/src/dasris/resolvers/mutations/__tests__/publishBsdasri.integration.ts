@@ -1,9 +1,9 @@
-import { resetDatabase } from "../../../integration-tests/helper";
-import { ErrorCode } from "../../common/errors";
-import { userWithCompanyFactory } from "../../__tests__/factories";
-import makeClient from "../../__tests__/testClient";
-
-import { bsdasriFactory } from "./factories";
+import { resetDatabase } from "../../../../../integration-tests/helper";
+import { ErrorCode } from "../../../../common/errors";
+import { userWithCompanyFactory } from "../../../../__tests__/factories";
+import makeClient from "../../../../__tests__/testClient";
+import { bsdasriFactory, initialData } from "../../../__tests__/factories";
+ 
 
 const PUBLISH_DASRI = `
 mutation PublishDasri($id: ID!){
@@ -11,7 +11,6 @@ mutation PublishDasri($id: ID!){
     id
     status
     isDraft
-    
   }
 }
 `;
@@ -50,7 +49,7 @@ describe("Mutation.publishBsdasri", () => {
       ownerId: user.id,
       opt: {
         isDraft: true,
-        emitterCompanySiret: company.siret
+        ...initialData(company)
       }
     });
 
@@ -72,7 +71,7 @@ describe("Mutation.publishBsdasri", () => {
     const dasri = await bsdasriFactory({
       ownerId: user.id,
       opt: {
-        emitterCompanySiret: company.siret
+        ...initialData(company)
       }
     });
 
@@ -101,8 +100,8 @@ describe("Mutation.publishBsdasri", () => {
 
       opt: {
         isDraft: true,
-        emitterCompanySiret: company.siret, // missing fields
-        emitterCompanyName: null
+        ...initialData(company),
+        emitterCompanyName: null // missing field
       }
     });
     const { mutate } = makeClient(user); // emitter

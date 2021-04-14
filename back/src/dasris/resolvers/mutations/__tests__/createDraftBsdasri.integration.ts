@@ -1,7 +1,10 @@
-import { resetDatabase } from "../../../integration-tests/helper";
-import { ErrorCode } from "../../common/errors";
-import { userFactory, userWithCompanyFactory } from "../../__tests__/factories";
-import makeClient from "../../__tests__/testClient";
+import { resetDatabase } from "../../../../../integration-tests/helper";
+import { ErrorCode } from "../../../../common/errors";
+import {
+  userFactory,
+  userWithCompanyFactory
+} from "../../../../__tests__/factories";
+import makeClient from "../../../../__tests__/testClient";
 
 const CREATE_DRAFT_DASRI = `
 mutation DasriCreate($input: BsdasriCreateInput!) {
@@ -45,7 +48,7 @@ describe("Mutation.createDraftBsdasri", () => {
         input: {
           emitter: {
             company: {
-              siret: "siret"
+              siret: "9999"
             }
           }
         }

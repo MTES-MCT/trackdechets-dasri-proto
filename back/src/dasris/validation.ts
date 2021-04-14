@@ -126,40 +126,37 @@ interface DasriValidationContext {
 export const emitterSchema: FactorySchemaOf<
   BsdasriValidationContext,
   Emitter
-> = context => {
-  return yup.object({
+> = context =>
+  yup.object({
     emitterCompanyName: yup
       .string()
-      .ensure()
       .requiredIf(
         context.emissionSignature,
         `Émetteur--: ${MISSING_COMPANY_NAME}`
       ),
     emitterCompanySiret: yup
       .string()
-      .ensure()
+      .length(14, `Émetteur: ${INVALID_SIRET_LENGTH}`)
       .requiredIf(
         context.emissionSignature,
         `Émetteur: ${MISSING_COMPANY_SIRET}`
-      )
-      .length(14, `Émetteur: ${INVALID_SIRET_LENGTH}`),
+      ),
     emitterCompanyAddress: yup
       .string()
-      .ensure()
+
       .requiredIf(
         context.emissionSignature,
         `Émetteur: ${MISSING_COMPANY_ADDRESS}`
       ),
     emitterCompanyContact: yup
       .string()
-      .ensure()
+
       .requiredIf(
         context.emissionSignature,
         `Émetteur: ${MISSING_COMPANY_CONTACT}`
       ),
     emitterCompanyPhone: yup
       .string()
-      .ensure()
       .requiredIf(
         context.emissionSignature,
         `Émetteur: ${MISSING_COMPANY_PHONE}`
@@ -167,7 +164,6 @@ export const emitterSchema: FactorySchemaOf<
     emitterCompanyMail: yup
       .string()
       .email()
-      .ensure()
       .requiredIf(
         context.emissionSignature,
         `Émetteur: ${MISSING_COMPANY_EMAIL}`
@@ -187,7 +183,6 @@ export const emitterSchema: FactorySchemaOf<
         v => (!context.isRegrouping ? !v : true)
       )
   });
-};
 
 const packagingsTypes: BsdasriPackagings[] = [
   "BOITE_CARTON",
@@ -290,12 +285,11 @@ export const transporterSchema: FactorySchemaOf<
       ),
     transporterCompanySiret: yup
       .string()
-
+      .length(14, `Transporteur: ${INVALID_SIRET_LENGTH}`)
       .requiredIf(
         context.transportSignature,
         `Transporteur: ${MISSING_COMPANY_SIRET}`
-      )
-      .length(14, `Transporteur: ${INVALID_SIRET_LENGTH}`),
+      ),
     transporterCompanyAddress: yup
       .string()
       .ensure()
@@ -433,29 +427,29 @@ export const recipientSchema: FactorySchemaOf<
   yup.object().shape({
     recipientCompanyName: yup
       .string()
-      .ensure()
+
       .requiredIf(
         context.receptionSignature,
         `Destinataire: ${MISSING_COMPANY_NAME}`
       ),
     recipientCompanySiret: yup
       .string()
+      .length(14, `Destinataire: ${INVALID_SIRET_LENGTH}`)
 
       .requiredIf(
         context.receptionSignature,
         `Destinataire: ${MISSING_COMPANY_SIRET}`
-      )
-      .length(14, `Destinataire: ${INVALID_SIRET_LENGTH}`),
+      ),
     recipientCompanyAddress: yup
       .string()
-      .ensure()
+
       .requiredIf(
         context.receptionSignature,
         `Destinataire: ${MISSING_COMPANY_ADDRESS}`
       ),
     recipientCompanyContact: yup
       .string()
-      .ensure()
+
       .requiredIf(
         context.receptionSignature,
         `Destinataire: ${MISSING_COMPANY_CONTACT}`

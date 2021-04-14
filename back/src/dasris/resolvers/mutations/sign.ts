@@ -2,6 +2,8 @@ import { checkIsAuthenticated } from "../../../common/permissions";
 import { getBsdasriOrNotFound } from "../../database";
 import { expandBsdasriFromDb } from "../../dasri-converter";
 import { InvalidTransition } from "../../../forms/errors";
+import { BsdasriStatus } from "@prisma/client";
+import { BsdasriEventType } from "../../workflow/types";
 
 import dasriTransition from "../../workflow/dasriTransition";
 
@@ -28,7 +30,7 @@ const basesign = async ({
     ? "EMISSION_WITH_SECRET_CODE"
     : signatureInput.type;
   const signatureParams = dasriSignatureMapping[signatureType];
-
+ 
   // Which siret is involved in curent signature process ?
   const siretWhoSigns = signatureParams.authorizedSiret(bsdasri);
   // Is this siret belonging to concrete user ?
@@ -51,8 +53,6 @@ const basesign = async ({
     [signatureParams.signatoryField]: { connect: { id: user.id } },
     ...getFieldsUpdate({ bsdasri, signatureInput })
   };
-
-  // Validate required fields are filled
 
   const updatedDasri = await dasriTransition(
     bsdasri,

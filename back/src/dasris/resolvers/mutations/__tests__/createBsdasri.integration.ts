@@ -1,7 +1,10 @@
-import { resetDatabase } from "../../../integration-tests/helper";
-import { ErrorCode } from "../../common/errors";
-import { userFactory, userWithCompanyFactory } from "../../__tests__/factories";
-import makeClient from "../../__tests__/testClient";
+import { resetDatabase } from "../../../../../integration-tests/helper";
+import { ErrorCode } from "../../../../common/errors";
+import {
+  userFactory,
+  userWithCompanyFactory
+} from "../../../../__tests__/factories";
+import makeClient from "../../../../__tests__/testClient";
 
 const CREATE_DASRI = `
 mutation DasriCreate($input: BsdasriCreateInput!) {
@@ -9,37 +12,11 @@ mutation DasriCreate($input: BsdasriCreateInput!) {
     id
     isDraft
     status
-
     emitter {
       company {
-        name
-        siret
-      }
-   
+         siret
+        }
     }
-    emission {
-      wasteCode
-      wasteDetails {
-        onuCode
-        volume
-        quantity
-        quantityType
-      }
-      handedOverAt
-      signature { author date}
-    }
-
-   
- 
-    recipient {
-      company {
-        name
-        siret
-      }
-    }
-  
-    
- 
   }
 }
 `;

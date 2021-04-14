@@ -1,17 +1,17 @@
-import { resetDatabase } from "../../../integration-tests/helper";
+import { resetDatabase } from "../../../../../integration-tests/helper";
 
-import { userWithCompanyFactory } from "../../__tests__/factories";
-import makeClient from "../../__tests__/testClient";
+import { userWithCompanyFactory } from "../../../../__tests__/factories";
+import makeClient from "../../../../__tests__/testClient";
 import { BsdasriStatus, WasteAcceptationStatus } from "@prisma/client";
-import { bsdasriFactory } from "./factories";
-import prisma from "../../prisma";
-
 import {
-  SIGN_DASRI,
-  draftData,
+  bsdasriFactory,
+  initialData,
   readyToTakeOverData,
   readyToReceiveData
-} from "./signUtils";
+} from "../../../__tests__/factories";
+import prisma from "../../../../prisma";
+
+import { SIGN_DASRI } from "./signUtils";
 
 describe("Mutation.signBsdasri reception", () => {
   afterEach(resetDatabase);
@@ -33,7 +33,7 @@ describe("Mutation.signBsdasri reception", () => {
     const dasri = await bsdasriFactory({
       ownerId: emitter.id,
       opt: {
-        ...draftData(emitterCompany),
+        ...initialData(emitterCompany),
         ...readyToTakeOverData(transporterCompany),
         ...readyToReceiveData(recipientCompany),
         receivedAt: new Date("2020-12-15T11:00:00.000Z"),
@@ -83,7 +83,7 @@ describe("Mutation.signBsdasri reception", () => {
     const dasri = await bsdasriFactory({
       ownerId: emitter.id,
       opt: {
-        ...draftData(emitterCompany),
+        ...initialData(emitterCompany),
         ...readyToTakeOverData(transporterCompany),
         ...readyToReceiveData(recipientCompany),
         handedOverToRecipientAt: new Date("2020-12-20T11:00:00.000Z"),
@@ -128,7 +128,7 @@ describe("Mutation.signBsdasri reception", () => {
     const dasri = await bsdasriFactory({
       ownerId: emitter.id,
       opt: {
-        ...draftData(emitterCompany),
+        ...initialData(emitterCompany),
         ...readyToTakeOverData(transporterCompany),
         ...readyToReceiveData(recipientCompany),
         recipientWasteAcceptationStatus: WasteAcceptationStatus.REFUSED,

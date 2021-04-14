@@ -14,8 +14,6 @@ describe("getBsdasriOrNotFound", () => {
     expect(created.id).toEqual(retrieved.id);
   });
 
- 
-
   it("should throw BsdasriNotFound exception if dasri is deleted", async () => {
     expect.assertions(2);
     const user = await userFactory();
@@ -45,6 +43,4 @@ describe("getBsdasriOrNotFound", () => {
       );
     }
   });
-
- 
 });

@@ -39,7 +39,7 @@ const createBsdasri = async (
 
   const flattenedInput = flattenBsdasriInput(bsdasriCreateInput);
   const isRegrouping = !!regroupedBsdasris && !!regroupedBsdasris.length;
-  
+
   if (isRegrouping) {
     await emitterIsAllowedToGroup(flattenedInput?.emitterCompanySiret);
     await checkDasrisAreGroupable(
@@ -66,6 +66,7 @@ const createBsdasri = async (
     });
     return expandBsdasriFromDb(newDasri);
   } catch (e) {
+
     console.log(e);
   }
 };
