@@ -128,7 +128,7 @@ type Query {
     updatedAfter: String
 
     "SIRET d'un établissement dont je suis membre"
-    siret: String
+    siret: String!
 
     where: BsdasriWhere
   ): BsdasriConnection!

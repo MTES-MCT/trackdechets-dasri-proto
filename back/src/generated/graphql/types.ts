@@ -1494,7 +1494,7 @@ export type Mutation = {
    */
   sendMembershipRequest?: Maybe<MembershipRequest>;
   /**
-   * Appose une signature sur un Bsdasri, verrouille les cadres correspondant
+   * Appowse une signature sur un Bsdasri, verrouille les cadres correspondant
    *
    * Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
    * Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport
@@ -2024,7 +2024,7 @@ export type QueryBsdasrisArgs = {
   before?: Maybe<Scalars["ID"]>;
   last?: Maybe<Scalars["Int"]>;
   updatedAfter?: Maybe<Scalars["String"]>;
-  siret?: Maybe<Scalars["String"]>;
+  siret: Scalars["String"];
   where?: Maybe<BsdasriWhere>;
 };
 
@@ -4516,7 +4516,7 @@ export type QueryResolvers<
     ResolversTypes["BsdasriConnection"],
     ParentType,
     ContextType,
-    RequireFields<QueryBsdasrisArgs, never>
+    RequireFields<QueryBsdasrisArgs, "siret">
   >;
   companyInfos?: Resolver<
     ResolversTypes["CompanyPublic"],

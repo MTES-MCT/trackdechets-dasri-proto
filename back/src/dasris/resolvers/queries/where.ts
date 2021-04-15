@@ -4,15 +4,23 @@ import { safeInput } from "../../../forms/form-converter";
 import { BsdasriWhere, DateFilter } from "../../../generated/graphql/types";
 
 export function convertWhereToDbFilter(
-  where: BsdasriWhere
+  where: BsdasriWhere,
+  userCompanySiret
 ): Prisma.BsdasriWhereInput {
+  const belongToUserSiret = {
+    OR: [
+      { emitterCompanySiret: userCompanySiret },
+      { transporterCompanySiret: userCompanySiret },
+      { recipientCompanySiret: userCompanySiret }
+    ]
+  };
+
   if (!where) {
-    return {};
+    return belongToUserSiret;
   }
 
   const { _or, _and, _not, ...filters } = where;
 
-  // const hasNesting = or_not_and?.some(w => w._or || w._and || w._not);
   const hasOrNesting = _or?.some(w => w._or || w._and || w._not);
   const hasAndNesting = _and?.some(w => w._or || w._and || w._not);
   const hasNotNesting = _not?.some(w => w._or || w._and || w._not);
@@ -21,16 +29,20 @@ export function convertWhereToDbFilter(
     throw new UserInputError("Cannot nest conditions deeper than one level");
   }
 
-  return safeInput({
+  const safeWhere = safeInput({
     OR: _or?.map(w => toPrismaFilter(w)),
     AND: _and?.map(w => toPrismaFilter(w)),
     NOT: _not?.map(w => toPrismaFilter(w)),
     ...toPrismaFilter(filters)
   });
+
+  return {
+    AND: [belongToUserSiret, safeWhere]
+  };
 }
 
-/**  */
 const getGroupableCondition = (groupable?: boolean) => {
+  // groupable dasris should not regroup or be regrouped
   if (!!groupable) {
     return { regroupedBsdasris: { none: {} }, regroupedOnBsdasri: null };
   }
@@ -44,6 +56,7 @@ const getGroupableCondition = (groupable?: boolean) => {
   }
   return {};
 };
+
 function toPrismaFilter(where: Omit<BsdasriWhere, "_or" | "_and" | "_not">) {
   return safeInput({
     createdAt: where.createdAt
@@ -52,10 +65,13 @@ function toPrismaFilter(where: Omit<BsdasriWhere, "_or" | "_and" | "_not">) {
     updatedAt: where.updatedAt
       ? toPrismaDateFilter(where.updatedAt)
       : undefined,
-    transporterCompanySiret: where.transporter?.company?.siret,
     emitterCompanySiret: where.emitter?.company?.siret,
+    transporterCompanySiret: where.transporter?.company?.siret,
+
     recipientCompanySiret: where.recipient?.company?.siret,
-    processingOperation: { in: where.processingOperation },
+    ...(!!where.processingOperation
+      ? { processingOperation: { in: where.processingOperation } }
+      : {}),
     status: where.status,
     isDraft: where.isDraft,
     ...getGroupableCondition(where?.groupable)
