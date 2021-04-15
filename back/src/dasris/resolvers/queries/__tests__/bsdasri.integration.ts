@@ -3,6 +3,7 @@ import { userWithCompanyFactory } from "../../../../__tests__/factories";
 import makeClient from "../../../../__tests__/testClient";
 import { ErrorCode } from "../../../../common/errors";
 import { bsdasriFactory, initialData } from "../../../__tests__/factories";
+ 
 
 const GET_BSDASRI = `
 query GetBsdasri($id: ID!) {
@@ -156,5 +157,34 @@ describe("Query.Bsdasri", () => {
 
     expect(data.bsdasri.id).toBe(dasri.id);
     expect(data.bsdasri.status).toBe("INITIAL");
+    expect(data.bsdasri.regroupedBsdasris).toStrictEqual([]);
+  });
+
+  it.only("should retrieve regrouped dasris", async () => {
+    const { user, company } = await userWithCompanyFactory("MEMBER");
+
+    const toRegroup = await bsdasriFactory({
+      ownerId: user.id,
+      opt: {
+        ...initialData(company),
+        status: "PROCESSED"
+      }
+    });
+    const dasri = await bsdasriFactory({
+      ownerId: user.id,
+      opt: {
+        ...initialData(company),
+        regroupedBsdasris: { connect: [{ id: toRegroup.id }] }
+      }
+    });
+
+    const { query } = makeClient(user);
+
+    const { data } = await query(GET_BSDASRI, {
+      variables: { id: dasri.id }
+    });
+
+    expect(data.bsdasri.id).toBe(dasri.id);
+    expect(data.bsdasri.regroupedBsdasris).toStrictEqual([toRegroup.id]);
   });
 });
