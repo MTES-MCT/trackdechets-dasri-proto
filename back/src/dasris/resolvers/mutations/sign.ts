@@ -30,22 +30,24 @@ const basesign = async ({
     ? "EMISSION_WITH_SECRET_CODE"
     : signatureInput.type;
   const signatureParams = dasriSignatureMapping[signatureType];
- 
+
   // Which siret is involved in curent signature process ?
   const siretWhoSigns = signatureParams.authorizedSiret(bsdasri);
-  // Is this siret belonging to concrete user ?
+  // Is this siret belonging to a concrete user ?
   await checkIsCompanyMember({ id: user.id }, { siret: siretWhoSigns });
 
-  await checkEmitterAllowsDirectTakeOver({
+  const isEmissionDirectTakenOver = await checkEmitterAllowsDirectTakeOver({
     signatureParams,
     bsdasri
   });
 
-  await checkEmitterAllowsSignatureWithSecretCode({
-    signatureParams,
-    bsdasri,
-    securityCode
-  });
+  const isEmissionTakenOverWithSecretCode = await checkEmitterAllowsSignatureWithSecretCode(
+    {
+      signatureParams,
+      bsdasri,
+      securityCode
+    }
+  );
 
   const data = {
     [signatureParams.author]: signatureInput.author,
@@ -55,12 +57,15 @@ const basesign = async ({
   };
 
   const updatedDasri = await dasriTransition(
-    bsdasri,
+    {
+      ...bsdasri
+    },
     {
       type: signatureParams.eventType,
       dasriUpdateInput: data
     },
-    signatureParams.validationContext
+    signatureParams.validationContext,
+    { isEmissionDirectTakenOver, isEmissionTakenOverWithSecretCode }
   );
 
   return expandBsdasriFromDb(updatedDasri);

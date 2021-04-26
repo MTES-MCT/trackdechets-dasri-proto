@@ -26,7 +26,7 @@ describe("Mutation.signBsdasri emission with secret code", () => {
         transporterCompanySiret: transporterCompany.siret
       }
     });
-    const { mutate } = makeClient(transporter); // emitter
+    const { mutate } = makeClient(transporter); // transporter
 
     const { errors } = await mutate(SIGN_DASRI_WITH_CODE, {
       variables: {
@@ -69,7 +69,7 @@ describe("Mutation.signBsdasri emission with secret code", () => {
     });
     const { mutate } = makeClient(transporter); // emitter
 
-    const res = await mutate(SIGN_DASRI_WITH_CODE, {
+    await mutate(SIGN_DASRI_WITH_CODE, {
       variables: {
         id: dasri.id,
         input: {
@@ -86,5 +86,8 @@ describe("Mutation.signBsdasri emission with secret code", () => {
     expect(readyTotakeOverDasri.emissionSignatureAuthor).toEqual("Marcel");
     expect(readyTotakeOverDasri.emissionSignatureDate).toBeTruthy();
     expect(readyTotakeOverDasri.emissionSignatoryId).toEqual(transporter.id);
+    expect(readyTotakeOverDasri.isEmissionTakenOverWithSecretCode).toEqual(
+      true
+    );
   });
 });

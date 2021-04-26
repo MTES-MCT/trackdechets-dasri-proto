@@ -12,7 +12,8 @@ import { validateBsdasri, BsdasriValidationContext } from "../validation";
 export default async function dasriTransition(
   bsdasri: Bsdasri,
   event: BsdasriEvent,
-  validationContext: BsdasriValidationContext
+  validationContext: BsdasriValidationContext,
+  extraFields?: Partial<Bsdasri>
 ) {
   const currentStatus = bsdasri.status;
 
@@ -29,7 +30,8 @@ export default async function dasriTransition(
 
   const dasriUpdateInput: Prisma.BsdasriUpdateInput = {
     status: nextStatus,
-    ...event.dasriUpdateInput
+    ...event.dasriUpdateInput,
+    ...extraFields
   };
 
   // update dasri

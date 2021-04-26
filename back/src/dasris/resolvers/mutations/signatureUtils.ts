@@ -9,10 +9,11 @@ import { BsdasriEventType } from "../../workflow/types";
 type checkEmitterAllowsDirectTakeOverFn = ({
   signatureParams: BsdasriSignatureInfos,
   bsdasri: Bsdasri
-}) => Promise<void>;
+}) => Promise<boolean>;
 /**
- * Dasri can be taken over author transporter without signature if emitter explicitly allows this in company preferences
- * Checking this in mutation code needs less code than doing it in the state machine, hence this utils
+ * Dasri can be taken over by transporter without signature if emitter explicitly allows this in company preferences
+ * Checking this in mutation code needs less code than doing it in the state machine, hence this util.
+ * A boolean is returned to be stored on Bsdasri model iot tell apart which dasris were taken over directly.
  */
 export const checkEmitterAllowsDirectTakeOver: checkEmitterAllowsDirectTakeOverFn = async ({
   signatureParams,
@@ -30,19 +31,22 @@ export const checkEmitterAllowsDirectTakeOver: checkEmitterAllowsDirectTakeOverF
         "Erreur, l'émetteur n'a pas autorisé l'emport par le transporteur sans l'avoir préalablement signé"
       );
     }
+    return true;
   }
+  return false;
 };
 
 type checkEmitterAllowsSignatureWithCodeFn = ({
   signatureParams: BsdasriSignatureInfos,
   bsdasri: Dasri,
   securityCode: number
-}) => Promise<void>;
+}) => Promise<boolean>;
 /**
  * Dasri takeOver can be processed on the transporter device
  * To perform this, we expect a SEALED -> READY_TO_TAKEOVER signature, then a READY_TO_TAKEOVER -> SENT one
  * This function is intended to perform checks to allow the first aforementionned transition, and verify
- * provided code matches emitter one
+ * provided code matches emitter's one.
+ * A boolean is returned to be stored on Bsdasri model iot tell apart which dasris were taken over with secret code.
  */
 export const checkEmitterAllowsSignatureWithSecretCode: checkEmitterAllowsSignatureWithCodeFn = async ({
   signatureParams,
@@ -50,13 +54,13 @@ export const checkEmitterAllowsSignatureWithSecretCode: checkEmitterAllowsSignat
   securityCode
 }) => {
   if (!securityCode) {
-    return;
+    return false;
   }
   if (
     signatureParams.eventType !== BsdasriEventType.SignEmissionWithSecretCode ||
     bsdasri.status !== BsdasriStatus.INITIAL
   ) {
-    return;
+    return false;
   }
   const emitterCompany = await getCompanyOrCompanyNotFound({
     siret: bsdasri.emitterCompanySiret
@@ -67,6 +71,7 @@ export const checkEmitterAllowsSignatureWithSecretCode: checkEmitterAllowsSignat
       "Erreur, le code de sécurité est manquant ou invalide"
     );
   }
+  return true;
 };
 
 /**

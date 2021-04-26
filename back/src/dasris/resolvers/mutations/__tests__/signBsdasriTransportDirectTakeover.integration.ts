@@ -52,6 +52,7 @@ describe("Mutation.signBsdasri transport", () => {
     expect(readyTotakeOverDasri.transportSignatureAuthor).toEqual("Jimmy");
     expect(readyTotakeOverDasri.transportSignatureDate).toBeTruthy();
     expect(readyTotakeOverDasri.transportSignatoryId).toEqual(transporter.id);
+    expect(readyTotakeOverDasri.isEmissionDirectTakenOver).toEqual(true);
   });
 
   it("should not put transport signature on an INITIAL dasri if required field is missing", async () => {
