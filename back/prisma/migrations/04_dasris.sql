@@ -35,6 +35,8 @@ CREATE TABLE "default$default"."Bsdasri" (
     "handedOverToTransporterAt" TIMESTAMP(3),
     "emissionSignatureAuthor" TEXT,
     "emissionSignatureDate" TIMESTAMP(3),
+    "isEmissionDirectTakenOver": BOOLEAN DEFAULT FALSE,
+    "isEmissionTakenOverWithSecretCode": BOOLEAN DEFAULT FALSE,
     "transporterCompanyName" TEXT,
     "transporterCompanySiret" TEXT,
     "transporterCompanyAddress" TEXT,

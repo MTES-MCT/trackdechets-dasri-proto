@@ -575,6 +575,9 @@ model Bsdasri {
   emissionSignatoryId                String?
   emissionSignatureDate              DateTime?
   emissionSignatureAuthor            String?
+
+  isEmissionDirectTakenOver           Boolean      @default(false)
+  isEmissionTakenOverWithSecretCode   Boolean      @default(false)
   
 // transporter
   transporterCompanyName             String?
@@ -648,5 +651,4 @@ model Bsdasri {
   regroupedBsdasris                 Bsdasri[]                  @relation("BsdasriToBsdasri")
   regroupedOnBsdasri                Bsdasri?                   @relation("BsdasriToBsdasri", fields: [regroupedOnBsdasriId], references: [id])
   regroupedOnBsdasriId              String?
-
 }
