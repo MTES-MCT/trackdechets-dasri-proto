@@ -62,12 +62,11 @@ input BsdasriWhere {
   transporter: BsdasriTransporterWhere
   recipient: BsdasriRecipientWhere
   processingOperation: [processingOperationTypes!]
-    """
+  """
   (Optionnel) Filtre sur l'état de regroupement des bordereaux
   Si aucun filtre n'est passé, les bordereaux seront retournés sans filtrage supplémentaire
   Si groupable: true, les bordereaux retournés ne sont pas déjà regroupés et ne regroupent pas d'autres bordereaux
   Si groupable: false, les bordereaux retournés ne sont déjà regroupés ou ne regroupent d'autres bordereaux
-
   """
   groupable: Boolean
   _and: [BsdasriWhere!]
@@ -77,9 +76,10 @@ input BsdasriWhere {
 
 type Query {
   """
+  EXPERIMENTAL - Ne pas utiliser dans un contexte de production
   Renvoie les Bsdasris.
+  Par défaut, les dasris des différentes companies de l'utilisateur sont renvoyés.
 
-  SIRET d'une entreprise présente n'importe où sur le bordereau via `siretPresentOnForm`
   """
   bsdasris(
     """
@@ -88,7 +88,7 @@ type Query {
     (des Bsdasri les plus récents aux Bsdasri les plus anciens)
     Curseur après lequel les Bsdasri doivent être retournés
     Attend un identifiant (propriété `id`) de BSD
-    Défaut à vide, pour retourner les Bsdasri les plus récents
+    Défaut à vide, pour retourner les Bsdasri les plus récents.
     Le BSD précisé dans le curseur ne fait pas partie du résultat
     """
     after: ID
@@ -120,18 +120,18 @@ type Query {
     last: Int
 
     """
-    (Optionnel) Retourne les Bsdasri modifiés après la date
-    Filtre sur la date de dernière modification
-    Au format (YYYY-MM-DD)
-    Par défaut vide, aucun filtre n'est appliqué
+    Filtres de recherche
     """
-    updatedAfter: String
-
-    "SIRET d'un établissement dont je suis membre"
-    siret: String!
-
     where: BsdasriWhere
   ): BsdasriConnection!
 
-  bsdasri("Identifiant opaque du BSD" id: ID!): Bsdasri!
+  """
+  EXPERIMENTAL - Ne pas utiliser dans un contexte de production
+  """
+  bsdasri(
+    """
+    Identifiant du BSD
+    """
+    id: ID!
+  ): Bsdasri!
 }

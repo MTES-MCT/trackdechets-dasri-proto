@@ -8,8 +8,8 @@ import { ErrorCode } from "../../../../common/errors";
 import { bsdasriFactory, initialData } from "../../../__tests__/factories";
 
 const GET_BSDASRIS = `
-query bsDasris($siret: String!, $where: BsdasriWhere) {
-  bsdasris(siret: $siret, where: $where) {
+query bsDasris($where: BsdasriWhere) {
+  bsdasris(where: $where) {
     totalCount
     pageInfo {
       startCursor
@@ -119,9 +119,7 @@ describe("Query.Bsdasris", () => {
       }
     });
 
-    const { errors } = await query(GET_BSDASRIS, {
-      variables: { siret: company.siret }
-    });
+    const { errors } = await query(GET_BSDASRIS);
     expect(errors).toEqual([
       expect.objectContaining({
         message: "Vous n'êtes pas connecté.",
@@ -132,7 +130,7 @@ describe("Query.Bsdasris", () => {
     ]);
   });
 
-  it("should forbid siret not belonging to user", async () => {
+  it("should return an empty list if requested sirets do not belong to user", async () => {
     const { user: otherUser, company } = await userWithCompanyFactory("MEMBER");
     const params = {
       ownerId: otherUser.id,
@@ -144,18 +142,13 @@ describe("Query.Bsdasris", () => {
 
     const { user } = await userWithCompanyFactory("MEMBER");
     const { query } = makeClient(user);
-    const { errors } = await query(GET_BSDASRIS, {
-      variables: { siret: company.siret }
+    const { data } = await query(GET_BSDASRIS, {
+      variables: {
+        where: { transporter: { company: { siret: "9999" } } }
+      }
     });
 
-    expect(errors).toEqual([
-      expect.objectContaining({
-        message: `Vous n'êtes pas membre de l'entreprise portant le siret "${company.siret}".`,
-        extensions: expect.objectContaining({
-          code: ErrorCode.FORBIDDEN
-        })
-      })
-    ]);
+    expect(data.bsdasris.totalCount).toEqual(0);
   });
 
   it("should get user dasris", async () => {
@@ -172,9 +165,7 @@ describe("Query.Bsdasris", () => {
 
     const { query } = makeClient(user);
 
-    const { data } = await query(GET_BSDASRIS, {
-      variables: { siret: company.siret }
-    });
+    const { data } = await query(GET_BSDASRIS);
     const ids = data.bsdasris.edges.map(edge => edge.node.id);
     expect(ids.length).toBe(3);
 
@@ -188,7 +179,7 @@ describe("Query.Bsdasris", () => {
     expect(data.bsdasris.pageInfo.hasNextPage).toBe(false);
   });
 
-  it.only("should get filtered dasris", async () => {
+  it("should get filtered dasris", async () => {
     const { user, company } = await userWithCompanyFactory("MEMBER");
     const transporterCompany = await companyFactory();
     const recipientCompany = await companyFactory();
@@ -221,7 +212,6 @@ describe("Query.Bsdasris", () => {
     // retrieve dasris where transporter is otherCompany
     const { data: queryTransporter } = await query(GET_BSDASRIS, {
       variables: {
-        siret: company.siret,
         where: { transporter: { company: { siret: transporterCompany.siret } } }
       }
     });
@@ -234,7 +224,6 @@ describe("Query.Bsdasris", () => {
     // retrieve dasris where recipient is otherCompany
     const { data: queryRecipient } = await query(GET_BSDASRIS, {
       variables: {
-        siret: company.siret,
         where: { recipient: { company: { siret: recipientCompany.siret } } }
       }
     });

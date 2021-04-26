@@ -3,20 +3,20 @@ import { UserInputError } from "apollo-server-express";
 import { safeInput } from "../../../forms/form-converter";
 import { BsdasriWhere, DateFilter } from "../../../generated/graphql/types";
 
-export function convertWhereToDbFilter(
+export function buildDbFilter(
   where: BsdasriWhere,
-  userCompanySiret
+  userSirets: string[]
 ): Prisma.BsdasriWhereInput {
-  const belongToUserSiret = {
+  const belongToUserSirets = {
     OR: [
-      { emitterCompanySiret: userCompanySiret },
-      { transporterCompanySiret: userCompanySiret },
-      { recipientCompanySiret: userCompanySiret }
+      { emitterCompanySiret: { in: userSirets } },
+      { transporterCompanySiret: { in: userSirets } },
+      { recipientCompanySiret: { in: userSirets } }
     ]
   };
 
   if (!where) {
-    return belongToUserSiret;
+    return belongToUserSirets;
   }
 
   const { _or, _and, _not, ...filters } = where;
@@ -37,7 +37,8 @@ export function convertWhereToDbFilter(
   });
 
   return {
-    AND: [belongToUserSiret, safeWhere]
+    ...belongToUserSirets,
+    ...safeWhere
   };
 }
 

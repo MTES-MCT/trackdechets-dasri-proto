@@ -1295,14 +1295,20 @@ export type Mutation = {
    * Modifie le mot de passe d'un utilisateur
    */
   changePassword: User;
-  /** Crée un nouveau dasri */
+  /**
+   * EXPERIMENTAL - Ne pas utiliser dans un contexte de production
+   * Crée un nouveau dasri
+   */
   createBsdasri: Bsdasri;
   /**
    * USAGE INTERNE
    * Rattache un établissement à l'utilisateur authentifié
    */
   createCompany: CompanyPrivate;
-  /** Crée un nouveau dasri en brouillon */
+  /**
+   * EXPERIMENTAL - Ne pas utiliser dans un contexte de production
+   * Crée un nouveau dasri en brouillon
+   */
   createDraftBsdasri: Bsdasri;
   /** Crée un nouveau bordereau */
   createForm: Form;
@@ -1454,7 +1460,10 @@ export type Mutation = {
   markSegmentAsReadyToTakeOver?: Maybe<TransportSegment>;
   /** Prépare un nouveau segment de transport multimodal */
   prepareSegment?: Maybe<TransportSegment>;
-  /** Marque un dasri brouillon comme publié (isDraft=false) */
+  /**
+   * EXPERIMENTAL - Ne pas utiliser dans un contexte de production
+   * Marque un dasri brouillon comme publié (isDraft=false)
+   */
   publishBsdasri?: Maybe<Bsdasri>;
   /**
    * USAGE INTERNE
@@ -1494,7 +1503,8 @@ export type Mutation = {
    */
   sendMembershipRequest?: Maybe<MembershipRequest>;
   /**
-   * Appowse une signature sur un Bsdasri, verrouille les cadres correspondant
+   * EXPERIMENTAL - Ne pas utiliser dans un contexte de production
+   * Appose une signature sur un Bsdasri, verrouille les cadres correspondant
    *
    * Une signature ne peut être apposée que par un membre de l'entreprise figurant sur le cadre concerné
    * Ex: la signature TRANSPORT ne peut être apposée que par un membre de l'entreprise de transport
@@ -1503,6 +1513,11 @@ export type Mutation = {
    * sécurité de l'émetteur (BsdasriSignatureType: EMISSION_WITH_SECRET_CODE)
    */
   signBsdasri?: Maybe<Bsdasri>;
+  /**
+   * EXPERIMENTAL - Ne pas utiliser dans un contexte de production
+   * Appose une signature de type EMISSION via un compte n'appartenant pas à l'émetteur.
+   * Permet de signer un enlèvement sur le device transporteur grâce au code de sécurité de l'émetteur du dasri
+   */
   signBsdasriEmissionWithSecretCode?: Maybe<Bsdasri>;
   /**
    * Permet de transférer le déchet à un transporteur lors de la collecte initiale (signatures en case 8 et 9)
@@ -1528,6 +1543,7 @@ export type Mutation = {
   /** Marque un segment comme pris en charge par le nouveau transporteur */
   takeOverSegment?: Maybe<TransportSegment>;
   /**
+   * EXPERIMENTAL - Ne pas utiliser dans un contexte de production
    * Met à jour un dasri existant
    * Par défaut, tous les champs sont modifiables.
    */
@@ -1918,11 +1934,11 @@ export type Query = {
   apiKey: Scalars["String"];
   /** Renvoie des BSD candidats à un regroupement dans une annexe 2 */
   appendixForms: Array<Form>;
+  /** EXPERIMENTAL - Ne pas utiliser dans un contexte de production */
   bsdasri: Bsdasri;
   /**
+   * EXPERIMENTAL - Ne pas utiliser dans un contexte de production
    * Renvoie les Bsdasris.
-   *
-   * SIRET d'une entreprise présente n'importe où sur le bordereau via `siretPresentOnForm`
    */
   bsdasris: BsdasriConnection;
   /**
@@ -2023,8 +2039,6 @@ export type QueryBsdasrisArgs = {
   first?: Maybe<Scalars["Int"]>;
   before?: Maybe<Scalars["ID"]>;
   last?: Maybe<Scalars["Int"]>;
-  updatedAfter?: Maybe<Scalars["String"]>;
-  siret: Scalars["String"];
   where?: Maybe<BsdasriWhere>;
 };
 
@@ -4516,7 +4530,7 @@ export type QueryResolvers<
     ResolversTypes["BsdasriConnection"],
     ParentType,
     ContextType,
-    RequireFields<QueryBsdasrisArgs, "siret">
+    RequireFields<QueryBsdasrisArgs, never>
   >;
   companyInfos?: Resolver<
     ResolversTypes["CompanyPublic"],

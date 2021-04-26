@@ -3,30 +3,31 @@ import { expandBsdasriFromDb } from "../../dasri-converter";
 import prisma from "../../../prisma";
 import { checkIsAuthenticated } from "../../../common/permissions";
 
-import { getCompanyOrCompanyNotFound } from "../../../companies/database";
-import { checkIsCompanyMember } from "../../../users/permissions";
-
 import { getCursorConnectionsArgs } from "../../cursorPagination";
 
 import { GraphQLContext } from "../../../types";
-import { convertWhereToDbFilter } from "./where";
+import { buildDbFilter } from "./where";
+const defaultPaginateBy = 50;
+import { getUserCompanies } from "../../../users/database";
+
 export default async function dasris(_, args, context: GraphQLContext) {
   const user = checkIsAuthenticated(context);
 
-  const { where: whereArgs, siret, ...rest } = args;
+  const { where: whereArgs, ...paginationArgs } = args;
 
-  // check user has permission on the specified siret
-  const company = await getCompanyOrCompanyNotFound({ siret });
-  await checkIsCompanyMember({ id: user.id }, { siret });
-
-  const itemsPerPage = 50;
+  const itemsPerPage =
+    paginationArgs.first ?? paginationArgs.last ?? defaultPaginateBy;
   const { requiredItems, ...connectionsArgs } = await getCursorConnectionsArgs({
-    ...rest,
+    ...paginationArgs,
     defaultPaginateBy: itemsPerPage,
     maxPaginateBy: 500
   });
+
+  const userCompanies = await getUserCompanies(user.id);
+  const userSirets = userCompanies.map(c => c.siret);
+
   const where = {
-    ...convertWhereToDbFilter(whereArgs, company.siret),
+    ...buildDbFilter(whereArgs, userSirets),
     isDeleted: false
   };
   const queried = await prisma.bsdasri.findMany({
@@ -42,9 +43,14 @@ export default async function dasris(_, args, context: GraphQLContext) {
   const pageInfo = {
     startCursor: expanded[0]?.id || "",
     endCursor: expanded[queriedCount - 1]?.id || "",
-    hasNextPage: rest.after | rest.first ? queriedCount > requiredItems : false,
+    hasNextPage:
+      paginationArgs.after | paginationArgs.first
+        ? queriedCount > requiredItems
+        : false,
     hasPreviousPage:
-      rest.before | rest.last ? queriedCount > requiredItems : false
+      paginationArgs.before | paginationArgs.last
+        ? queriedCount > requiredItems
+        : false
   };
   return {
     totalCount,
