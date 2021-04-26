@@ -1,6 +1,6 @@
 import { BsdasriStatus } from ".prisma/client";
 import { BsdasriWhere } from "../../../../generated/graphql/types";
-import { convertWhereToDbFilter } from "../where";
+import { buildDbFilter } from "../where";
 
 const siret = "11112345611111";
 
@@ -9,7 +9,7 @@ describe("Bsdasri where conversion", () => {
     const where: BsdasriWhere = {
       [cond]: [{ _and: [{ isDraft: true }] }]
     };
-    expect(() => convertWhereToDbFilter(where, siret)).toThrow();
+    expect(() => buildDbFilter(where, [siret])).toThrow();
   });
 
   it("should convert filter on sirets", () => {
@@ -19,7 +19,7 @@ describe("Bsdasri where conversion", () => {
       recipient: { company: { siret: "recipientSiret" } }
     };
 
-    const dbFilter = convertWhereToDbFilter(where, siret);
+    const dbFilter = buildDbFilter(where, [siret]);
     expect(dbFilter).toEqual({
       AND: [
         {
@@ -43,7 +43,7 @@ describe("Bsdasri where conversion", () => {
       processingOperation: ["D9", "R1"]
     };
 
-    const dbFilter = convertWhereToDbFilter(where, siret);
+    const dbFilter = buildDbFilter(where, [siret]);
     expect(dbFilter).toEqual({
       AND: [
         {
@@ -66,21 +66,15 @@ describe("Bsdasri where conversion", () => {
       isDraft: true
     };
 
-    const dbFilter = convertWhereToDbFilter(where, siret);
+    const dbFilter = buildDbFilter(where, [siret]);
     expect(dbFilter).toEqual({
-      AND: [
-        {
-          OR: [
-            { emitterCompanySiret: siret },
-            { transporterCompanySiret: siret },
-            { recipientCompanySiret: siret }
-          ]
-        },
-        {
-          status: "PROCESSED",
-          isDraft: true
-        }
-      ]
+      OR: [
+        { emitterCompanySiret: { in: [siret] }  },
+        { transporterCompanySiret: { in: [siret] }  },
+        { recipientCompanySiret: { in: [siret] }  }
+      ],
+      status: "PROCESSED",
+      isDraft: true
     });
   });
 
@@ -89,18 +83,15 @@ describe("Bsdasri where conversion", () => {
       groupable: true
     };
 
-    const dbFilter = convertWhereToDbFilter(where, siret);
+    const dbFilter = buildDbFilter(where, [siret]);
     expect(dbFilter).toEqual({
-      AND: [
-        {
-          OR: [
-            { emitterCompanySiret: siret },
-            { transporterCompanySiret: siret },
-            { recipientCompanySiret: siret }
-          ]
-        },
-        { regroupedBsdasris: { none: {} }, regroupedOnBsdasri: null }
-      ]
+      OR: [
+        { emitterCompanySiret: { in: [siret] } },
+        { transporterCompanySiret: { in: [siret] } },
+        { recipientCompanySiret: { in: [siret] } }
+      ],
+      regroupedBsdasris: { none: {} },
+      regroupedOnBsdasri: null
     });
   });
   it("should convert complex filters to db filters", () => {
@@ -115,27 +106,13 @@ describe("Bsdasri where conversion", () => {
       ]
     };
 
-    const dbFilter = convertWhereToDbFilter(where, siret);
+    const dbFilter = buildDbFilter(where, [siret]);
 
     expect(dbFilter).toEqual({
+      OR: [{ status: "RECEIVED" }, { status: "PROCESSED" }],
       AND: [
-        {
-          OR: [
-            { emitterCompanySiret: siret },
-            { transporterCompanySiret: siret },
-            { recipientCompanySiret: siret }
-          ]
-        },
-        {
-          OR: [
-            { status: BsdasriStatus.RECEIVED },
-            { status: BsdasriStatus.PROCESSED }
-          ],
-          AND: [
-            { emitterCompanySiret: "emitterSiret" },
-            { recipientCompanySiret: "recipientSiret" }
-          ]
-        }
+        { emitterCompanySiret: "emitterSiret" },
+        { recipientCompanySiret: "recipientSiret" }
       ]
     });
   });
@@ -146,21 +123,15 @@ describe("Bsdasri where conversion", () => {
       createdAt: { _gt: now, _lt: now }
     };
 
-    const dbFilter = convertWhereToDbFilter(where, siret);
+    const dbFilter = buildDbFilter(where, [siret]);
 
     expect(dbFilter).toEqual({
-      AND: [
-        {
-          OR: [
-            { emitterCompanySiret: siret },
-            { transporterCompanySiret: siret },
-            { recipientCompanySiret: siret }
-          ]
-        },
-        {
-          createdAt: { gt: now, lt: now }
-        }
-      ]
+      OR: [
+        { emitterCompanySiret: { in: [siret] } },
+        { transporterCompanySiret: { in: [siret] } },
+        { recipientCompanySiret: { in: [siret] } }
+      ],
+      createdAt: { gt: now, lt: now }
     });
   });
 });

@@ -160,7 +160,7 @@ describe("Query.Bsdasri", () => {
     expect(data.bsdasri.regroupedBsdasris).toStrictEqual([]);
   });
 
-  it.only("should retrieve regrouped dasris", async () => {
+  it("should retrieve regrouped dasris", async () => {
     const { user, company } = await userWithCompanyFactory("MEMBER");
 
     const toRegroup = await bsdasriFactory({

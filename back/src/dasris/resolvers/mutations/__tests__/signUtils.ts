@@ -1,7 +1,3 @@
-
-
-
-
 export const SIGN_DASRI = `
 mutation  SignDasri($id: ID!, $input: BsdasriSignatureInput
 !) {
