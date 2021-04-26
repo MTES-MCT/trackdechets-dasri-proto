@@ -1939,6 +1939,7 @@ export type Query = {
   /**
    * EXPERIMENTAL - Ne pas utiliser dans un contexte de production
    * Renvoie les Bsdasris.
+   * Par défaut, les dasris des différentes companies de l'utilisateur sont renvoyés.
    */
   bsdasris: BsdasriConnection;
   /**
